@@ -20,10 +20,10 @@
 
 {#if leaderboardId}
     {#await getTableData(leaderboardId)}
-        <div>loading...</div>
+        <div class="flex justify-center text-2xl">loading...</div>
     {:then tableData}
         <Table table={tableData.data} />
     {:catch error}
-        <div>{error.message}</div>
+        <div class="flex justify-center text-2xl">{error.message}</div>
     {/await}
 {/if}
