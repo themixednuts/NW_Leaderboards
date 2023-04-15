@@ -33,8 +33,6 @@
             "/leaderboard/corruptedbreach/s1",
     } as const;
 
-    export let data: PageData;
-
     async function getTableData(leaderboardId: string) {
         const response = await fetch(
             `https://lb.jakel.rocks${mappingLeaderboards[leaderboardId]}?json=true&size=1000`

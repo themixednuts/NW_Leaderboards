@@ -6,6 +6,8 @@
     import { leaderboardMap } from "$lib/leaderboardmap.js";
     import { base } from "$app/paths";
 
+    console.log(process.env.NODE_ENV);
+
     $: firstLevelCategory = $page.url.searchParams.get("firstlevelcategory");
     $: category = $page.url.searchParams.get("category");
     $: subcategory = $page.url.searchParams.get("subcategory");
