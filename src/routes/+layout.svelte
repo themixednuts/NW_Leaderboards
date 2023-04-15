@@ -6,7 +6,7 @@
     import { leaderboardMap } from "$lib/leaderboardmap.js";
     import { base } from "$app/paths";
 
-    console.log(process.env.NODE_ENV);
+    const leaderboardData: LeaderboardType = leaderboardMap;
 
     $: firstLevelCategory = $page.url.searchParams.get("firstlevelcategory");
     $: category = $page.url.searchParams.get("category");
@@ -14,16 +14,17 @@
     $: regions = $page.url.searchParams.get("regions");
     $: leaderboardId = $page.url.searchParams.get("leaderboardid");
 
-    const leaderboardData: LeaderboardType = leaderboardMap;
-
-    $: if (firstLevelCategory !== null)
-        console.log(leaderboardData[firstLevelCategory]);
-
     type BannerMap = {
         [key: string]: string;
     };
 
-    const bannerMap: BannerMap = {
+    const bannerMap: BannerMap & {
+        "Mutated Expeditions": "/lyshineui/images/leaderboards/leaderboard_cat_bg_expeditions.png";
+        "Faction War": "/lyshineui/images/leaderboards/leaderboard_cat_bg_faction_convenant.png";
+        "Vs. Environment": "/lyshineui/images/leaderboards/leaderboard_cat_bg_environment.png";
+        "Vs. Players": "/lyshineui/images/leaderboards/leaderboard_cat_bg_player.png";
+        "Trade Skills": "/lyshineui/images/leaderboards/leaderboard_cat_bg_trade.png";
+    } = {
         "Mutated Expeditions":
             "/lyshineui/images/leaderboards/leaderboard_cat_bg_expeditions.png",
         "Faction War":
@@ -34,7 +35,7 @@
             "/lyshineui/images/leaderboards/leaderboard_cat_bg_player.png",
         "Trade Skills":
             "/lyshineui/images/leaderboards/leaderboard_cat_bg_trade.png",
-    };
+    } as const;
 
     function updateSearchParams(param: string, id: string) {
         const searchParams = new URLSearchParams($page.url.searchParams);
@@ -62,8 +63,6 @@
         searchParams.set(param, id);
         goto(`${$page.url.pathname}?${searchParams}`);
     }
-
-    $: console.log(firstLevelCategory, $page);
 </script>
 
 <div class="container flex flex-col mx-auto gap-4 h-screen overflow-hidden">
