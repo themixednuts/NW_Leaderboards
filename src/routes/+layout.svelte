@@ -19,7 +19,12 @@
         | ArrayLike<unknown>
         | { [s: string]: unknown }
         | null;
-    $: if (subcategory) {
+    $: if (
+        firstLevelCategory &&
+        subcategory &&
+        category &&
+        leaderboardData[firstLevelCategory!][category!]
+    ) {
         leaderboards =
             leaderboardData[firstLevelCategory!][category!][subcategory!];
     }
@@ -206,7 +211,7 @@
                     </ul>
                 </div>
             {/if}
-            {#if firstLevelCategory && category && subcategory && leaderboards !== null && leaderboardData[firstLevelCategory][category][subcategory].length > 1}
+            {#if firstLevelCategory && category && subcategory && leaderboards && leaderboards.length > 1}
                 <div class="dropdown dropdown-end">
                     <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
                     <!-- svelte-ignore a11y-label-has-associated-control -->
