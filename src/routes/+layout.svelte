@@ -4,6 +4,7 @@
     import { goto } from "$app/navigation";
     import type { LeaderboardType } from "$lib/leaderboardmap.js";
     import { leaderboardMap } from "$lib/leaderboardmap.js";
+    import { base } from "$app/paths";
 
     $: firstLevelCategory = $page.url.searchParams.get("firstlevelcategory");
     $: category = $page.url.searchParams.get("category");
@@ -77,7 +78,7 @@
             class="flex justify-center w-full place-self-stretch h-56 min-h-56 mt-4 border-2 p-2 border-base-100 rounded-box"
         >
             <img
-                src={bannerMap[firstLevelCategory || "mutated"]}
+                src={`${base}${bannerMap[firstLevelCategory || "mutated"]}`}
                 alt=""
                 class="object-cover border-2 border-base-100 min-h-full rounded-box"
             />
