@@ -6,7 +6,11 @@
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
+<<<<<<< HEAD
 		"deploy": "git add . && git commit -m update && git push origin gh-pages",
+=======
+		"deploy": "npx gh-pages -d .",
+>>>>>>> b4fe95cde2ac0adea812396722200b80034643f9
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
 	},
