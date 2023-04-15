@@ -4,7 +4,7 @@
     import { goto } from "$app/navigation";
     import type { LeaderboardType } from "$lib/leaderboardmap.js";
     import { leaderboardMap } from "$lib/leaderboardmap.js";
-    import { base } from "$app/paths";
+    import { base, assets } from "$app/paths";
 
     const leaderboardData: LeaderboardType = leaderboardMap;
 
@@ -19,22 +19,22 @@
     };
 
     const bannerMap: BannerMap & {
-        "Mutated Expeditions": "./lyshineui/images/leaderboards/leaderboard_cat_bg_expeditions.png";
-        "Faction War": "./lyshineui/images/leaderboards/leaderboard_cat_bg_faction_convenant.png";
-        "Vs. Environment": "./lyshineui/images/leaderboards/leaderboard_cat_bg_environment.png";
-        "Vs. Players": "./lyshineui/images/leaderboards/leaderboard_cat_bg_player.png";
-        "Trade Skills": "./lyshineui/images/leaderboards/leaderboard_cat_bg_trade.png";
+        "Mutated Expeditions": "/lyshineui/images/leaderboards/leaderboard_cat_bg_expeditions.png";
+        "Faction War": "/lyshineui/images/leaderboards/leaderboard_cat_bg_faction_convenant.png";
+        "Vs. Environment": "/lyshineui/images/leaderboards/leaderboard_cat_bg_environment.png";
+        "Vs. Players": "/lyshineui/images/leaderboards/leaderboard_cat_bg_player.png";
+        "Trade Skills": "/lyshineui/images/leaderboards/leaderboard_cat_bg_trade.png";
     } = {
         "Mutated Expeditions":
-            "./lyshineui/images/leaderboards/leaderboard_cat_bg_expeditions.png",
+            "/lyshineui/images/leaderboards/leaderboard_cat_bg_expeditions.png",
         "Faction War":
-            "./lyshineui/images/leaderboards/leaderboard_cat_bg_faction_convenant.png",
+            "/lyshineui/images/leaderboards/leaderboard_cat_bg_faction_convenant.png",
         "Vs. Environment":
-            "./lyshineui/images/leaderboards/leaderboard_cat_bg_environment.png",
+            "/lyshineui/images/leaderboards/leaderboard_cat_bg_environment.png",
         "Vs. Players":
-            "./lyshineui/images/leaderboards/leaderboard_cat_bg_player.png",
+            "/lyshineui/images/leaderboards/leaderboard_cat_bg_player.png",
         "Trade Skills":
-            "./lyshineui/images/leaderboards/leaderboard_cat_bg_trade.png",
+            "/lyshineui/images/leaderboards/leaderboard_cat_bg_trade.png",
     } as const;
 
     function updateSearchParams(param: string, id: string) {
@@ -79,7 +79,7 @@
             class="flex justify-center w-full place-self-stretch h-56 min-h-56 mt-4 border-2 p-2 border-base-100 rounded-box"
         >
             <img
-                src={`${base}${bannerMap[firstLevelCategory || "mutated"]}`}
+                src={`${assets}${bannerMap[firstLevelCategory || "mutated"]}`}
                 alt=""
                 class="object-cover border-2 border-base-100 min-h-full rounded-box"
             />
