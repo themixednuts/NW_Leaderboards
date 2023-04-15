@@ -14,6 +14,16 @@
     $: regions = $page.url.searchParams.get("regions");
     $: leaderboardId = $page.url.searchParams.get("leaderboardid");
 
+    let leaderboards:
+        | any[]
+        | ArrayLike<unknown>
+        | { [s: string]: unknown }
+        | null;
+    $: if (subcategory) {
+        leaderboards =
+            leaderboardData[firstLevelCategory!][category!][subcategory!];
+    }
+
     type BannerMap = {
         [key: string]: string;
     };
@@ -196,46 +206,38 @@
                     </ul>
                 </div>
             {/if}
-            {#if firstLevelCategory && category && subcategory && leaderboardData[firstLevelCategory][category][subcategory].length > 1}
+            {#if firstLevelCategory && category && subcategory && leaderboards !== null && leaderboardData[firstLevelCategory][category][subcategory].length > 1}
                 <div class="dropdown dropdown-end">
                     <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
                     <!-- svelte-ignore a11y-label-has-associated-control -->
 
                     <label tabindex="0" class="btn m-1">
                         <div class="flex flex-col">
-                            {#if leaderboardId}
-                                <div class="sect">
-                                    {leaderboardData[firstLevelCategory][
-                                        category
-                                    ][subcategory].find((item) => {
-                                        return (
+                            {#if leaderboardId && leaderboards.find((item) => item.LeaderboardDefinitionId === leaderboardId)?.DisplayName === subcategory}
+                                <div class="">
+                                    {leaderboards.find(
+                                        (item) =>
                                             item.LeaderboardDefinitionId ===
                                             leaderboardId
-                                        );
-                                    })?.CharacterLeaderboard
+                                    )?.CharacterLeaderboard
                                         ? "Character"
-                                        : leaderboardData[firstLevelCategory][
-                                              category
-                                          ][subcategory].find((item) => {
-                                              return (
+                                        : leaderboards.find(
+                                              (item) =>
                                                   item.LeaderboardDefinitionId ===
                                                   leaderboardId
-                                              );
-                                          })?.CompanyLeaderboard
+                                          )?.CompanyLeaderboard
                                         ? "Company"
                                         : ""}
                                 </div>
+                            {:else if leaderboardId && leaderboards.find((item) => item.LeaderboardDefinitionId === leaderboardId)?.DisplayName !== subcategory}
+                                {leaderboards.find(
+                                    (item) =>
+                                        item.LeaderboardDefinitionId ===
+                                        leaderboardId
+                                )?.DisplayName}
+                            {:else}
+                                Leaderboards
                             {/if}
-                            {leaderboardId
-                                ? leaderboardData[firstLevelCategory][category][
-                                      subcategory
-                                  ].find((item) => {
-                                      return (
-                                          item.LeaderboardDefinitionId ===
-                                          leaderboardId
-                                      );
-                                  })?.DisplayName
-                                : "Leaderboards"}
                         </div>
                     </label>
                     <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
@@ -243,7 +245,7 @@
                         tabindex="0"
                         class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 dropdown-end"
                     >
-                        {#each Object.values(leaderboardData[firstLevelCategory][category][subcategory]) as categoryKeys}
+                        {#each Object.values(leaderboards) as categoryKeys}
                             <li>
                                 <div
                                     class={leaderboardId ===
