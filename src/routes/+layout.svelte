@@ -17,7 +17,6 @@
     $: regions = $page.url.searchParams.get("regions");
     $: leaderboardId = $page.url.searchParams.get("leaderboardid");
 
-    $: console.log(subcategory);
     let leaderboards: LeaderboardDefinition[] = [];
     $: if (
         firstLevelCategory &&
@@ -81,9 +80,7 @@
                     .LeaderboardDefinitionId
             );
         }
-
         searchParams.set(param, id);
-        console.log(`${$page.url.pathname}?${searchParams}`);
         goto(`${$page.url.pathname}?${searchParams}`);
     }
 </script>

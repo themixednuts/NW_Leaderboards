@@ -21,7 +21,9 @@
 
 {#if leaderboardId}
     {#await getTableData(leaderboardId)}
-        <div class="flex justify-center text-2xl">loading...</div>
+        <div class="flex justify-center text-2xl">
+            <button class="btn loading">loading</button>
+        </div>
     {:then tableData}
         <Table table={tableData.data} />
     {:catch error}
