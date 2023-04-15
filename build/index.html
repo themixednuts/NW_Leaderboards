@@ -2,30 +2,30 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" href="/NW_Leaderboards/favicon.png" />
+		<link rel="icon" href="./leaderboards/favicon.png" />
 		<meta name="viewport" content="width=device-width" />
 		<meta http-equiv="content-security-policy" content="">
-		<link rel="modulepreload" href="/NW_Leaderboards/_app/immutable/entry/start.b714d99f.js">
-		<link rel="modulepreload" href="/NW_Leaderboards/_app/immutable/chunks/index.6e2e9970.js">
-		<link rel="modulepreload" href="/NW_Leaderboards/_app/immutable/chunks/singletons.c05038af.js">
-		<link rel="modulepreload" href="/NW_Leaderboards/_app/immutable/entry/app.d077eafb.js">
+		<link rel="modulepreload" href="./leaderboards/_app/immutable/entry/start.86e9a64b.js">
+		<link rel="modulepreload" href="./leaderboards/_app/immutable/chunks/index.6e2e9970.js">
+		<link rel="modulepreload" href="./leaderboards/_app/immutable/chunks/singletons.09167cf6.js">
+		<link rel="modulepreload" href="./leaderboards/_app/immutable/entry/app.199222f9.js">
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">
 			<script>
 				{
-					__sveltekit_1vlrwky = {
+					__sveltekit_1iijo59 = {
 						env: {},
-						assets: "/NW_Leaderboards",
-						base: "/NW_Leaderboards",
+						assets: "/leaderboards",
+						base: new URL("./leaderboards", location).pathname,
 						element: document.currentScript.parentElement
 					};
 
 					Promise.all([
-						import("/NW_Leaderboards/_app/immutable/entry/start.b714d99f.js"),
-						import("/NW_Leaderboards/_app/immutable/entry/app.d077eafb.js")
+						import("./leaderboards/_app/immutable/entry/start.86e9a64b.js"),
+						import("./leaderboards/_app/immutable/entry/app.199222f9.js")
 					]).then(([kit, app]) => {
-						kit.start(app, __sveltekit_1vlrwky.element);
+						kit.start(app, __sveltekit_1iijo59.element);
 					});
 				}
 			</script>
