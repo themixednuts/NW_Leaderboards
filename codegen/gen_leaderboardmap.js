@@ -97,23 +97,26 @@ for (const value of leaderboardJson) {
 
 const writePath = "./src/lib/leaderboardmap.ts"
 await writeFile(writePath, `export const leaderboardMap = ${JSON.stringify(obj, null, 4)}\n
+
+export type LeaderboardDefinition = {
+    Rotation: string[];
+    Value: string;
+    LeaderboardDefinitionId: string;
+    DisplayName: string;
+    EntitlementRewards?: string;
+    Rewards?: string;
+    CategoryDescription?: string;
+    CategoryAdditionalHeader?: string;
+    CharacterLeaderboard?: boolean;
+    GroupLeaderboard?: boolean;
+    CompanyLeaderboard?: boolean;
+    FactionLeaderboard?: boolean;
+}
+
 export type LeaderboardType = typeof leaderboardMap & {
     [key: string]: {
         [key: string]: {
-            [key: string]: {
-                Rotation: string[];
-                Value: string;
-                LeaderboardDefinitionId: string;
-                DisplayName: string;
-                EntitlementRewards?: string;
-                Rewards?: string;
-                CategoryDescription?: string;
-                CategoryAdditionalHeader?: string;
-                CharacterLeaderboard?: boolean;
-                GroupLeaderboard?: boolean;
-                CompanyLeaderboard?: boolean;
-                FactionLeaderboard?: boolean;
-            }[];
+            [key: string]: LeaderboardDefinition[];
         };
     };
 }`)

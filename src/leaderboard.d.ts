@@ -1,23 +1,12 @@
-interface LeaderboardBracket {
-    alltime?: LeaderboardItem[];
-    weekly?: LeaderboardItem[];
-    monthly?: LeaderboardItem[];
-}
-
-interface LeaderboardItem {
+interface LeaderboardAPIItem {
     rank: number;
     value: number;
     server: string;
     date: string;
 }
 
-interface LeaderboardCategory {
-    [key: string]: string[];
-}
-
 interface LeaderboardAPIResponse {
     [key: string]: string;
-
-    data: LeaderboardItem[];
+    data: LeaderboardAPIItem[];
     name: string;
 }

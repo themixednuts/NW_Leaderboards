@@ -3403,23 +3403,26 @@ export const leaderboardMap = {
     }
 }
 
+
+export type LeaderboardDefinition = {
+    Rotation: string[];
+    Value: string;
+    LeaderboardDefinitionId: string;
+    DisplayName: string;
+    EntitlementRewards?: string;
+    Rewards?: string;
+    CategoryDescription?: string;
+    CategoryAdditionalHeader?: string;
+    CharacterLeaderboard?: boolean;
+    GroupLeaderboard?: boolean;
+    CompanyLeaderboard?: boolean;
+    FactionLeaderboard?: boolean;
+}
+
 export type LeaderboardType = typeof leaderboardMap & {
     [key: string]: {
         [key: string]: {
-            [key: string]: {
-                Rotation: string[];
-                Value: string;
-                LeaderboardDefinitionId: string;
-                DisplayName: string;
-                EntitlementRewards?: string;
-                Rewards?: string;
-                CategoryDescription?: string;
-                CategoryAdditionalHeader?: string;
-                CharacterLeaderboard?: boolean;
-                GroupLeaderboard?: boolean;
-                CompanyLeaderboard?: boolean;
-                FactionLeaderboard?: boolean;
-            }[];
+            [key: string]: LeaderboardDefinition[];
         };
     };
 }

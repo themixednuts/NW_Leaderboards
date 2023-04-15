@@ -2,7 +2,10 @@
     import "../app.css";
     import { page } from "$app/stores";
     import { goto } from "$app/navigation";
-    import type { LeaderboardType } from "$lib/leaderboardmap.js";
+    import type {
+        LeaderboardDefinition,
+        LeaderboardType,
+    } from "$lib/leaderboardmap.js";
     import { leaderboardMap } from "$lib/leaderboardmap.js";
     import { base, assets } from "$app/paths";
 
@@ -14,11 +17,8 @@
     $: regions = $page.url.searchParams.get("regions");
     $: leaderboardId = $page.url.searchParams.get("leaderboardid");
 
-    let leaderboards:
-        | any[]
-        | ArrayLike<unknown>
-        | { [s: string]: unknown }
-        | null;
+    $: console.log(subcategory);
+    let leaderboards: LeaderboardDefinition[] = [];
     $: if (
         firstLevelCategory &&
         subcategory &&
@@ -52,41 +52,38 @@
             "/lyshineui/images/leaderboards/leaderboard_cat_bg_trade.png",
     } as const;
 
-    function updateSearchParams(param: string, id: string) {
-        const searchParams = new URLSearchParams($page.url.searchParams);
-        searchParams.forEach((value, key) => {
-            if (param === "firstlevelcategory") {
-                if (key !== "firstlevelcategory") {
-                    searchParams.delete(key);
-                }
-            }
-            if (param === "category") {
-                if (key !== "category" && key !== "firstlevelcategory") {
-                    searchParams.delete(key);
-                }
-            }
-            if (param === "subcategory") {
-                if (
-                    key !== "subcategory" &&
-                    key !== "category" &&
-                    key !== "firstlevelcategory"
-                ) {
-                    searchParams.delete(key);
-                }
+    const hierarchy: { [key: string]: string[] } = {
+        firstlevelcategory: [
+            "category",
+            "subcategory",
+            "regions",
+            "leaderboardid",
+        ],
+        category: ["subcategory", "regions", "leaderboardid"],
+        subcategory: ["regions", "leaderboardid"],
+    };
 
-                if (
-                    leaderboardData[firstLevelCategory!][category!][id!]
-                        .length === 1
-                ) {
-                    searchParams.set(
-                        "leaderboardid",
-                        leaderboardData[firstLevelCategory!][category!][id!][0]
-                            .LeaderboardDefinitionId
-                    );
-                }
-            }
-        });
+    function updateSearchParams(param: string, id: string) {
+        type Hierarchy = typeof hierarchy;
+        const searchParams = new URLSearchParams($page.url.searchParams);
+
+        if (hierarchy[param]) {
+            hierarchy[param].forEach((key) => searchParams.delete(key));
+        }
+
+        if (
+            param === "subcategory" &&
+            leaderboardData[firstLevelCategory!][category!][id!].length === 1
+        ) {
+            searchParams.set(
+                "leaderboardid",
+                leaderboardData[firstLevelCategory!][category!][id!][0]
+                    .LeaderboardDefinitionId
+            );
+        }
+
         searchParams.set(param, id);
+        console.log(`${$page.url.pathname}?${searchParams}`);
         goto(`${$page.url.pathname}?${searchParams}`);
     }
 </script>

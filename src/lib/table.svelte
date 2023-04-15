@@ -1,5 +1,5 @@
 <script lang="ts">
-    export let table: LeaderboardItem[];
+    export let table: LeaderboardAPIItem[];
     import { page } from "$app/stores";
     import { leaderboardMap } from "./leaderboardmap";
     import type { LeaderboardType } from "./leaderboardmap";
