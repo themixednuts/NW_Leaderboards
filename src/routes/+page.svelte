@@ -9,6 +9,9 @@
             `https://lb.jakel.rocks/json/${leaderboardId}/s1?size=1000`
         );
 
+        if (response.status !== 200) {
+            throw new Error("Leaderboard not found");
+        }
         const data = await response.json();
 
         return data;
