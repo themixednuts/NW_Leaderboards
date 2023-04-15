@@ -8,7 +8,7 @@ interface LeaderboardItem {
     rank: number;
     value: number;
     server: string;
-    date: Date;
+    date: string;
 }
 
 interface LeaderboardCategory {

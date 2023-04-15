@@ -58,6 +58,17 @@
                 ) {
                     searchParams.delete(key);
                 }
+
+                if (
+                    leaderboardData[firstLevelCategory!][category!][id!]
+                        .length === 1
+                ) {
+                    searchParams.set(
+                        "leaderboardid",
+                        leaderboardData[firstLevelCategory!][category!][id!][0]
+                            .LeaderboardDefinitionId
+                    );
+                }
             }
         });
         searchParams.set(param, id);
@@ -185,7 +196,7 @@
                     </ul>
                 </div>
             {/if}
-            {#if firstLevelCategory && category && subcategory}
+            {#if firstLevelCategory && category && subcategory && leaderboardData[firstLevelCategory][category][subcategory].length > 1}
                 <div class="dropdown dropdown-end">
                     <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
                     <!-- svelte-ignore a11y-label-has-associated-control -->
@@ -219,7 +230,33 @@
                                             categoryKeys.LeaderboardDefinitionId
                                         )}
                                 >
-                                    {categoryKeys.DisplayName}
+                                    <div class="flex">
+                                        {categoryKeys.DisplayName}
+                                    </div>
+                                    {#if categoryKeys.CharacterLeaderboard || categoryKeys.CompanyLeaderboard}
+                                        <div
+                                            class="tooltip px-0"
+                                            data-tip={categoryKeys.CharacterLeaderboard
+                                                ? "Character"
+                                                : categoryKeys.CompanyLeaderboard
+                                                ? "Company"
+                                                : ""}
+                                        >
+                                            <!-- .replace(/(\<.*\>)/g, "") -->
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                class="w-4 h-4 stroke-current"
+                                                ><path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                                /></svg
+                                            >
+                                        </div>
+                                    {/if}
                                 </div>
                             </li>
                         {/each}

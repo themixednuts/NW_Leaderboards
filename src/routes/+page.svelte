@@ -3,10 +3,11 @@
     import Table from "$lib/table.svelte";
 
     $: leaderboardId = $page.url.searchParams.get("leaderboardid");
+    $: bracket = $page.url.searchParams.get("bracket") || "s1";
 
     async function getTableData(leaderboardId: string) {
         const response = await fetch(
-            `https://lb.jakel.rocks/json/${leaderboardId}/s1?size=1000`
+            `https://lb.jakel.rocks/json/${leaderboardId}/${bracket}?size=1000`
         );
 
         if (response.status !== 200) {

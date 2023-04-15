@@ -46,16 +46,13 @@ for (const value of leaderboardJson) {
 
     const innerObj = {}
 
-    if (!innerObj["Rotation"]) {
-        innerObj["Rotation"] = []
-    }
-
-    if (!innerObj["Rotation"].includes(value.Rotation)) {
-        innerObj["Rotation"].push(value.Rotation)
-    }
-    innerObj["Value"] = resolveKey(value.ValueString)
     innerObj["LeaderboardDefinitionId"] = lbDefinitionId
     innerObj["DisplayName"] = resolveKey(value.DisplayName)
+    innerObj["Value"] = resolveKey(value.ValueString)
+    innerObj["CharacterLeaderboard"] = value.CharacterLeaderboard
+    innerObj["GroupLeaderboard"] = value.GroupLeaderboard
+    innerObj["CompanyLeaderboard"] = value.CompanyLeaderboard
+    innerObj["FactionLeaderboard"] = value.FactionLeaderboard
 
     if (!innerObj["EntitlementRewards"] && value.EntitlementRewards) {
         innerObj["EntitlementRewards"] = value.EntitlementRewards
@@ -63,6 +60,21 @@ for (const value of leaderboardJson) {
     if (!innerObj["Rewards"] && value.Rewards) {
         innerObj["Rewards"] = value.Rewards
     }
+    if (!innerObj["CategoryDescription"] && value.CategoryDescription) {
+        innerObj["CategoryDescription"] = resolveKey(value.CategoryDescription)
+    }
+    if (!innerObj["CategoryAdditionalHeader"] && value.CategoryAdditionalHeader) {
+        innerObj["CategoryAdditionalHeader"] = resolveKey(value.CategoryAdditionalHeader)
+    }
+
+    if (!innerObj["Rotation"]) {
+        innerObj["Rotation"] = []
+    }
+    if (!innerObj["Rotation"].includes(value.Rotation)) {
+        innerObj["Rotation"].push(value.Rotation)
+    }
+
+
 
     if (obj[value.FirstLevelCategory][resolveKey(value.Category)][resolveKey(value.SecondLevelCategory)].length === 0) {
         obj[value.FirstLevelCategory][resolveKey(value.Category)][resolveKey(value.SecondLevelCategory)].push(innerObj)
@@ -95,6 +107,12 @@ export type LeaderboardType = typeof leaderboardMap & {
                 DisplayName: string;
                 EntitlementRewards?: string;
                 Rewards?: string;
+                CategoryDescription?: string;
+                CategoryAdditionalHeader?: string;
+                CharacterLeaderboard?: boolean;
+                GroupLeaderboard?: boolean;
+                CompanyLeaderboard?: boolean;
+                FactionLeaderboard?: boolean;
             }[];
         };
     };
