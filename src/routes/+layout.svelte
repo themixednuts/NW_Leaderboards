@@ -200,18 +200,44 @@
                 <div class="dropdown dropdown-end">
                     <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
                     <!-- svelte-ignore a11y-label-has-associated-control -->
-                    <label tabindex="0" class="btn m-1"
-                        >{leaderboardId
-                            ? leaderboardData[firstLevelCategory][category][
-                                  subcategory
-                              ].find((item) => {
-                                  return (
-                                      item.LeaderboardDefinitionId ===
-                                      leaderboardId
-                                  );
-                              })?.DisplayName
-                            : "Leaderboards"}</label
-                    >
+
+                    <label tabindex="0" class="btn m-1">
+                        <div class="flex flex-col">
+                            {#if leaderboardId}
+                                <div class="sect">
+                                    {leaderboardData[firstLevelCategory][
+                                        category
+                                    ][subcategory].find((item) => {
+                                        return (
+                                            item.LeaderboardDefinitionId ===
+                                            leaderboardId
+                                        );
+                                    })?.CharacterLeaderboard
+                                        ? "Character"
+                                        : leaderboardData[firstLevelCategory][
+                                              category
+                                          ][subcategory].find((item) => {
+                                              return (
+                                                  item.LeaderboardDefinitionId ===
+                                                  leaderboardId
+                                              );
+                                          })?.CompanyLeaderboard
+                                        ? "Company"
+                                        : ""}
+                                </div>
+                            {/if}
+                            {leaderboardId
+                                ? leaderboardData[firstLevelCategory][category][
+                                      subcategory
+                                  ].find((item) => {
+                                      return (
+                                          item.LeaderboardDefinitionId ===
+                                          leaderboardId
+                                      );
+                                  })?.DisplayName
+                                : "Leaderboards"}
+                        </div>
+                    </label>
                     <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
                     <ul
                         tabindex="0"
@@ -278,5 +304,8 @@
 <style>
     .min-h-56 {
         min-height: 14rem;
+    }
+    .sect {
+        font-size: 0.55rem;
     }
 </style>
