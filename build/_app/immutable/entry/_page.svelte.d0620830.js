@@ -1,1 +1,0 @@
-import{S as t,i as e,s as a,o as n}from"../chunks/index.edce1928.js";import{g as r}from"../chunks/navigation.4feda52e.js";function i(o){return n(()=>{r("/leaderboards")}),[]}class f extends t{constructor(s){super(),e(this,s,i,null,a,{})}}export{f as default};
