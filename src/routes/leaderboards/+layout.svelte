@@ -22,15 +22,15 @@
 
     const bannerMap: BannerMap = {
         "Mutated Expeditions":
-            "./lyshineui/images/leaderboards/leaderboard_cat_bg_expeditions.png",
+            "/NW_Leaderboards/lyshineui/images/leaderboards/leaderboard_cat_bg_expeditions.png",
         "Faction War":
-            "./lyshineui/images/leaderboards/leaderboard_cat_bg_faction_convenant.png",
+            "/NW_Leaderboards/lyshineui/images/leaderboards/leaderboard_cat_bg_faction_convenant.png",
         "Vs. Environment":
-            "./lyshineui/images/leaderboards/leaderboard_cat_bg_environment.png",
+            "/NW_Leaderboards/lyshineui/images/leaderboards/leaderboard_cat_bg_environment.png",
         "Vs. Players":
-            "./lyshineui/images/leaderboards/leaderboard_cat_bg_player.png",
+            "/NW_Leaderboards/lyshineui/images/leaderboards/leaderboard_cat_bg_player.png",
         "Trade Skills":
-            "./lyshineui/images/leaderboards/leaderboard_cat_bg_trade.png",
+            "/NW_Leaderboards/lyshineui/images/leaderboards/leaderboard_cat_bg_trade.png",
     };
 
     function updateSearchParams(param: string, id: string) {
