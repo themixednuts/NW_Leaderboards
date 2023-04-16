@@ -2,10 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
-.no-scrollbar{
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+.no-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
 }
+
 .no-scrollbar::-webkit-scrollbar {
-    display: none;  /* Chrome, Safari, Opera*/
+    display: none;
+    /* Chrome, Safari, Opera*/
+}
+
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+    @apply bg-base-300;
+    width: 0.2rem;
+}
+
+*::-webkit-scrollbar-track {
+    @apply bg-base-300;
+}
+
+*::-webkit-scrollbar-thumb {
+    @apply bg-accent;
 }

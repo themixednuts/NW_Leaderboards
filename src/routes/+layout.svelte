@@ -106,8 +106,8 @@
     class=" container flex flex-col mx-auto gap-4 h-screen overflow-y-hidden no-scrollbar"
 >
     <div class="navbar bg-base-100 sticky top-0 z-50 justify-between">
-        <a href="./leaderboards" class="btn btn-ghost normal-case text-xl">
-            New World Leaderboards
+        <a href="./leaderboards" class="btn btn-ghost capitalize text-xl">
+            new world leaderboards
         </a>
         <div class="dropdown dropdown-end">
             <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
@@ -264,7 +264,7 @@
                 </div>
             {/if}
             {#if firstLevelCategory && category && subcategory && leaderboards && leaderboards.length > 1}
-                <div class="dropdown dropdown-end relative">
+                <div class="dropdown dropdown-end">
                     <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
                     <!-- svelte-ignore a11y-label-has-associated-control -->
 
@@ -300,7 +300,7 @@
                     <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
                     <ul
                         tabindex="0"
-                        class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 dropdown-end overflow-auto no-scrollbar min-h-24 flex-nowrap"
+                        class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 dropdown-end overflow-y-auto overflow-x-hidden min-h-24 flex-nowrap max-h-[35vh] small-scrollbar"
                     >
                         {#each Object.values(leaderboards) as categoryKeys}
                             <li>

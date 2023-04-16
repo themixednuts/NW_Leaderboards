@@ -27,6 +27,25 @@
         pageArrayIndex[i] = i;
     }
 
+    const ranks = calculateRanks(table);
+
+    function calculateRanks(data: LeaderboardAPIBoardItem[]) {
+        let rank = 1;
+        let currentRank = 2;
+        let ranks = [];
+
+        for (let i = 0; i < data.length; i++) {
+            if (i !== 0 && data[i - 1].value !== data[i].value) {
+                rank = currentRank;
+            }
+
+            ranks.push(rank);
+            currentRank++;
+        }
+
+        return ranks;
+    }
+
     function handleClickEvent(e: Event) {
         const target = e.target as HTMLButtonElement;
         currentPage = parseInt(target.innerText);
@@ -115,7 +134,7 @@
         {#each pageArrayIndex as i}
             {#if table[i]}
                 <tr>
-                    <td>{i + 1}</td>
+                    <td>{ranks[i]}</td>
                     <td
                         >{data.Value === "Time"
                             ? secondsToTimeFormat(table[i].value)
