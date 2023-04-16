@@ -1,5 +1,5 @@
 <script lang="ts">
-    export let table: LeaderboardAPIItem[];
+    export let table: LeaderboardAPIBoardItem[];
     import { page } from "$app/stores";
     import { leaderboardMap } from "./leaderboardmap";
     import type { LeaderboardType } from "./leaderboardmap";
@@ -75,7 +75,7 @@
 </script>
 
 <div
-    class="flex justify-center capitalize sticky top-16 z-50 bg-base-300 py-4 w-full"
+    class="flex justify-center capitalize sticky top-10 z-50 bg-base-300 py-4 w-full"
 >
     {!isNaN(Number(data.DisplayName))
         ? `${category}, ${data.DisplayName}`

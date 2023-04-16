@@ -7,7 +7,7 @@
         LeaderboardType,
     } from "$lib/leaderboardmap.js";
     import { leaderboardMap } from "$lib/leaderboardmap.js";
-    import { base, assets } from "$app/paths";
+    import { assets } from "$app/paths";
 
     const leaderboardData: LeaderboardType = leaderboardMap;
 
@@ -83,6 +83,17 @@
         searchParams.set(param, id);
         goto(`${$page.url.pathname}?${searchParams}`);
     }
+
+    async function getUniqueUserData() {
+        const response = await fetch(`https://lb.jakel.rocks/users`);
+
+        if (response.status !== 200) {
+            throw new Error("Unique users not found");
+        }
+        const data: LeaderboardAPIUserResponse = await response.json();
+
+        return data;
+    }
 </script>
 
 <div
@@ -95,17 +106,17 @@
     </div>
 
     <div
-        class="flex flex-col grow gap-2 bg-base-300 min-w-fit px-4 h-full overflow-y-auto rounded-box no-scrollbar"
+        class="flex flex-col align-middle grow bg-base-300 min-w-fit px-4 h-full overflow-y-auto rounded-box no-scrollbar"
     >
         <div
-            class="flex justify-center w-full place-self-stretch h-56 min-h-56 mt-4 border-2 p-2 border-base-100 rounded-box"
+            class="flex place-content-center h-56 w-full place-self-stretch mt-4 border-2 p-2 border-base-100 rounded-box"
         >
             <img
                 src={`${assets}${
                     bannerMap[firstLevelCategory || "Mutated Expeditions"]
                 }`}
                 alt=""
-                class="object-cover border-2 border-base-100 min-h-full rounded-box"
+                class="object-cover object-top border-2 border-base-100 rounded-box"
             />
         </div>
         <div
@@ -127,10 +138,15 @@
                     {#each Object.keys(leaderboardData) as categoryKeys}
                         <li>
                             <div
-                                class={firstLevelCategory === categoryKeys
-                                    ? "active"
-                                    : ""}
-                                on:pointerdown={() =>
+                                class=" {firstLevelCategory === categoryKeys
+                                    ? 'active'
+                                    : ''}"
+                                on:click={() =>
+                                    updateSearchParams(
+                                        "firstlevelcategory",
+                                        categoryKeys
+                                    )}
+                                on:keypress={() =>
                                     updateSearchParams(
                                         "firstlevelcategory",
                                         categoryKeys
@@ -160,7 +176,12 @@
                                     class={category === categoryKeys
                                         ? "active"
                                         : ""}
-                                    on:pointerdown={() =>
+                                    on:click={() =>
+                                        updateSearchParams(
+                                            "category",
+                                            categoryKeys
+                                        )}
+                                    on:keypress={() =>
                                         updateSearchParams(
                                             "category",
                                             categoryKeys
@@ -194,7 +215,12 @@
                                     class={subcategory === categoryKeys
                                         ? "active"
                                         : ""}
-                                    on:pointerdown={() =>
+                                    on:click={() =>
+                                        updateSearchParams(
+                                            "subcategory",
+                                            categoryKeys
+                                        )}
+                                    on:keypress={() =>
                                         updateSearchParams(
                                             "subcategory",
                                             categoryKeys
@@ -253,7 +279,12 @@
                                     categoryKeys.LeaderboardDefinitionId
                                         ? "active"
                                         : ""}
-                                    on:pointerdown={() =>
+                                    on:click={() =>
+                                        updateSearchParams(
+                                            "leaderboardid",
+                                            categoryKeys.LeaderboardDefinitionId
+                                        )}
+                                    on:keypress={() =>
                                         updateSearchParams(
                                             "leaderboardid",
                                             categoryKeys.LeaderboardDefinitionId
@@ -301,14 +332,25 @@
             </div>
         {/if}
     </div>
-    <div class="footer">Footer</div>
+    {#await getUniqueUserData()}
+        <div class="footer">
+            <button class="btn btn-xs loading">Loading</button>
+        </div>
+    {:then uniqueUsers}
+        <div class="stats btn btn-sm shadow h-fit mb-2">
+            <div class="stat place-items-center">
+                <div class="stat-title">Unique Players</div>
+                <div class="stat-value text-secondary">
+                    {uniqueUsers.data[0].count}
+                </div>
+                <!-- <div class="stat-desc text-secondary">↗︎ 40 (2%)</div> -->
+            </div>
+        </div>
+    {/await}
 </div>
 
 <style>
     .min-h-56 {
         min-height: 14rem;
-    }
-    .sect {
-        font-size: 0.55rem;
     }
 </style>
