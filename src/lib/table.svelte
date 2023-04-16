@@ -31,17 +31,17 @@
 
     function calculateRanks(data: LeaderboardAPIBoardItem[]) {
         let rank = 1;
-        let currentRank = 2;
+        let currentRank = 1;
         let ranks = [];
 
         for (let i = 0; i < data.length; i++) {
             if (i !== 0 && data[i - 1].value !== data[i].value) {
                 rank = currentRank;
             }
-
             ranks.push(rank);
             currentRank++;
         }
+        currentRank--;
 
         return ranks;
     }

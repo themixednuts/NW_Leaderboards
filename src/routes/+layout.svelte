@@ -302,7 +302,7 @@
                         tabindex="0"
                         class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 dropdown-end overflow-y-auto overflow-x-hidden min-h-24 flex-nowrap max-h-[35vh] small-scrollbar"
                     >
-                        {#each Object.values(leaderboards) as categoryKeys}
+                        {#each Object.values(leaderboards) as categoryKeys, i}
                             <li>
                                 <div
                                     class={leaderboardId ===
@@ -325,7 +325,10 @@
                                     </div>
                                     {#if categoryKeys.CharacterLeaderboard || categoryKeys.CompanyLeaderboard}
                                         <div
-                                            class="tooltip tooltip-info px-0"
+                                            class="tooltip tooltip-info px-0 {i ==
+                                            0
+                                                ? 'tooltip-bottom'
+                                                : ''}"
                                             data-tip={categoryKeys.CharacterLeaderboard
                                                 ? "Character"
                                                 : categoryKeys.CompanyLeaderboard
