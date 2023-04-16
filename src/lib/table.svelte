@@ -102,7 +102,7 @@
     {/if}
 </div>
 <table
-    class="table table-zebra w-full table-compact md:table-normal table-fixed"
+    class="table table-zebra w-full table-compact md:table-normal table-fixed overflow-clip"
 >
     <thead>
         <tr>

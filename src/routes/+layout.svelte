@@ -85,7 +85,9 @@
     }
 </script>
 
-<div class="container flex flex-col mx-auto gap-4 h-screen overflow-hidden">
+<div
+    class=" container flex flex-col mx-auto gap-4 h-screen overflow-y-hidden no-scrollbar"
+>
     <div class="navbar bg-base-100 sticky top-0 z-50">
         <a href="./leaderboards" class="btn btn-ghost normal-case text-xl">
             New World Leaderboards
@@ -107,12 +109,12 @@
             />
         </div>
         <div
-            class="flex place-content-center gap-4 place-items-center mt-4 sticky top-0 z-50 bg-base-300 py-2"
+            class="flex place-content-center gap-0 place-items-center mt-4 sticky top-0 z-50 bg-base-300 py-2"
         >
             <div class="dropdown">
                 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
                 <!-- svelte-ignore a11y-label-has-associated-control -->
-                <label tabindex="0" class="btn m-1"
+                <label tabindex="0" class="btn btn-xs md:btn-sm m-1"
                     >{firstLevelCategory
                         ? firstLevelCategory
                         : "Main Section"}</label
@@ -144,7 +146,7 @@
                 <div class="dropdown">
                     <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
                     <!-- svelte-ignore a11y-label-has-associated-control -->
-                    <label tabindex="0" class="btn m-1"
+                    <label tabindex="0" class="btn btn-xs md:btn-sm m-1"
                         >{category ? category : "Category"}</label
                     >
                     <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
@@ -176,7 +178,7 @@
                 <div class="dropdown dropdown-end">
                     <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
                     <!-- svelte-ignore a11y-label-has-associated-control -->
-                    <label tabindex="0" class="btn"
+                    <label tabindex="0" class="btn btn-xs md:btn-sm"
                         >{subcategory ? subcategory : "Sub Category"}</label
                     >
                     <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
@@ -210,7 +212,7 @@
                     <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
                     <!-- svelte-ignore a11y-label-has-associated-control -->
 
-                    <label tabindex="0" class="btn m-1">
+                    <label tabindex="0" class="btn btn-xs md:btn-sm m-1">
                         <div class="flex flex-col">
                             {#if leaderboardId && leaderboards.find((item) => item.LeaderboardDefinitionId === leaderboardId)?.DisplayName === subcategory}
                                 <div class="">
