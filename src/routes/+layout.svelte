@@ -16,7 +16,6 @@
         "(prefers-color-scheme: dark)"
     ).matches;
 
-    console.log(prefersDark);
     $: firstLevelCategory = $page.url.searchParams.get("firstlevelcategory");
     $: category = $page.url.searchParams.get("category");
     $: subcategory = $page.url.searchParams.get("subcategory");
