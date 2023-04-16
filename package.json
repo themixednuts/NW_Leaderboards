@@ -7,7 +7,7 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"add": "git add .",
-		"push": "git push -u origin gh-pages",
+		"deploy": "git push -u origin gh-pages",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
 	},

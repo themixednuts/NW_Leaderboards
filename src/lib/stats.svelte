@@ -7,7 +7,7 @@
     <div class="stat-title text-sm md:text-base">{title}</div>
     <div class="stat-value text-secondary text-base md:text-4xl">
         {#if value}
-            {value}
+            {Number(value).toLocaleString()}
         {:else}
             <span>No Data</span>
         {/if}
