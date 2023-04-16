@@ -399,7 +399,7 @@
                                     </div>
                                     {#if categoryKeys.CharacterLeaderboard || categoryKeys.CompanyLeaderboard}
                                         <div
-                                            class="tooltip px-0"
+                                            class="tooltip tooltip-info px-0"
                                             data-tip={categoryKeys.CharacterLeaderboard
                                                 ? "Character"
                                                 : categoryKeys.CompanyLeaderboard

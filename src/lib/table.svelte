@@ -82,7 +82,7 @@
         : data.DisplayName}
     {#if data.CategoryAdditionalHeader}
         <div
-            class="tooltip"
+            class="tooltip tooltip-info"
             data-tip={data.CategoryAdditionalHeader.replace(/<[^>]*>/g, "")}
         >
             <!-- .replace(/(\<.*\>)/g, "") -->
