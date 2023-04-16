@@ -7,7 +7,7 @@
         LeaderboardType,
     } from "$lib/leaderboardmap.js";
     import { leaderboardMap } from "$lib/leaderboardmap.js";
-    import { assets } from "$app/paths";
+    import { base, assets } from "$app/paths";
 
     const leaderboardData: LeaderboardType = leaderboardMap;
 
@@ -100,7 +100,7 @@
     class=" container flex flex-col mx-auto gap-4 h-screen overflow-y-hidden no-scrollbar"
 >
     <div class="navbar bg-base-100 sticky top-0 z-50">
-        <a href="./leaderboards" class="btn btn-ghost normal-case text-xl">
+        <a href="./" class="btn btn-ghost normal-case text-xl">
             New World Leaderboards
         </a>
     </div>
@@ -348,9 +348,3 @@
         </div>
     {/await}
 </div>
-
-<style>
-    .min-h-56 {
-        min-height: 14rem;
-    }
-</style>
