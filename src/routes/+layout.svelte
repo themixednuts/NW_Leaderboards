@@ -362,7 +362,9 @@
             </div>
         {/if}
     </div>
-    <div class="flex place-content-center">
+    <div
+        class="flex place-content-center max-h-24 md:max-h-fit overflow-auto no-scrollbar"
+    >
         <div
             class="stats stats-vertical md:stats-horizontal shadow h-fit mb-2 overflow-auto no-scrollbar"
         >

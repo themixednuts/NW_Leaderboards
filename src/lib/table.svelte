@@ -119,7 +119,7 @@
                     <td
                         >{data.Value === "Time"
                             ? secondsToTimeFormat(table[i].value)
-                            : table[i].value}</td
+                            : table[i].value.toLocaleString()}</td
                     >
                     <td>{table[i].server}</td>
                 </tr>
