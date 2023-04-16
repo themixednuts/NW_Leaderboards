@@ -110,7 +110,7 @@
     class=" container flex flex-col mx-auto gap-4 h-screen overflow-y-hidden no-scrollbar"
 >
     <div class="navbar bg-base-100 sticky top-0 z-50 justify-between">
-        <a href={base} class="btn btn-ghost normal-case text-xl">
+        <a href="./leaderboards" class="btn btn-ghost normal-case text-xl">
             New World Leaderboards
         </a>
         <div class="dropdown dropdown-end">
