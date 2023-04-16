@@ -110,7 +110,7 @@
     class=" container flex flex-col mx-auto gap-4 h-screen overflow-y-hidden no-scrollbar"
 >
     <div class="navbar bg-base-100 sticky top-0 z-50 justify-between">
-        <a href="./" class="btn btn-ghost normal-case text-xl">
+        <a href={base} class="btn btn-ghost normal-case text-xl">
             New World Leaderboards
         </a>
         <div class="dropdown dropdown-end">
@@ -144,10 +144,31 @@
                     </button>
                     <button
                         class="btn outline-base-content"
+                        data-set-theme="pastel"
+                        data-theme="pastel"
+                    >
+                        Pastel
+                    </button>
+                    <button
+                        class="btn outline-base-content"
                         data-set-theme="bumblebee"
                         data-theme="bumblebee"
                     >
                         Bumblebee
+                    </button>
+                    <button
+                        class="btn outline-base-content"
+                        data-set-theme="lofi"
+                        data-theme="lofi"
+                    >
+                        Lofi
+                    </button>
+                    <button
+                        class="btn outline-base-content"
+                        data-set-theme="emerald"
+                        data-theme="emerald"
+                    >
+                        Emerald
                     </button>
                     <button
                         class="btn outline-base-content"
@@ -200,7 +221,7 @@
                     bannerMap[firstLevelCategory || "Mutated Expeditions"]
                 }`}
                 alt=""
-                class="object-cover object-top border-2 border-base-100 rounded-box"
+                class="object-cover object-top border-2 border-base-100 rounded-box bg-black"
             />
         </div>
         <div
