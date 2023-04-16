@@ -3,7 +3,7 @@
     export let value: string;
 </script>
 
-<div class="stat place-items-center shrink">
+<div class="stat place-items-center">
     <div class="stat-title text-sm md:text-base">{title}</div>
     <div class="stat-value text-secondary text-base md:text-4xl">
         {#if value}
