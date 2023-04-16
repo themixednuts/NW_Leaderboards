@@ -8,9 +8,15 @@
     } from "$lib/leaderboardmap.js";
     import { leaderboardMap } from "$lib/leaderboardmap.js";
     import { base, assets } from "$app/paths";
+    import { onMount } from "svelte";
+    import { themeChange } from "theme-change";
 
     const leaderboardData: LeaderboardType = leaderboardMap;
+    const prefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+    ).matches;
 
+    console.log(prefersDark);
     $: firstLevelCategory = $page.url.searchParams.get("firstlevelcategory");
     $: category = $page.url.searchParams.get("category");
     $: subcategory = $page.url.searchParams.get("subcategory");
@@ -94,19 +100,97 @@
 
         return data;
     }
+
+    onMount(() => {
+        themeChange(false);
+    });
 </script>
 
 <div
     class=" container flex flex-col mx-auto gap-4 h-screen overflow-y-hidden no-scrollbar"
 >
-    <div class="navbar bg-base-100 sticky top-0 z-50">
+    <div class="navbar bg-base-100 sticky top-0 z-50 justify-between">
         <a href="./" class="btn btn-ghost normal-case text-xl">
             New World Leaderboards
         </a>
+        <div class="dropdown dropdown-end">
+            <div tabindex="0" class="btn gap-1 btn-ghost">
+                <span>Theme</span>
+            </div>
+            <div
+                class="dropdown-content bg-base-200 text-base-content rounded-t-box rounded-box max-h-96 overflow-y-auto shadow-2xl no-scrollbar justify-between p-4"
+            >
+                <div class="flex flex-col gap-2 min-w-fit w-36">
+                    <button
+                        class="btn outline-base-content"
+                        data-set-theme=""
+                        data-theme={prefersDark ? "dark" : "light"}
+                    >
+                        Default
+                    </button>
+                    <button
+                        class="btn outline-base-content"
+                        data-set-theme="light"
+                        data-theme="light"
+                    >
+                        Light
+                    </button>
+                    <button
+                        class="btn outline-base-content"
+                        data-set-theme="dark"
+                        data-theme="dark"
+                    >
+                        Dark
+                    </button>
+                    <button
+                        class="btn outline-base-content"
+                        data-set-theme="bumblebee"
+                        data-theme="bumblebee"
+                    >
+                        Bumblebee
+                    </button>
+                    <button
+                        class="btn outline-base-content"
+                        data-set-theme="cupcake"
+                        data-theme="cupcake"
+                    >
+                        Cupcake
+                    </button>
+                    <button
+                        class="btn outline-base-content"
+                        data-set-theme="halloween"
+                        data-theme="halloween"
+                    >
+                        Halloween
+                    </button>
+                    <button
+                        class="btn outline-base-content"
+                        data-set-theme="black"
+                        data-theme="black"
+                    >
+                        Black
+                    </button>
+                    <button
+                        class="btn outline-base-content"
+                        data-set-theme="autumn"
+                        data-theme="autumn"
+                    >
+                        Autumn
+                    </button>
+                    <button
+                        class="btn outline-base-content"
+                        data-set-theme="coffee"
+                        data-theme="coffee"
+                    >
+                        Coffee
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div
-        class="flex flex-col align-middle grow bg-base-300 min-w-fit px-4 h-full overflow-y-auto rounded-box no-scrollbar"
+        class="flex flex-col align-middle grow bg-base-300 min-w-fit px-4 h-full overflow-y-auto rounded-box no-scrollbar z-20"
     >
         <div
             class="flex place-content-center h-56 w-full place-self-stretch mt-4 border-2 p-2 border-base-100 rounded-box"
@@ -133,7 +217,7 @@
                 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
                 <ul
                     tabindex="0"
-                    class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+                    class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 overflow-scroll no-scrollbar min-h-24 flex-nowrap"
                 >
                     {#each Object.keys(leaderboardData) as categoryKeys}
                         <li>
@@ -168,7 +252,7 @@
                     <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
                     <ul
                         tabindex="0"
-                        class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 left-1/2 -translate-x-1/2"
+                        class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 left-1/2 -translate-x-1/2 overflow-auto no-scrollbar min-h-24 flex-nowrap"
                     >
                         {#each Object.keys(leaderboardData[firstLevelCategory]) as categoryKeys}
                             <li>
@@ -205,7 +289,7 @@
                     <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
                     <ul
                         tabindex="0"
-                        class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 {subcategory
+                        class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 overflow-auto no-scrollbar min-h-24 flex-nowrap {subcategory
                             ? 'left-1/2 -translate-x-1/2'
                             : 'dropdown-end'}"
                     >
@@ -234,7 +318,7 @@
                 </div>
             {/if}
             {#if firstLevelCategory && category && subcategory && leaderboards && leaderboards.length > 1}
-                <div class="dropdown dropdown-end">
+                <div class="dropdown dropdown-end relative">
                     <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
                     <!-- svelte-ignore a11y-label-has-associated-control -->
 
@@ -270,7 +354,7 @@
                     <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
                     <ul
                         tabindex="0"
-                        class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 dropdown-end"
+                        class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 dropdown-end overflow-auto no-scrollbar min-h-24 flex-nowrap"
                     >
                         {#each Object.values(leaderboards) as categoryKeys}
                             <li>
