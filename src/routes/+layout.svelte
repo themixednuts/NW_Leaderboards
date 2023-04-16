@@ -10,6 +10,14 @@
     import { base, assets } from "$app/paths";
     import { onMount } from "svelte";
     import { themeChange } from "theme-change";
+    import TButton from "$lib/T-Button.svelte";
+    import {
+        getUniqueUserData,
+        getBreachesData,
+        getLegendaryData,
+        formatNumberToSI,
+    } from "../utils";
+    import Stats from "$lib/stats.svelte";
 
     const leaderboardData: LeaderboardType = leaderboardMap;
     const prefersDark = window.matchMedia(
@@ -89,17 +97,6 @@
         goto(`${$page.url.pathname}?${searchParams}`);
     }
 
-    async function getUniqueUserData() {
-        const response = await fetch(`https://lb.jakel.rocks/users`);
-
-        if (response.status !== 200) {
-            throw new Error("Unique users not found");
-        }
-        const data: LeaderboardAPIUserResponse = await response.json();
-
-        return data;
-    }
-
     onMount(() => {
         themeChange(false);
     });
@@ -113,97 +110,26 @@
             New World Leaderboards
         </a>
         <div class="dropdown dropdown-end">
+            <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
             <div tabindex="0" class="btn gap-1 btn-ghost">
                 <span>Theme</span>
             </div>
             <div
-                class="dropdown-content bg-base-200 text-base-content rounded-t-box rounded-box max-h-96 overflow-y-auto shadow-2xl no-scrollbar justify-between p-4"
+                class="dropdown-content bg-base-200 text-base-content rounded-t-box rounded-box max-h-96 overflow-y-auto shadow-2xl no-scrollbar justify-between p-4 pl-2"
             >
                 <div class="flex flex-col gap-2 min-w-fit w-36">
-                    <button
-                        class="btn outline-base-content"
-                        data-set-theme=""
-                        data-theme={prefersDark ? "dark" : "light"}
-                    >
-                        Default
-                    </button>
-                    <button
-                        class="btn outline-base-content"
-                        data-set-theme="light"
-                        data-theme="light"
-                    >
-                        Light
-                    </button>
-                    <button
-                        class="btn outline-base-content"
-                        data-set-theme="dark"
-                        data-theme="dark"
-                    >
-                        Dark
-                    </button>
-                    <button
-                        class="btn outline-base-content"
-                        data-set-theme="pastel"
-                        data-theme="pastel"
-                    >
-                        Pastel
-                    </button>
-                    <button
-                        class="btn outline-base-content"
-                        data-set-theme="bumblebee"
-                        data-theme="bumblebee"
-                    >
-                        Bumblebee
-                    </button>
-                    <button
-                        class="btn outline-base-content"
-                        data-set-theme="lofi"
-                        data-theme="lofi"
-                    >
-                        Lofi
-                    </button>
-                    <button
-                        class="btn outline-base-content"
-                        data-set-theme="emerald"
-                        data-theme="emerald"
-                    >
-                        Emerald
-                    </button>
-                    <button
-                        class="btn outline-base-content"
-                        data-set-theme="cupcake"
-                        data-theme="cupcake"
-                    >
-                        Cupcake
-                    </button>
-                    <button
-                        class="btn outline-base-content"
-                        data-set-theme="halloween"
-                        data-theme="halloween"
-                    >
-                        Halloween
-                    </button>
-                    <button
-                        class="btn outline-base-content"
-                        data-set-theme="black"
-                        data-theme="black"
-                    >
-                        Black
-                    </button>
-                    <button
-                        class="btn outline-base-content"
-                        data-set-theme="autumn"
-                        data-theme="autumn"
-                    >
-                        Autumn
-                    </button>
-                    <button
-                        class="btn outline-base-content"
-                        data-set-theme="coffee"
-                        data-theme="coffee"
-                    >
-                        Coffee
-                    </button>
+                    <TButton theme="" />
+                    <TButton theme="light" />
+                    <TButton theme="dark" />
+                    <TButton theme="pastel" />
+                    <TButton theme="bumblebee" />
+                    <TButton theme="lofi" />
+                    <TButton theme="emerald" />
+                    <TButton theme="cupcake" />
+                    <TButton theme="halloween" />
+                    <TButton theme="black" />
+                    <TButton theme="autumn" />
+                    <TButton theme="coffee" />
                 </div>
             </div>
         </div>
@@ -436,19 +362,40 @@
             </div>
         {/if}
     </div>
-    {#await getUniqueUserData()}
-        <div class="footer">
-            <button class="btn btn-xs loading">Loading</button>
-        </div>
-    {:then uniqueUsers}
-        <div class="stats btn btn-sm shadow h-fit mb-2">
-            <div class="stat place-items-center">
-                <div class="stat-title">Unique Players</div>
-                <div class="stat-value text-secondary">
-                    {uniqueUsers.data[0].count}
+    <div class="flex place-content-center">
+        <div
+            class="stats stats-vertical md:stats-horizontal shadow h-fit mb-2 overflow-auto no-scrollbar"
+        >
+            {#await getUniqueUserData()}
+                <div class="stat place-items-center">
+                    <button class="btn btn-xs loading">Loading</button>
                 </div>
-                <!-- <div class="stat-desc text-secondary">↗︎ 40 (2%)</div> -->
-            </div>
+            {:then uniqueUsers}
+                <Stats
+                    title="Unique Characters"
+                    value={uniqueUsers.data[0].count}
+                />
+            {/await}
+            {#await getLegendaryData()}
+                <div class="stat place-items-center">
+                    <button class="btn btn-xs loading">Loading</button>
+                </div>
+            {:then legendaryData}
+                <Stats
+                    title="Max Legendaries Crafted"
+                    value={legendaryData.data[0].count}
+                />
+            {/await}
+            {#await getBreachesData()}
+                <div class="stat place-items-center">
+                    <button class="btn btn-xs loading">Loading</button>
+                </div>
+            {:then breachesData}
+                <Stats
+                    title="Corrupted Breaches Done"
+                    value={breachesData.data[0].count}
+                />
+            {/await}
         </div>
-    {/await}
+    </div>
 </div>
