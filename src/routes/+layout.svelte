@@ -387,7 +387,7 @@
                 </div>
             {:then legendaryData}
                 <Stats
-                    title="Max Legendaries Crafted"
+                    title="Legendaries Crafted"
                     value={legendaryData.data[0].count}
                 />
             {/await}
