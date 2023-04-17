@@ -106,9 +106,7 @@
     class=" container flex flex-col mx-auto gap-4 h-screen overflow-y-hidden no-scrollbar"
 >
     <div class="navbar bg-base-100 sticky top-0 z-50 justify-between">
-        <a href="./" class="btn btn-ghost capitalize text-xl">
-            new world leaderboards
-        </a>
+        <a href="./" class="btn btn-ghost capitalize text-xl"> NW Stats </a>
         <div class="flex">
             <a
                 href="https://discord.gg/UQ3Q4SBqND"
@@ -141,7 +139,7 @@
                     ></svg
                 >
             </a>
-            <div class="divider divider-horizontal" />
+            <div class="divider divider-horizontal px-0 mx-0" />
             <div class="dropdown dropdown-end">
                 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
                 <div tabindex="0" class="btn gap-1 btn-ghost">
@@ -403,7 +401,7 @@
         class="flex place-content-center max-h-24 h-32 md:max-h-fit overflow-auto no-scrollbar"
     >
         <div
-            class="stats stats-vertical md:stats-horizontal shadow h-fit mb-2 overflow-auto no-scrollbar"
+            class="stats stats-vertical md:stats-horizontal shadow h-fit mb-2 overflow-auto no-scrollbar grow"
         >
             {#await getUniqueUserData()}
                 <div class="stat place-items-center">
