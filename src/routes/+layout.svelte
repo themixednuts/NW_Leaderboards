@@ -105,14 +105,15 @@
     class=" container flex flex-col mx-auto gap-4 h-screen overflow-y-hidden no-scrollbar"
 >
     <div class="navbar bg-base-100 sticky top-0 z-50 justify-between">
-        <a href="./leaderboards" class="btn btn-ghost capitalize text-xl">
+        <a href="./" class="btn btn-ghost capitalize text-xl">
             new world leaderboards
         </a>
-        <div class="flex gap-2">
+        <div class="flex">
             <a
                 href="https://discord.gg/UQ3Q4SBqND"
                 target="_blank"
                 rel="noopener noreferrer"
+                class="btn btn-ghost"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -139,6 +140,7 @@
                     ></svg
                 >
             </a>
+            <div class="divider divider-horizontal" />
             <div class="dropdown dropdown-end">
                 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
                 <div tabindex="0" class="btn gap-1 btn-ghost">
