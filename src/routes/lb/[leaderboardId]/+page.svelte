@@ -8,9 +8,9 @@
 
     afterNavigate(({ from }) => {
         if (from) {
-            const previousPage = from.params?.leaderboardId;
+            const previousPage = from.params?.season;
             if (previousPage) {
-                goto(`/`);
+                // goto(`/`);
             }
         }
     });
