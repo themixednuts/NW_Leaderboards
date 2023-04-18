@@ -1,6 +1,7 @@
 <script lang="ts">
     export let table: LeaderboardAPIBoardItem[];
     export let id: string;
+    export let season: string;
 
     import { leaderboardMap, leaderboardIdMap } from "./leaderboardmap";
     import type { LeaderboardType, LeaderboardIdMap } from "./leaderboardmap";
@@ -259,7 +260,8 @@
         {/if}
     </div>
     <div class="flex justify-center text-sm md:text-base">
-        Date Pulled: {getDateAndTime(pullDate)}
+        {season.replace("s", "Season: ").replace("q", "Quarter: ")} - Date Pulled:
+        {getDateAndTime(pullDate)}
     </div>
 {:else}
     <div>No Table</div>

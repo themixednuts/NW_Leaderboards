@@ -77,6 +77,12 @@
             });
         }
     }
+
+    function removeFocus() {
+        if (document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+        }
+    }
 </script>
 
 <div
@@ -161,7 +167,7 @@
                                 if (e.button !== 0) {
                                     return;
                                 }
-                                e.target.blur();
+                                removeFocus();
                                 clearHierarchy("firstlevelcategory");
                                 $categories.firstlevelcategory = categoryKeys;
                             }}
@@ -202,7 +208,7 @@
                                         if (e.button !== 0) {
                                             return;
                                         }
-                                        e.target.blur();
+                                        removeFocus();
                                         clearHierarchy("category");
                                         $categories.category = categoryKeys;
                                     }}
@@ -247,7 +253,7 @@
                                         if (e.button !== 0) {
                                             return;
                                         }
-                                        e.target.blur();
+                                        removeFocus();
                                         clearHierarchy("subcategory");
                                         $categories.subcategory = categoryKeys;
                                         if (
@@ -387,7 +393,13 @@
                     </ul>
                 </div>
                 <div
-                    class="w-[100%] h-[5%] bottom-0 absolute grow -z-10 bg-accent"
+                    class="w-[100%] h-[5%] bottom-0 absolute grow -z-10 {leaderboardIdMap[
+                        leaderboardId
+                    ].Category === $categories.category &&
+                    leaderboardIdMap[leaderboardId].SecondLevelCategory ===
+                        $categories.subcategory
+                        ? 'bg-accent'
+                        : ''} "
                 />
             </div>
         {/if}

@@ -21,7 +21,7 @@
 </script>
 
 {#if table && table.length > 0}
-    <Table {table} {id} />
+    <Table {table} {id} season={$page.params.season} />
 {:else}
     <div class="text-center">
         <h1 class="text-3xl">No data available</h1>
