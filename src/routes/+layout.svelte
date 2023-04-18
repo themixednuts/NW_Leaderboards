@@ -126,7 +126,7 @@
                 </div>
             {:then breachesData}
                 <Stats
-                    title="Corrupted Breaches Done"
+                    title="Corrupted Breach Participants"
                     value={breachesData.data[0].count}
                 />
             {/await}

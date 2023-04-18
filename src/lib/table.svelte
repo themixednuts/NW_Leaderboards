@@ -95,7 +95,7 @@
 
 {#if data}
     <div
-        class="flex justify-center capitalize sticky top-10 bg-base-300 py-4 w-full"
+        class="flex justify-center capitalize sticky top-10 bg-base-300 py-4 w-full z-10"
     >
         {!isNaN(Number(data.DisplayName))
             ? `${category}, ${data.DisplayName}`
@@ -124,7 +124,7 @@
     <table
         class="table table-zebra w-full table-compact md:table-normal table-fixed overflow-clip"
     >
-        <thead>
+        <thead class="sticky top-20 z-10">
             <tr>
                 <th scope="col">Rank</th>
                 <th scope="col">{data.Value}</th>

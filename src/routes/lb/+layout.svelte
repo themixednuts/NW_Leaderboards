@@ -46,6 +46,9 @@
         [key: string]: string;
     };
 
+    $: console.log(leaderboardId);
+    $: console.log(leaderboards);
+
     const bannerMap: BannerMap & {
         "Mutated Expeditions": "/lyshineui/images/leaderboards/leaderboard_cat_bg_expeditions.png";
         "Faction War": "/lyshineui/images/leaderboards/leaderboard_cat_bg_faction_convenant.png";
@@ -117,7 +120,8 @@
                             categoryKeys
                                 ? 'active'
                                 : ''}"
-                            on:click={() => {
+                            on:click={(e) => {
+                                e.target.blur();
                                 clearHierarchy("firstlevelcategory");
                                 $categories.firstlevelcategory = categoryKeys;
                             }}
@@ -146,7 +150,8 @@
                                 class={$categories.category === categoryKeys
                                     ? "active"
                                     : ""}
-                                on:click={() => {
+                                on:click={(e) => {
+                                    e.target.blur();
                                     clearHierarchy("category");
                                     $categories.category = categoryKeys;
                                 }}
@@ -179,7 +184,8 @@
                                 class={$categories.subcategory === categoryKeys
                                     ? "active"
                                     : ""}
-                                on:click={() => {
+                                on:click={(e) => {
+                                    e.target.blur();
                                     clearHierarchy("subcategory");
                                     $categories.subcategory = categoryKeys;
                                     if (
@@ -233,11 +239,19 @@
                                     : ""}
                             </div>
                         {:else if leaderboardId && leaderboards.find((item) => item.LeaderboardDefinitionId === leaderboardId)?.DisplayName !== $categories.subcategory}
-                            {leaderboards.find(
-                                (item) =>
-                                    item.LeaderboardDefinitionId ===
-                                    leaderboardId
-                            )?.DisplayName}
+                            {#if leaderboards.find((item) => item.LeaderboardDefinitionId === leaderboardId)}
+                                {leaderboards.find(
+                                    (item) =>
+                                        item.LeaderboardDefinitionId ===
+                                        leaderboardId
+                                )?.DisplayName}
+                            {:else}
+                                {leaderboardData[
+                                    $categories.firstlevelcategory
+                                ][$categories.category][
+                                    $categories.subcategory
+                                ][0].DisplayName}
+                            {/if}
                         {:else}
                             Leaderboards
                         {/if}
