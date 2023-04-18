@@ -1,9 +1,12 @@
 <script lang="ts">
     export let theme: string;
 
-    const prefersDark = window.matchMedia(
-        "(prefers-color-scheme: dark)"
-    ).matches;
+    import { browser } from "$app/environment";
+
+    let prefersDark: boolean = true;
+    if (browser) {
+        prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
 </script>
 
 <button
