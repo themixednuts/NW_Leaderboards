@@ -123,7 +123,7 @@
         {/if}
     </div>
     <table
-        class="table table-zebra w-full table-compact md:table-normal table-fixed overflow-clip"
+        class="table table-zebra w-full table-compact md:table-normal table-fixed overflow-clip relative select-none"
     >
         <thead class="sticky top-20 z-10">
             <tr>
@@ -147,6 +147,11 @@
                 {/if}
             {/each}
         </tbody>
+        <div
+            class="flex place-content-center place-items-center absolute top-0 left-0 w-full h-full opacity-10 rotate-45 text-2xl"
+        >
+            <span class="translate-x-1/4 translate-y-1/4">nwstats.info</span>
+        </div>
     </table>
 
     <div class="flex justify-center btn-group place-self-center py-2 my-0">

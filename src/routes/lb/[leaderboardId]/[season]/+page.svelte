@@ -22,4 +22,8 @@
 
 {#if table && table.length > 0}
     <Table {table} {id} />
+{:else}
+    <div class="text-center">
+        <h1 class="text-3xl">No data available</h1>
+    </div>
 {/if}
