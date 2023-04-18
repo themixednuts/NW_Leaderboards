@@ -1,5 +1,46 @@
 import type { LayoutLoad } from './$types';
 
-export const load = (async () => {
-    return {};
+export const load = (async ({ fetch }) => {
+
+    const currentSeason = "s1";
+
+    async function getUniqueUserData() {
+        const response = await fetch(`https://lb.jakel.rocks/users`);
+
+        if (response.status !== 200) {
+            throw new Error("Unique users not found");
+        }
+        const data: LeaderboardAPIUserResponse = await response.json();
+
+        return data;
+    }
+
+    async function getLegendaryData() {
+        const response = await fetch(`https://lb.jakel.rocks/legendaries/${currentSeason}`);
+
+        if (response.status !== 200) {
+            throw new Error("Legendary data not found");
+        }
+        const data: LeaderboardAPILegendaryResponse = await response.json();
+
+        return data;
+    }
+
+    async function getBreachesData() {
+        const response = await fetch(`https://lb.jakel.rocks/breaches/${currentSeason}`);
+
+        if (response.status !== 200) {
+            throw new Error("Breaches data not found");
+        }
+        const data: LeaderboardAPIBreachesResponse = await response.json();
+
+        return data;
+    }
+
+    return {
+        users: await getUniqueUserData(),
+        legendaries: await getLegendaryData(),
+        breaches: await getBreachesData(),
+        currentSeason
+    };
 }) satisfies LayoutLoad;

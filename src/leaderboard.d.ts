@@ -8,7 +8,6 @@ interface LeaderboardAPIBoardItem {
 interface LeaderboardAPIBoardResponse {
     [key: string]: string;
     data: LeaderboardAPIBoardItem[];
-    name: string;
 }
 
 interface LeaderboardAPIUserItem {

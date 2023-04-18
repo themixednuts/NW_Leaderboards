@@ -1,19 +1,17 @@
 <script lang="ts">
     import "../app.css";
-    import { base } from "$app/paths";
-    import { page } from "$app/stores";
-    import { navigating } from "$app/stores";
     import { onMount } from "svelte";
     import { themeChange } from "theme-change";
     import TButton from "$lib/T-Button.svelte";
 
-    import {
-        getUniqueUserData,
-        getBreachesData,
-        getLegendaryData,
-        formatNumberToSI,
-    } from "../utils";
     import Stats from "$lib/stats.svelte";
+    import type { LayoutData } from "./$types";
+
+    export let data: LayoutData;
+
+    const users = data.users;
+    const breaches = data.breaches;
+    const legendaries = data.legendaries;
 
     onMount(() => {
         themeChange(false);
@@ -100,36 +98,17 @@
         <div
             class="stats stats-vertical md:stats-horizontal shadow h-fit mb-2 overflow-auto no-scrollbar grow"
         >
-            {#await getUniqueUserData()}
-                <div class="stat place-items-center">
-                    <button class="btn btn-xs loading">Loading</button>
-                </div>
-            {:then uniqueUsers}
-                <Stats
-                    title="Unique Characters"
-                    value={uniqueUsers.data[0].count}
-                />
-            {/await}
-            {#await getLegendaryData()}
-                <div class="stat place-items-center">
-                    <button class="btn btn-xs loading">Loading</button>
-                </div>
-            {:then legendaryData}
-                <Stats
-                    title="Legendaries Crafted"
-                    value={legendaryData.data[0].count}
-                />
-            {/await}
-            {#await getBreachesData()}
-                <div class="stat place-items-center">
-                    <button class="btn btn-xs loading">Loading</button>
-                </div>
-            {:then breachesData}
-                <Stats
-                    title="Corrupted Breach Participants"
-                    value={breachesData.data[0].count}
-                />
-            {/await}
+            <Stats title="Unique Characters" value={users.data[0].count} />
+
+            <Stats
+                title="Legendaries Crafted"
+                value={legendaries.data[0].count}
+            />
+
+            <Stats
+                title="Corrupted Breach Participants"
+                value={breaches.data[0].count}
+            />
         </div>
     </div>
 </div>

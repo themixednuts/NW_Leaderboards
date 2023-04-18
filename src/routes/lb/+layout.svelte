@@ -2,7 +2,6 @@
     import { assets } from "$app/paths";
     import { page } from "$app/stores";
     import { writable } from "svelte/store";
-    $: console.log($page);
     import { goto } from "$app/navigation";
     import { leaderboardMap, leaderboardIdMap } from "$lib/leaderboardmap";
     import type {
@@ -46,9 +45,6 @@
         [key: string]: string;
     };
 
-    $: console.log(leaderboardId);
-    $: console.log(leaderboards);
-
     const bannerMap: BannerMap & {
         "Mutated Expeditions": "/lyshineui/images/leaderboards/leaderboard_cat_bg_expeditions.png";
         "Faction War": "/lyshineui/images/leaderboards/leaderboard_cat_bg_faction_convenant.png";
@@ -84,10 +80,14 @@
 </script>
 
 <div
-    class="flex flex-col align-middle grow bg-base-300 min-w-fit px-4 h-full overflow-y-auto rounded-box no-scrollbar z-20"
+    class="flex flex-col align-middle grow bg-base-300 min-w-fit px-4 h-full overflow-y-auto rounded-box no-scrollbar z-20 {$categories.firstlevelcategory
+        ? ''
+        : 'xl:place-content-center'}"
 >
     <div
-        class="flex place-content-center h-56 w-full place-self-stretch mt-4 border-2 p-2 border-base-100 rounded-box"
+        class="flex row-span-1 col-span-full {$categories.firstlevelcategory
+            ? 'xl:flex'
+            : 'xl:hidden'} place-content-center h-56 w-full mt-4 border-2 p-2 border-base-100 rounded-box"
     >
         <img
             src={`${assets}${
@@ -100,7 +100,35 @@
         />
     </div>
     <div
-        class="flex place-content-center gap-0 place-items-center mt-4 sticky top-0 z-50 bg-base-300 py-2"
+        class=" place-items-center h-min hidden grid-cols-3 grid-rows-3 row-span-full col-span-full {!$categories.firstlevelcategory
+            ? 'xl:grid'
+            : 'xl:hidden'} place-content-center h-56 w-full mt-4 border-2 p-2 border-base-100 rounded-box"
+    >
+        {#each Object.keys(bannerMap) as banner, key}
+            <img
+                src={`${assets}${bannerMap[banner]}`}
+                alt=""
+                title={banner}
+                class="hover:bg-opacity-90 hover:border-accent hover:cursor-pointer h-full object-contain border-2 border-base-100 rounded-box bg-black {key ===
+                0
+                    ? 'col-span-1 row-span-full'
+                    : key === 1
+                    ? 'col-span-1 row-span-full'
+                    : 'col-span-1 row-span-1'}"
+                on:pointerup={(e) => {
+                    if (e.button !== 0) {
+                        return;
+                    }
+                    clearHierarchy("firstlevelcategory");
+                    $categories.firstlevelcategory = banner;
+                }}
+            />
+        {/each}
+    </div>
+    <div
+        class="flex row-span-1 col-span-full w-full {!$categories.firstlevelcategory
+            ? 'xl:hidden'
+            : 'xl:flex'} place-content-center gap-0 place-items-center mt-4 sticky top-0 z-50 bg-base-300 py-2"
     >
         <div class="dropdown">
             <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
@@ -120,7 +148,10 @@
                             categoryKeys
                                 ? 'active'
                                 : ''}"
-                            on:click={(e) => {
+                            on:pointerup={(e) => {
+                                if (e.button !== 0) {
+                                    return;
+                                }
                                 e.target.blur();
                                 clearHierarchy("firstlevelcategory");
                                 $categories.firstlevelcategory = categoryKeys;
@@ -151,7 +182,10 @@
                                 categoryKeys
                                     ? 'active'
                                     : ''}"
-                                on:click={(e) => {
+                                on:pointerup={(e) => {
+                                    if (e.button !== 0) {
+                                        return;
+                                    }
                                     e.target.blur();
                                     clearHierarchy("category");
                                     $categories.category = categoryKeys;
@@ -185,7 +219,10 @@
                                 class={$categories.subcategory === categoryKeys
                                     ? "active"
                                     : ""}
-                                on:click={(e) => {
+                                on:pointerup={(e) => {
+                                    if (e.button !== 0) {
+                                        return;
+                                    }
                                     e.target.blur();
                                     clearHierarchy("subcategory");
                                     $categories.subcategory = categoryKeys;
@@ -270,10 +307,14 @@
                                 categoryKeys.LeaderboardDefinitionId
                                     ? "active"
                                     : ""}
-                                on:click={() =>
+                                on:pointerup={(e) => {
+                                    if (e.button !== 0) {
+                                        return;
+                                    }
                                     goto(
                                         `/lb/${categoryKeys.LeaderboardDefinitionId}`
-                                    )}
+                                    );
+                                }}
                             >
                                 <div class="flex">
                                     {categoryKeys.DisplayName}
