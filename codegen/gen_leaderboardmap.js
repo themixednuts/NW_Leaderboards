@@ -23,7 +23,9 @@ function resolveKey(string) {
 
 const leaderboardIdCount = new Map()
 
-const obj = {}
+const leaderboardDataObj = {}
+const leaderboardIdMap = {}
+
 for (const value of leaderboardJson) {
     const lbDefinitionId = value.LeaderboardDefinitionId
         .replace("min-dungeon-group-gold-medal-expedition-clear-time", "group_gold_time")
@@ -33,15 +35,15 @@ for (const value of leaderboardJson) {
 
     leaderboardIdCount.set(lbDefinitionId, (leaderboardIdCount.get(lbDefinitionId) || 0) + 1)
 
-    if (!obj[value.FirstLevelCategory]) {
-        obj[value.FirstLevelCategory] = {}
+    if (!leaderboardDataObj[value.FirstLevelCategory]) {
+        leaderboardDataObj[value.FirstLevelCategory] = {}
     }
-    if (!obj[value.FirstLevelCategory][resolveKey(value.Category)]) {
-        obj[value.FirstLevelCategory][resolveKey(value.Category)] = {}
+    if (!leaderboardDataObj[value.FirstLevelCategory][resolveKey(value.Category)]) {
+        leaderboardDataObj[value.FirstLevelCategory][resolveKey(value.Category)] = {}
     }
 
-    if (!obj[value.FirstLevelCategory][resolveKey(value.Category)][resolveKey(value.SecondLevelCategory)]) {
-        obj[value.FirstLevelCategory][resolveKey(value.Category)][resolveKey(value.SecondLevelCategory)] = []
+    if (!leaderboardDataObj[value.FirstLevelCategory][resolveKey(value.Category)][resolveKey(value.SecondLevelCategory)]) {
+        leaderboardDataObj[value.FirstLevelCategory][resolveKey(value.Category)][resolveKey(value.SecondLevelCategory)] = []
     }
 
     const innerObj = {}
@@ -53,6 +55,16 @@ for (const value of leaderboardJson) {
     innerObj["GroupLeaderboard"] = value.GroupLeaderboard
     innerObj["CompanyLeaderboard"] = value.CompanyLeaderboard
     innerObj["FactionLeaderboard"] = value.FactionLeaderboard
+    innerObj["FirstLevelCategory"] = value.FirstLevelCategory
+    innerObj["Category"] = resolveKey(value.Category)
+    innerObj["SecondLevelCategory"] = resolveKey(value.SecondLevelCategory)
+
+
+    leaderboardIdMap[lbDefinitionId] = {
+        "FirstLevelCategory": value.FirstLevelCategory,
+        "Category": resolveKey(value.Category),
+        "SecondLevelCategory": resolveKey(value.SecondLevelCategory)
+    }
 
     if (!innerObj["EntitlementRewards"] && value.EntitlementRewards) {
         innerObj["EntitlementRewards"] = value.EntitlementRewards
@@ -74,14 +86,12 @@ for (const value of leaderboardJson) {
         innerObj["Rotation"].push(value.Rotation)
     }
 
-
-
-    if (obj[value.FirstLevelCategory][resolveKey(value.Category)][resolveKey(value.SecondLevelCategory)].length === 0) {
-        obj[value.FirstLevelCategory][resolveKey(value.Category)][resolveKey(value.SecondLevelCategory)].push(innerObj)
+    if (leaderboardDataObj[value.FirstLevelCategory][resolveKey(value.Category)][resolveKey(value.SecondLevelCategory)].length === 0) {
+        leaderboardDataObj[value.FirstLevelCategory][resolveKey(value.Category)][resolveKey(value.SecondLevelCategory)].push(innerObj)
     } else {
         let shouldAddInnerObj = true;
 
-        obj[value.FirstLevelCategory][resolveKey(value.Category)][resolveKey(value.SecondLevelCategory)].forEach(element => {
+        leaderboardDataObj[value.FirstLevelCategory][resolveKey(value.Category)][resolveKey(value.SecondLevelCategory)].forEach(element => {
             if (element.LeaderboardDefinitionId === lbDefinitionId) {
                 element["Rotation"].push(value.Rotation);
                 shouldAddInnerObj = false;
@@ -89,15 +99,15 @@ for (const value of leaderboardJson) {
         });
 
         if (shouldAddInnerObj) {
-            obj[value.FirstLevelCategory][resolveKey(value.Category)][resolveKey(value.SecondLevelCategory)].push(innerObj);
+            leaderboardDataObj[value.FirstLevelCategory][resolveKey(value.Category)][resolveKey(value.SecondLevelCategory)].push(innerObj);
         }
     }
 
 }
 
 const writePath = "./src/lib/leaderboardmap.ts"
-await writeFile(writePath, `export const leaderboardMap = ${JSON.stringify(obj, null, 4)}\n
-
+await writeFile(writePath, `export const leaderboardMap = ${JSON.stringify(leaderboardDataObj, null, 4)}\n
+export const leaderboardIdMap = ${JSON.stringify(leaderboardIdMap, null, 4)}\n
 export type LeaderboardDefinition = {
     Rotation: string[];
     Value: string;
@@ -111,6 +121,9 @@ export type LeaderboardDefinition = {
     GroupLeaderboard?: boolean;
     CompanyLeaderboard?: boolean;
     FactionLeaderboard?: boolean;
+    FirstLevelCategory?: string;
+    Category?: string;
+    SecondLevelCategory?: string;
 }
 
 export type LeaderboardType = typeof leaderboardMap & {
@@ -119,4 +132,10 @@ export type LeaderboardType = typeof leaderboardMap & {
             [key: string]: LeaderboardDefinition[];
         };
     };
+}
+
+export type LeaderboardIdMap = typeof leaderboardIdMap & {
+    [key: string]: {
+        [key: string]: string
+    }
 }`)
