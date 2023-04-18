@@ -96,14 +96,14 @@
 
 {#if data}
     <div
-        class="flex justify-center capitalize sticky top-10 bg-base-300 py-4 w-full z-10"
+        class="flex justify-center capitalize sticky top-10 bg-base-300 py-4 w-full"
     >
         {!isNaN(Number(data.DisplayName))
             ? `${category}, ${data.DisplayName}`
             : data.DisplayName}
         {#if data.CategoryAdditionalHeader}
             <div
-                class="tooltip tooltip-info"
+                class="tooltip tooltip-info mt-4"
                 data-tip={data.CategoryAdditionalHeader.replace(/<[^>]*>/g, "")}
             >
                 <!-- .replace(/(\<.*\>)/g, "") -->

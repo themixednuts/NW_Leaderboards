@@ -100,16 +100,13 @@
         />
     </div>
     <div
-        class=" place-items-center h-min hidden grid-cols-3 grid-rows-3 row-span-full col-span-full {!$categories.firstlevelcategory
+        class=" place-items-center h-min hidden gap-2 grid-cols-3 grid-rows-3 row-span-full col-span-full {!$categories.firstlevelcategory
             ? 'xl:grid'
             : 'xl:hidden'} place-content-center h-56 w-full mt-4 border-2 p-2 border-base-100 rounded-box"
     >
         {#each Object.keys(bannerMap) as banner, key}
-            <img
-                src={`${assets}${bannerMap[banner]}`}
-                alt=""
-                title={banner}
-                class="hover:bg-opacity-90 hover:border-accent hover:cursor-pointer h-full object-contain border-2 border-base-100 rounded-box bg-black {key ===
+            <div
+                class="grid place-content-center relative overflow-clip hover:bg-opacity-90 hover:border-accent hover:cursor-pointer h-full border-2 border-base-100 rounded-box bg-black {key ===
                 0
                     ? 'col-span-1 row-span-full'
                     : key === 1
@@ -122,7 +119,19 @@
                     clearHierarchy("firstlevelcategory");
                     $categories.firstlevelcategory = banner;
                 }}
-            />
+            >
+                <img
+                    src={`${assets}${bannerMap[banner]}`}
+                    alt=""
+                    title={banner}
+                    class="h-full w-full"
+                />
+                <div
+                    class="opacity-0 absolute top-0 left-0 w-full h-full grid hover:opacity-60 z-10 place-items-center bg-base-100 text-4xl"
+                >
+                    {banner}
+                </div>
+            </div>
         {/each}
     </div>
     <div
