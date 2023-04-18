@@ -147,9 +147,10 @@
                     {#each Object.keys(leaderboardData[$categories.firstlevelcategory]) as categoryKeys}
                         <li>
                             <button
-                                class={$categories.category === categoryKeys
-                                    ? "active"
-                                    : ""}
+                                class=" text-start {$categories.category ===
+                                categoryKeys
+                                    ? 'active'
+                                    : ''}"
                                 on:click={(e) => {
                                     e.target.blur();
                                     clearHierarchy("category");
