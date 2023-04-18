@@ -1,7 +1,7 @@
 <script lang="ts">
     import { assets } from "$app/paths";
     import { page } from "$app/stores";
-    import { writable, type Writable } from "svelte/store";
+    import { writable } from "svelte/store";
     $: console.log($page);
     import { goto } from "$app/navigation";
     import { leaderboardMap, leaderboardIdMap } from "$lib/leaderboardmap";
@@ -12,7 +12,7 @@
     } from "$lib/leaderboardmap";
 
     const leaderboardData: LeaderboardType = leaderboardMap;
-
+    const leaderboardMapId: LeaderboardIdMap = leaderboardIdMap;
     const categories = writable({
         firstlevelcategory: "",
         category: "",
@@ -23,10 +23,10 @@
 
     $: if (leaderboardId) {
         $categories.firstlevelcategory =
-            leaderboardIdMap[leaderboardId].FirstLevelCategory;
-        $categories.category = leaderboardIdMap[leaderboardId].Category;
+            leaderboardMapId[leaderboardId].FirstLevelCategory;
+        $categories.category = leaderboardMapId[leaderboardId].Category;
         $categories.subcategory =
-            leaderboardIdMap[leaderboardId].SecondLevelCategory;
+            leaderboardMapId[leaderboardId].SecondLevelCategory;
     }
 
     let leaderboards: LeaderboardDefinition[] = [];

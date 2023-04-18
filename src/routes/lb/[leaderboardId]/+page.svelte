@@ -2,7 +2,7 @@
     import { page } from "$app/stores";
     import Table from "$lib/table.svelte";
 
-    import type { PageData } from "./$types";
+    import type { PageData } from "../$types";
     export let data: PageData;
 
     $: leaderboardId = data.id;
