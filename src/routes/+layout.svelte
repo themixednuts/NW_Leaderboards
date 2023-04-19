@@ -1,12 +1,10 @@
 <script lang="ts">
     import "../app.css";
     import { onMount } from "svelte";
-    import { themeChange } from "theme-change";
     import TButton from "$lib/T-Button.svelte";
 
     import Stats from "$lib/stats.svelte";
     import type { LayoutData } from "./$types";
-    import { browser } from "$app/environment";
 
     export let data: LayoutData;
 
@@ -15,11 +13,21 @@
     const legendaries = data.legendaries;
 
     onMount(() => {
-        if (browser) {
-            console.log(window.document.querySelector("html"));
-        }
+        let prefersDark = true;
+        prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
-        themeChange(false);
+        const defaultTheme =
+            localStorage.getItem("theme") || prefersDark ? "dark" : "light";
+
+        if (localStorage.getItem("theme")) {
+            window.document
+                .querySelector("html")
+                ?.setAttribute("data-theme", localStorage.getItem("theme")!);
+        } else {
+            window.document
+                .querySelector("html")
+                ?.setAttribute("data-theme", defaultTheme);
+        }
     });
 </script>
 
