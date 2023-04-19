@@ -70,6 +70,87 @@
         subcategory: ["leaderboardId"],
     };
 
+    $: if (!$categories.subcategory) {
+        if (
+            $categories.firstlevelcategory === "Mutated Expeditions" &&
+            $categories.category
+        ) {
+            $categories.subcategory = "Clear Time";
+            const leaderboardId =
+                leaderboardData["Mutated Expeditions"][$categories.category][
+                    $categories.subcategory
+                ][9].LeaderboardDefinitionId;
+
+            goto(`/lb/${leaderboardId}`);
+        }
+
+        if ($categories.firstlevelcategory === "Faction War") {
+            if ($categories.category === "War") {
+                $categories.subcategory = "Wins";
+                const leaderboardId =
+                    leaderboardData["Faction War"][$categories.category][
+                        $categories.subcategory
+                    ][0].LeaderboardDefinitionId;
+
+                goto(`/lb/${leaderboardId}`);
+            }
+
+            if ($categories.category === "Territory Control") {
+                $categories.subcategory = "Days Governed";
+                const leaderboardId =
+                    leaderboardData["Faction War"][$categories.category][
+                        $categories.subcategory
+                    ][0].LeaderboardDefinitionId;
+
+                goto(`/lb/${leaderboardId}`);
+            }
+        }
+
+        if ($categories.firstlevelcategory === "Vs. Environment") {
+            if (
+                $categories.category === "Invasions" ||
+                $categories.category === "Corruption Breaches"
+            ) {
+                $categories.subcategory = "Score";
+                const leaderboardId =
+                    leaderboardData["Vs. Environment"][$categories.category][
+                        $categories.subcategory
+                    ][0].LeaderboardDefinitionId;
+
+                goto(`/lb/${leaderboardId}`);
+            }
+        }
+
+        if ($categories.firstlevelcategory === "Vs. Players") {
+            if (
+                $categories.category === "Outpost Rush" ||
+                $categories.category === "3v3 Arenas"
+            ) {
+                $categories.subcategory = "Wins";
+                const leaderboardId =
+                    leaderboardData["Vs. Players"][$categories.category][
+                        $categories.subcategory
+                    ][0].LeaderboardDefinitionId;
+
+                goto(`/lb/${leaderboardId}`);
+            }
+
+            if ($categories.category === "Open World PVP") {
+                $categories.subcategory = "PvP Kills";
+                const leaderboardId =
+                    leaderboardData["Vs. Players"][$categories.category][
+                        $categories.subcategory
+                    ][0].LeaderboardDefinitionId;
+
+                goto(`/lb/${leaderboardId}`);
+            }
+        }
+
+        if ($categories.firstlevelcategory === "Trade Skills") {
+            $categories.category = "Legendaries";
+        }
+    }
+
     function clearHierarchy(targetKey: string) {
         if (hierarchy[targetKey]) {
             hierarchy[targetKey].forEach((item) => {
