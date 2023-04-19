@@ -8,6 +8,15 @@
     });
 </script>
 
+<svelte:head>
+    <title>NW Stats - Leaderboards</title>
+    <meta content="New World Global Leaderboards" property="og:title" />
+    <meta
+        content="A site to view leaderboards for New World"
+        property="og:description"
+    />
+</svelte:head>
+
 <button
     class="btn btn-ghost"
     on:pointerup={(e) => {

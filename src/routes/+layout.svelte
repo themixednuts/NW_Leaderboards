@@ -18,15 +18,6 @@
     });
 </script>
 
-<svelte:head>
-    <title>NW Stats - Leaderboards</title>
-    <meta content="New World Global Leaderboards" property="og:title" />
-    <meta
-        content="A site to view leaderboards for New World"
-        property="og:description"
-    />
-</svelte:head>
-
 <div
     class=" container flex flex-col mx-auto gap-4 h-screen overflow-y-hidden no-scrollbar max-h-full"
 >
