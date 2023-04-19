@@ -216,9 +216,11 @@
                     class="h-full w-full"
                 />
                 <div
-                    class="opacity-0 absolute top-0 left-0 w-full h-full grid hover:opacity-60 z-10 place-items-center bg-base-100 text-4xl"
+                    class="bg-opacity-0 absolute top-0 left-0 w-full h-full grid hover:bg-opacity-60 z-10 place-items-center bg-base-100 text-4xl"
                 >
-                    {banner}
+                    <div class="absolute bottom-4 left-4 text-white">
+                        {banner}
+                    </div>
                 </div>
             </div>
         {/each}
