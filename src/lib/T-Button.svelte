@@ -1,12 +1,20 @@
-<script lang="ts">
-    export let theme: string;
-
-    import { browser } from "$app/environment";
-
-    let prefersDark: boolean = true;
+<script context="module" lang="ts">
+    export let prefersDark = true;
     if (browser) {
         prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     }
+
+    function changeTheme(theme: string) {
+        window.document
+            .querySelector("html")!
+            .setAttribute("data-theme", theme);
+    }
+</script>
+
+<script lang="ts">
+    export let theme = "";
+
+    import { browser } from "$app/environment";
 </script>
 
 <button
@@ -14,6 +22,9 @@
     data-set-theme={theme}
     data-theme={theme ? theme : prefersDark ? "dark" : "light"}
     data-act-class="[&_svg]:visible"
+    on:pointerup={(e) => {
+        if (e.button === 0) changeTheme(theme);
+    }}
 >
     <div class="flex w-full gap-6">
         <svg

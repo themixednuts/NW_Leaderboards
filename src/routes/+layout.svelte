@@ -6,6 +6,7 @@
 
     import Stats from "$lib/stats.svelte";
     import type { LayoutData } from "./$types";
+    import { browser } from "$app/environment";
 
     export let data: LayoutData;
 
@@ -14,6 +15,10 @@
     const legendaries = data.legendaries;
 
     onMount(() => {
+        if (browser) {
+            console.log(window.document.querySelector("html"));
+        }
+
         themeChange(false);
     });
 </script>
