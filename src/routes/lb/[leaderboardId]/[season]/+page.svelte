@@ -29,10 +29,19 @@
 </script>
 
 <svelte:head>
+    <title>
+        {!isNaN(Number(leaderboard.DisplayName))
+            ? `${secondlevelcategory}: ${category}, ${leaderboard.DisplayName}`
+            : secondlevelcategory === leaderboard.DisplayName
+            ? `${category}: ${secondlevelcategory}`
+            : `${secondlevelcategory}: ${leaderboard.DisplayName}`} - Leaderboard
+    </title>
     <meta
-        content="{!isNaN(Number(leaderboard.DisplayName))
-            ? `${category}, ${leaderboard.DisplayName}`
-            : leaderboard.DisplayName}}"
+        content={!isNaN(Number(leaderboard.DisplayName))
+            ? `${secondlevelcategory}: ${category}, ${leaderboard.DisplayName}`
+            : secondlevelcategory === leaderboard.DisplayName
+            ? `${category}: ${secondlevelcategory}`
+            : `${secondlevelcategory}: ${leaderboard.DisplayName}`}
         property="og:title"
     />
     <meta
