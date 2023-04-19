@@ -395,7 +395,7 @@
                 <div
                     class="w-[100%] h-[5%] bottom-0 absolute grow -z-10 {leaderboardIdMap[
                         leaderboardId
-                    ].Category === $categories.category &&
+                    ]?.Category === $categories.category &&
                     leaderboardIdMap[leaderboardId].SecondLevelCategory ===
                         $categories.subcategory
                         ? 'bg-accent'
