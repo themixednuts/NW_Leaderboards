@@ -328,10 +328,10 @@
                         {#each Object.keys(leaderboardData[$categories.firstlevelcategory][$categories.category]) as categoryKeys}
                             <li>
                                 <button
-                                    class={$categories.subcategory ===
+                                    class=" text-left {$categories.subcategory ===
                                     categoryKeys
-                                        ? "active"
-                                        : ""}
+                                        ? 'active'
+                                        : ''}"
                                     on:pointerup={(e) => {
                                         if (e.button !== 0) {
                                             return;
