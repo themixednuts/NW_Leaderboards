@@ -19,7 +19,7 @@
 </script>
 
 <div
-    class=" container flex flex-col mx-auto gap-4 h-screen overflow-y-hidden no-scrollbar"
+    class=" container flex flex-col mx-auto gap-4 h-screen overflow-y-hidden no-scrollbar max-h-full"
 >
     <div class="navbar bg-base-100 sticky top-0 z-50 justify-between">
         <a href="/" class="btn btn-ghost capitalize text-xl"> NW Stats </a>
@@ -93,10 +93,10 @@
 
     <slot><!-- optional fallback --></slot>
     <div
-        class="flex place-content-center max-h-24 h-32 md:max-h-fit overflow-auto no-scrollbar"
+        class="flex place-content-center place-items-center max-h-24 h-32 md:max-h-fit overflow-auto no-scrollbar"
     >
         <div
-            class="stats stats-vertical md:stats-horizontal shadow h-fit mb-2 overflow-auto no-scrollbar grow"
+            class="stats stats-vertical md:stats-horizontal shadow max-h-full mb-2 overflow-auto no-scrollbar grow"
         >
             <Stats title="Unique Characters" value={users.data[0].count} />
 
