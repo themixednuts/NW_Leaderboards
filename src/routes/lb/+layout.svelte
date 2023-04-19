@@ -88,7 +88,7 @@
 <div
     class="flex flex-col align-middle grow bg-base-300 min-w-fit px-4 h-full overflow-y-auto rounded-box no-scrollbar z-20 {$categories.firstlevelcategory
         ? ''
-        : 'xl:place-content-center'}"
+        : 'xl:place-content-center place-items-center'}"
 >
     <div
         class="flex row-span-1 col-span-full {$categories.firstlevelcategory
@@ -106,13 +106,15 @@
         />
     </div>
     <div
-        class=" place-items-center h-min hidden gap-2 grid-cols-3 grid-rows-3 row-span-full col-span-full {!$categories.firstlevelcategory
+        class=" place-items-center h-full hidden gap-2 grid-cols-3 grid-rows-3 row-span-full max-h-[29rem] col-span-full {!$categories.firstlevelcategory
             ? 'xl:grid'
             : 'xl:hidden'} place-content-center h-56 w-full mt-4 border-2 p-2 border-base-100 rounded-box"
     >
         {#each Object.keys(bannerMap) as banner, key}
             <div
-                class="grid place-content-center relative overflow-clip hover:bg-opacity-90 hover:border-accent hover:cursor-pointer h-full border-2 border-base-100 rounded-box bg-black {key ===
+                class="grid place-content-center {key === 0 || key === 1
+                    ? 'place-content-start place-items-start'
+                    : ''}  relative overflow-clip hover:bg-opacity-90 hover:border-accent hover:cursor-pointer h-full border-2 border-base-100 rounded-box bg-black {key ===
                 0
                     ? 'col-span-1 row-span-full'
                     : key === 1
