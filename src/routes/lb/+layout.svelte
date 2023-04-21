@@ -10,6 +10,10 @@
         LeaderboardDefinition,
     } from "$lib/leaderboardmap";
     import type { LayoutData } from "../$types";
+    import Category from "$lib/category.svelte";
+    import Firstcategory from "$lib/firstcategory.svelte";
+    import Secondcategory from "$lib/secondcategory.svelte";
+    import Leaderboard from "$lib/leaderboard.svelte";
 
     const leaderboardData: LeaderboardType = leaderboardMap;
     const leaderboardMapId: LeaderboardIdMap = leaderboardIdMap;
@@ -233,264 +237,46 @@
             ? 'xl:hidden'
             : 'xl:flex'} place-content-center gap-0 place-items-center mt-4 sticky top-0 z-50 bg-base-300 py-2"
     >
-        <div class="dropdown">
-            <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-            <!-- svelte-ignore a11y-label-has-associated-control -->
-            <label tabindex="0" class="btn btn-xs md:btn-sm m-1"
-                >{$categories.firstlevelcategory || "Main Section"}</label
-            >
-            <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-            <ul
-                tabindex="0"
-                class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 overflow-y-auto overflow-x-hidden min-h-24 flex-nowrap max-h-[35vh] small-scrollbar"
-            >
-                {#each Object.keys(leaderboardData) as categoryKeys}
-                    <li>
-                        <button
-                            class=" {$categories.firstlevelcategory ===
-                            categoryKeys
-                                ? 'active'
-                                : ''}"
-                            on:pointerup={(e) => {
-                                if (e.button !== 0) {
-                                    return;
-                                }
-                                removeFocus();
-                                clearHierarchy("firstlevelcategory");
-                                $categories.firstlevelcategory = categoryKeys;
-                            }}
-                        >
-                            {categoryKeys}
-                        </button>
-                    </li>
-                {/each}
-            </ul>
-            <div
-                class="w-[100%] h-[5%] bottom-0 absolute grow -z-10 {!$categories.firstlevelcategory
-                    ? 'bg-accent'
-                    : ''}"
-            />
-        </div>
+        <Firstcategory
+            {categories}
+            {leaderboardData}
+            on:selectCategory={(e) => {
+                removeFocus();
+                clearHierarchy(e.detail);
+            }}
+        />
 
-        {#if $categories.firstlevelcategory}
-            <div class="flex relative">
-                <div class="dropdown">
-                    <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-                    <!-- svelte-ignore a11y-label-has-associated-control -->
-                    <label tabindex="0" class="btn btn-xs md:btn-sm m-1"
-                        >{$categories.category || "Category"}</label
-                    >
-                    <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-                    <ul
-                        tabindex="0"
-                        class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 left-1/2 -translate-x-1/2 overflow-y-auto overflow-x-hidden min-h-24 flex-nowrap max-h-[35vh] small-scrollbar"
-                    >
-                        {#each Object.keys(leaderboardData[$categories.firstlevelcategory]) as categoryKeys}
-                            <li>
-                                <button
-                                    class=" text-start {$categories.category ===
-                                    categoryKeys
-                                        ? 'active'
-                                        : ''}"
-                                    on:pointerup={(e) => {
-                                        if (e.button !== 0) {
-                                            return;
-                                        }
-                                        removeFocus();
-                                        clearHierarchy("category");
-                                        $categories.category = categoryKeys;
-                                    }}
-                                >
-                                    {categoryKeys}
-                                </button>
-                            </li>
-                        {/each}
-                    </ul>
-                </div>
-                <div
-                    class="w-[100%] h-[5%] bottom-0 absolute grow -z-10 {!$categories.category
-                        ? 'bg-accent'
-                        : ''}"
-                />
-            </div>
-        {/if}
+        <Category
+            {categories}
+            {leaderboardData}
+            on:selectCategory={(e) => {
+                removeFocus();
+                clearHierarchy(e.detail);
+            }}
+        />
 
-        {#if $categories.firstlevelcategory && $categories.category}
-            <div class="flex relative">
-                <div class="dropdown dropdown-end">
-                    <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-                    <!-- svelte-ignore a11y-label-has-associated-control -->
-                    <label tabindex="0" class="btn btn-xs md:btn-sm"
-                        >{$categories.subcategory || "Sub Category"}</label
-                    >
-                    <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-                    <ul
-                        tabindex="0"
-                        class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 overflow-y-auto overflow-x-hidden min-h-24 flex-nowrap max-h-[35vh] small-scrollbar {$categories.subcategory
-                            ? 'left-1/2 -translate-x-1/2'
-                            : 'dropdown-end'}"
-                    >
-                        {#each Object.keys(leaderboardData[$categories.firstlevelcategory][$categories.category]) as categoryKeys}
-                            <li>
-                                <button
-                                    class=" text-left {$categories.subcategory ===
-                                    categoryKeys
-                                        ? 'active'
-                                        : ''}"
-                                    on:pointerup={(e) => {
-                                        if (e.button !== 0) {
-                                            return;
-                                        }
-                                        removeFocus();
-                                        clearHierarchy("subcategory");
-                                        $categories.subcategory = categoryKeys;
-                                        if (
-                                            leaderboardData[
-                                                $categories.firstlevelcategory
-                                            ][$categories.category][
-                                                $categories.subcategory
-                                            ].length === 1
-                                        ) {
-                                            goto(
-                                                `/lb/${
-                                                    leaderboardData[
-                                                        $categories
-                                                            .firstlevelcategory
-                                                    ][$categories.category][
-                                                        $categories.subcategory
-                                                    ][0].LeaderboardDefinitionId
-                                                }/${data.currentSeason}`
-                                            );
-                                        }
-                                    }}
-                                >
-                                    {categoryKeys}
-                                </button>
-                            </li>
-                        {/each}
-                    </ul>
-                </div>
-                <div
-                    class="w-[100%] h-[5%] bottom-0 absolute grow {!$categories.subcategory ||
-                    ($categories.subcategory &&
-                        leaderboardData[$categories.firstlevelcategory][
-                            $categories.category
-                        ][$categories.subcategory]?.length === 1)
-                        ? 'bg-accent'
-                        : ''}"
-                />
-            </div>
-        {/if}
-        {#if $categories.firstlevelcategory && $categories.category && $categories.subcategory && leaderboards && leaderboards.length > 1}
-            <div class="relative flex place-content-center rounded-md">
-                <div class="dropdown dropdown-end grow">
-                    <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-                    <!-- svelte-ignore a11y-label-has-associated-control -->
+        <Secondcategory
+            {categories}
+            {leaderboardData}
+            {data}
+            on:selectCategory={(e) => {
+                removeFocus();
+                clearHierarchy(e.detail);
+            }}
+        />
 
-                    <label tabindex="0" class="btn btn-xs md:btn-sm m-1">
-                        <div class="flex flex-col">
-                            {#if leaderboardId && leaderboards.find((item) => item.LeaderboardDefinitionId === leaderboardId)?.DisplayName === $categories.subcategory}
-                                <div class="">
-                                    {leaderboards.find(
-                                        (item) =>
-                                            item.LeaderboardDefinitionId ===
-                                            leaderboardId
-                                    )?.CharacterLeaderboard
-                                        ? "Character"
-                                        : leaderboards.find(
-                                              (item) =>
-                                                  item.LeaderboardDefinitionId ===
-                                                  leaderboardId
-                                          )?.CompanyLeaderboard
-                                        ? "Company"
-                                        : ""}
-                                </div>
-                            {:else if leaderboardId && leaderboards.find((item) => item.LeaderboardDefinitionId === leaderboardId)?.DisplayName !== $categories.subcategory}
-                                {#if leaderboards.find((item) => item.LeaderboardDefinitionId === leaderboardId)}
-                                    {leaderboards.find(
-                                        (item) =>
-                                            item.LeaderboardDefinitionId ===
-                                            leaderboardId
-                                    )?.DisplayName}
-                                {:else}
-                                    {leaderboardData[
-                                        $categories.firstlevelcategory
-                                    ][$categories.category][
-                                        $categories.subcategory
-                                    ][0].DisplayName}
-                                {/if}
-                            {:else}
-                                Leaderboards
-                            {/if}
-                        </div>
-                    </label>
-                    <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-                    <ul
-                        tabindex="0"
-                        class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 dropdown-end overflow-y-auto overflow-x-hidden min-h-24 flex-nowrap max-h-[35vh] small-scrollbar"
-                    >
-                        {#each Object.values(leaderboards) as categoryKeys, i}
-                            <li>
-                                <button
-                                    class={leaderboardId ===
-                                    categoryKeys.LeaderboardDefinitionId
-                                        ? "active"
-                                        : ""}
-                                    on:pointerup={(e) => {
-                                        if (e.button !== 0) {
-                                            return;
-                                        }
-                                        goto(
-                                            `/lb/${categoryKeys.LeaderboardDefinitionId}/${data.currentSeason}`
-                                        );
-                                    }}
-                                >
-                                    <div class="flex">
-                                        {categoryKeys.DisplayName}
-                                    </div>
-                                    {#if categoryKeys.CharacterLeaderboard || categoryKeys.CompanyLeaderboard}
-                                        <div
-                                            class="tooltip tooltip-info px-0 {i ==
-                                            0
-                                                ? 'tooltip-bottom'
-                                                : ''}"
-                                            data-tip={categoryKeys.CharacterLeaderboard
-                                                ? "Character"
-                                                : categoryKeys.CompanyLeaderboard
-                                                ? "Company"
-                                                : ""}
-                                        >
-                                            <!-- .replace(/(\<.*\>)/g, "") -->
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                class="w-4 h-4 stroke-current"
-                                                ><path
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                                /></svg
-                                            >
-                                        </div>
-                                    {/if}
-                                </button>
-                            </li>
-                        {/each}
-                    </ul>
-                </div>
-                <div
-                    class="w-[100%] h-[5%] bottom-0 absolute grow -z-10 {leaderboardIdMap[
-                        leaderboardId
-                    ]?.Category === $categories.category &&
-                    leaderboardIdMap[leaderboardId].SecondLevelCategory ===
-                        $categories.subcategory
-                        ? 'bg-accent'
-                        : ''} "
-                />
-            </div>
-        {/if}
+        <Leaderboard
+            {categories}
+            {leaderboardData}
+            {data}
+            {leaderboardId}
+            {leaderboards}
+            {leaderboardIdMap}
+            on:selectCategory={(e) => {
+                removeFocus();
+                clearHierarchy(e.detail);
+            }}
+        />
     </div>
     <slot />
 </div>

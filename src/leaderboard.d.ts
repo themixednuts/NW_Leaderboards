@@ -13,6 +13,7 @@ interface LeaderboardAPIBoardResponse {
 interface LeaderboardAPIUserItem {
     [key: string]: string;
     count: string;
+    date?: string;
 }
 
 interface LeaderboardAPIUserResponse {

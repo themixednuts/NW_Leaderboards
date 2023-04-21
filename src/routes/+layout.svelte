@@ -8,9 +8,9 @@
 
     export let data: LayoutData;
 
-    const users = data.users;
-    const breaches = data.breaches;
-    const legendaries = data.legendaries;
+    const users = data.users.data[0];
+    const breaches = data.breaches.data[0];
+    const legendaries = data.legendaries.data[0];
 
     onMount(() => {
         let prefersDark = true;
@@ -111,17 +111,11 @@
         <div
             class="stats stats-vertical md:stats-horizontal shadow max-h-full mb-2 overflow-auto no-scrollbar grow"
         >
-            <Stats title="Unique Characters" value={users.data[0].count} />
+            <Stats title="Unique Characters" json={users} />
 
-            <Stats
-                title="Legendaries Crafted"
-                value={legendaries.data[0].count}
-            />
+            <Stats title="Legendaries Crafted" json={legendaries} />
 
-            <Stats
-                title="Corrupted Breach Participants"
-                value={breaches.data[0].count}
-            />
+            <Stats title="Corrupted Breach Participants" json={breaches} />
         </div>
     </div>
 </div>

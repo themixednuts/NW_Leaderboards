@@ -1,16 +1,23 @@
 <script lang="ts">
     export let title: string;
-    export let value: string;
+    export let json:
+        | LeaderboardAPIBreachesItem
+        | LeaderboardAPILegendaryItem
+        | LeaderboardAPIUserItem;
+
+    const value = Intl.NumberFormat().format(Number(json.count));
 </script>
 
 <div class="stat place-items-center">
     <div class="stat-title text-sm md:text-base">{title}</div>
     <div class="stat-value text-secondary text-base md:text-4xl">
         {#if value}
-            {Number(value).toLocaleString()}
+            {value}
         {:else}
             <span>No Data</span>
         {/if}
     </div>
-    <!-- <div class="stat-desc text-secondary">↗︎ 40 (2%)</div> -->
+    {#if json.date}
+        <div class="stat-desc">json.date</div>
+    {/if}
 </div>
