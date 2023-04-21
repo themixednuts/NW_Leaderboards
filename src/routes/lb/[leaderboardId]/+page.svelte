@@ -18,3 +18,9 @@
         goto(`${$page.params.leaderboardId}/${data.currentSeason}`);
     });
 </script>
+
+<svelte:head>
+    <title>Redirecting...</title>
+</svelte:head>
+
+<div class="btn btn-ghost loading">Loading</div>

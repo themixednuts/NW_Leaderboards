@@ -1,11 +1,14 @@
 import { goto } from '$app/navigation';
+import { page } from '$app/stores';
 import type { PageLoad } from './$types';
 
 
 
-export const load = (async ({ fetch, params }) => {
+export const load = (async ({ fetch, params, parent }) => {
     const leaderboardId = params.leaderboardId;
-    const seasonId = params.season
+    const { currentSeason } = await parent()
+    const validSeasons = ["q1", "s1"];
+    const seasonId = validSeasons.includes(params.season) ? params.season : currentSeason;
 
     const response = await fetch(
         `https://lb.jakel.rocks/json/${leaderboardId}/${seasonId}?size=1000`

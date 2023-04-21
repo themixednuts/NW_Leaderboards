@@ -9,6 +9,7 @@
         LeaderboardIdMap,
         LeaderboardDefinition,
     } from "$lib/leaderboardmap";
+    import type { LayoutData } from "../$types";
 
     const leaderboardData: LeaderboardType = leaderboardMap;
     const leaderboardMapId: LeaderboardIdMap = leaderboardIdMap;
@@ -17,6 +18,8 @@
         category: "",
         subcategory: "",
     });
+
+    export let data: LayoutData;
 
     $: leaderboardId = $page.params.leaderboardId || "";
 
@@ -81,7 +84,7 @@
                     $categories.subcategory
                 ][9].LeaderboardDefinitionId;
 
-            goto(`/lb/${leaderboardId}`);
+            goto(`/lb/${leaderboardId}/${data.currentSeason}`);
         }
 
         if ($categories.firstlevelcategory === "Faction War") {
@@ -92,7 +95,7 @@
                         $categories.subcategory
                     ][0].LeaderboardDefinitionId;
 
-                goto(`/lb/${leaderboardId}`);
+                goto(`/lb/${leaderboardId}/${data.currentSeason}`);
             }
 
             if ($categories.category === "Territory Control") {
@@ -102,7 +105,7 @@
                         $categories.subcategory
                     ][0].LeaderboardDefinitionId;
 
-                goto(`/lb/${leaderboardId}`);
+                goto(`/lb/${leaderboardId}/${data.currentSeason}`);
             }
         }
 
@@ -117,7 +120,7 @@
                         $categories.subcategory
                     ][0].LeaderboardDefinitionId;
 
-                goto(`/lb/${leaderboardId}`);
+                goto(`/lb/${leaderboardId}/${data.currentSeason}`);
             }
         }
 
@@ -132,7 +135,7 @@
                         $categories.subcategory
                     ][0].LeaderboardDefinitionId;
 
-                goto(`/lb/${leaderboardId}`);
+                goto(`/lb/${leaderboardId}/${data.currentSeason}`);
             }
 
             if ($categories.category === "Open World PVP") {
@@ -142,7 +145,7 @@
                         $categories.subcategory
                     ][0].LeaderboardDefinitionId;
 
-                goto(`/lb/${leaderboardId}`);
+                goto(`/lb/${leaderboardId}/${data.currentSeason}`);
             }
         }
 
@@ -356,7 +359,7 @@
                                                     ][$categories.category][
                                                         $categories.subcategory
                                                     ][0].LeaderboardDefinitionId
-                                                }`
+                                                }/${data.currentSeason}`
                                             );
                                         }
                                     }}
@@ -438,7 +441,7 @@
                                             return;
                                         }
                                         goto(
-                                            `/lb/${categoryKeys.LeaderboardDefinitionId}`
+                                            `/lb/${categoryKeys.LeaderboardDefinitionId}/${data.currentSeason}`
                                         );
                                     }}
                                 >
