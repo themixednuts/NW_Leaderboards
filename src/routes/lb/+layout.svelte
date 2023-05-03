@@ -213,23 +213,29 @@
       <div
         class="btn-group col-span-full row-start-2 row-end-3 place-self-center"
       >
-        <button class="dropdown no-animation btn">
-          <!-- svelte-ignore a11y-label-has-associated-control -->
-          <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-          <label tabindex="0" class="m-1">
-            {$page.params.season
-              ?.replace('s', 'Season ')
-              .replace('q', 'Quarter ')}
-          </label>
-          <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-          <ul
-            tabindex="0"
-            class="dropdown-content menu rounded-box no-animation w-52 bg-base-100 p-2 text-base-content shadow"
-          >
-            <li><a href="/lb/{leaderboardId}/s1">Season 1</a></li>
-            <li><a href="/lb/{leaderboardId}/q1">Quarter 1</a></li>
-          </ul>
-        </button>
+        {#if $page.params.season}
+          <button class="dropdown btn-primary no-animation btn">
+            <!-- svelte-ignore a11y-label-has-associated-control -->
+            <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+            <label tabindex="0" class="m-1">
+              {$page.params.season
+                ?.replace('s', 'Season ')
+                .replace('q', 'Quarter ')}
+            </label>
+            <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+            <ul
+              tabindex="0"
+              class="dropdown-content menu rounded-box no-animation w-52 bg-base-100 p-2 text-base-content shadow"
+            >
+              <li>
+                <a href="/lb/{leaderboardId}/s1">Season 1</a>
+              </li>
+              <li>
+                <a href="/lb/{leaderboardId}/q1">Quarter 1</a>
+              </li>
+            </ul>
+          </button>
+        {/if}
         {#if leaderboard && filteredLeaderboards.length > 1 && leaderboards.find((item) => item[data.filter] === true)}
           <button class="dropdown no-animation btn">
             <!-- svelte-ignore a11y-label-has-associated-control -->

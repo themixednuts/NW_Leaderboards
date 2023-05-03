@@ -157,7 +157,7 @@
         </tbody>
       </table>
       <div
-        class=" absolute left-0 top-0 flex h-full w-full select-none place-content-center place-items-center place-self-center text-2xl opacity-10"
+        class="absolute left-0 top-0 flex h-full w-full select-none place-content-center place-items-center place-self-center text-2xl opacity-10"
       >
         <span class="translate-x-1/4 translate-y-1/4 rotate-45">
           nwstats.info

@@ -7,7 +7,7 @@ import {
 import type { LayoutLoad } from './$types'
 
 export const load = (async ({ fetch, params }) => {
-  const currentSeason = 's1'
+  const currentSeason = params.season || 's1'
   let filter = 'CharacterLeaderboard' as
     | 'CharacterLeaderboard'
     | 'CompanyLeaderboard'
