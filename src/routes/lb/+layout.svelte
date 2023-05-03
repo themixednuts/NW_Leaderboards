@@ -213,7 +213,7 @@
       <div
         class="btn-group col-span-full row-start-2 row-end-3 place-self-center"
       >
-        <button class="dropdown btn">
+        <button class="dropdown no-animation btn">
           <!-- svelte-ignore a11y-label-has-associated-control -->
           <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
           <label tabindex="0" class="m-1">
@@ -224,14 +224,14 @@
           <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
           <ul
             tabindex="0"
-            class="dropdown-content menu rounded-box w-52 bg-base-100 p-2 shadow"
+            class="dropdown-content menu rounded-box no-animation w-52 bg-base-100 p-2 text-base-content shadow"
           >
             <li><a href="/lb/{leaderboardId}/s1">Season 1</a></li>
             <li><a href="/lb/{leaderboardId}/q1">Quarter 1</a></li>
           </ul>
         </button>
         {#if leaderboard && filteredLeaderboards.length > 1 && leaderboards.find((item) => item[data.filter] === true)}
-          <button class="dropdown btn">
+          <button class="dropdown no-animation btn">
             <!-- svelte-ignore a11y-label-has-associated-control -->
             <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
             <label tabindex="0" class="m-1">
@@ -240,7 +240,7 @@
             <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
             <ul
               tabindex="0"
-              class="dropdown-content menu rounded-box w-52 bg-base-100 p-2 shadow"
+              class="dropdown-content menu rounded-box no-animation w-52 bg-base-100 p-2 text-base-content shadow"
             >
               {#each leaderboards as leaderboard}
                 {#if leaderboard[data.filter]}
@@ -272,18 +272,26 @@
         </button>
         <button
           class="btn text-center"
-          disabled={!leaderboards.find(
-            (item) => item['CompanyLeaderboard'] === true
+          disabled={!Object.keys(
+            leaderboardData[$categories.firstlevelcategory][
+              $categories.category
+            ]
+          ).some((key) =>
+            leaderboardData[$categories.firstlevelcategory][
+              $categories.category
+            ][key].some((item) => item.CompanyLeaderboard === true)
           )}
           class:btn-active={data.filter === 'CompanyLeaderboard'}
           on:pointerup={() => {
             data.filter = 'CompanyLeaderboard'
-            goto(
-              `/lb/${
-                leaderboards.find((item) => item['CompanyLeaderboard'] === true)
-                  ?.LeaderboardDefinitionId
-              }/${data.currentSeason}`
-            )
+
+            const id = leaderboards.find(
+              (item) => item['CompanyLeaderboard'] === true
+            )?.LeaderboardDefinitionId
+
+            if (id) {
+              goto(`/lb/${id}/${data.currentSeason}`)
+            }
           }}
         >
           Company
@@ -293,13 +301,13 @@
           class:btn-active={data.filter === 'CharacterLeaderboard'}
           on:pointerup={() => {
             data.filter = 'CharacterLeaderboard'
-            goto(
-              `/lb/${
-                leaderboards.find(
-                  (item) => item['CharacterLeaderboard'] === true
-                )?.LeaderboardDefinitionId
-              }/${data.currentSeason}`
-            )
+            const id = leaderboards.find(
+              (item) => item['CharacterLeaderboard'] === true
+            )?.LeaderboardDefinitionId
+
+            if (id) {
+              goto(`/lb/${id}/${data.currentSeason}`)
+            }
           }}
         >
           Character
@@ -341,10 +349,11 @@
                 )?.LeaderboardDefinitionId
                 goto(`/lb/${id}/${data.currentSeason}`)
               }}
-              class="btn box-border border-2 border-transparent px-6 text-left text-lg hover:border-b-accent hover:bg-base-200 {$categories.subcategory ===
-                subitem && $categories.category === item
-                ? 'border-l-accent'
-                : ''}"
+              class="btn box-border border-8 border-transparent px-6 text-left text-lg"
+              class:btn-active={$categories.subcategory === subitem &&
+                $categories.category === item}
+              class:border-l-primary={$categories.subcategory === subitem &&
+                $categories.category === item}
             >
               {subitem}
             </button>

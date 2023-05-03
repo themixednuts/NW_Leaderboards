@@ -18,21 +18,22 @@ export const load = (async ({ fetch, params }) => {
 
   if (params.leaderboardId) {
     const map = leaderboardMapId[params.leaderboardId]
-    const leaderboard = leaderboardData[map.FirstLevelCategory][map.Category][
-      map.SecondLevelCategory
-    ].find((item) => item.LeaderboardDefinitionId === params.leaderboardId)
+    if (map) {
+      const leaderboard = leaderboardData[map.FirstLevelCategory][map.Category][
+        map.SecondLevelCategory
+      ].find((item) => item.LeaderboardDefinitionId === params.leaderboardId)
 
-    if (leaderboard?.CharacterLeaderboard === true) {
-      filter = 'CharacterLeaderboard'
+      if (leaderboard?.CharacterLeaderboard === true) {
+        filter = 'CharacterLeaderboard'
+      }
+      if (leaderboard?.CompanyLeaderboard === true) {
+        filter = 'CompanyLeaderboard'
+      }
     }
-    if (leaderboard?.CompanyLeaderboard === true) {
-      filter = 'CompanyLeaderboard'
-    }
+
     // if (leaderboard?.FactionLeaderboard === true) {
     //   filter = 'FactionLeaderboard'
     // }
-
-    console.log(filter)
   }
 
   async function getUniqueUserData() {
