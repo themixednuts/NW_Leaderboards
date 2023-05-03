@@ -99,7 +99,9 @@
   class="my-grid-row col-span-full row-span-2 row-start-3 grid max-h-full grid-cols-1 place-self-start lg:col-start-2 lg:col-end-5 lg:row-start-2 lg:row-end-5"
 >
   {#if data}
-    <div class="flex w-full justify-center bg-base-300 py-4 capitalize">
+    <div
+      class="flex w-full justify-center bg-base-300 py-4 text-2xl capitalize"
+    >
       {!isNaN(Number(data.DisplayName))
         ? `${category}, ${data.DisplayName}`
         : data.DisplayName}
