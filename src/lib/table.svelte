@@ -169,9 +169,8 @@
       {#if pageSize > 5}
         <!-- Page 1 -->
         <button
-          class="btn-sm btn {currentPage === pageSizeArray[0]
-            ? 'btn-active'
-            : ''}"
+          class="btn-sm btn"
+          class:btn-active={currentPage === pageSizeArray[0]}
           on:pointerup={(e) => handleClickEvent(e)}
         >
           {pageSizeArray[0]}
@@ -179,27 +178,24 @@
         <!-- Page 2 or currentPage - 1 -->
         {#if currentPage - 1 > 2 && currentPage - 1 <= pageSize - 3}
           <button
-            class="btn-sm btn {currentPage === currentPage - 1
-              ? 'btn-active'
-              : ''}"
+            class="btn-sm btn"
+            class:btn-active={currentPage === currentPage - 1}
             on:pointerup={(e) => handleClickEvent(e)}
           >
             {currentPage - 1}
           </button>
         {:else if currentPage - 1 >= pageSize - 3}
           <button
-            class="btn-sm btn {currentPage === pageSize - 3
-              ? 'btn-active'
-              : ''}"
+            class="btn-sm btn"
+            class:btn-active={currentPage === pageSize - 3}
             on:pointerup={(e) => handleClickEvent(e)}
           >
             {pageSize - 3}
           </button>
         {:else}
           <button
-            class="btn-sm btn {currentPage === pageSizeArray[1]
-              ? 'btn-active'
-              : ''}"
+            class="btn-sm btn"
+            class:btn-active={currentPage === pageSizeArray[1]}
             on:pointerup={(e) => handleClickEvent(e)}
           >
             {pageSizeArray[1]}
@@ -208,25 +204,24 @@
         <!-- Page 3 or currentPage -->
         {#if currentPage > 3 && currentPage < pageSize - 1}
           <button
-            class="btn-sm btn {currentPage === currentPage ? 'btn-active' : ''}"
+            class="btn-sm btn"
+            class:btn-active={currentPage === currentPage}
             on:pointerup={(e) => handleClickEvent(e)}
           >
             {currentPage}
           </button>
         {:else if currentPage >= 1 && currentPage < 4}
           <button
-            class="btn-sm btn {currentPage === pageSizeArray[2]
-              ? 'btn-active'
-              : ''}"
+            class="btn-sm btn"
+            class:btn-active={currentPage === pageSizeArray[2]}
             on:pointerup={(e) => handleClickEvent(e)}
           >
             {pageSizeArray[2]}
           </button>
         {:else}
           <button
-            class="btn-sm btn {currentPage === pageSize - 2
-              ? 'btn-active'
-              : ''}"
+            class="btn-sm btn"
+            class:btn-active={currentPage === pageSize - 2}
             on:pointerup={(e) => handleClickEvent(e)}
           >
             {pageSize - 2}
@@ -235,27 +230,24 @@
         <!-- Page 4 or Page 5 or currentPage + 1 -->
         {#if currentPage + 1 < pageSize - 1 && currentPage + 1 > pageSizeArray[2]}
           <button
-            class="btn-sm btn {currentPage === currentPage + 1
-              ? 'btn-active'
-              : ''}"
+            class="btn-sm btn"
+            class:btn-active={currentPage === currentPage + 1}
             on:pointerup={(e) => handleClickEvent(e)}
           >
             {currentPage + 1}
           </button>
         {:else if currentPage + 1 <= pageSizeArray[2]}
           <button
-            class="btn-sm btn {currentPage === pageSizeArray[3]
-              ? 'btn-active'
-              : ''}"
+            class="btn-sm btn"
+            class:btn-active={currentPage === pageSizeArray[3]}
             on:pointerup={(e) => handleClickEvent(e)}
           >
             {pageSizeArray[3]}
           </button>
         {:else}
           <button
-            class="btn-sm btn {currentPage === pageSize - 1
-              ? 'btn-active'
-              : ''}"
+            class="btn-sm btn"
+            class:btn-active={currentPage === pageSize - 1}
             on:pointerup={(e) => handleClickEvent(e)}
           >
             {pageSize - 1}
@@ -263,7 +255,8 @@
         {/if}
         <!-- Page 6 or last page -->
         <button
-          class="btn-sm btn {currentPage === pageSize ? 'btn-active' : ''}"
+          class="btn-sm btn"
+          class:btn-active={currentPage === pageSize}
           on:pointerup={(e) => handleClickEvent(e)}
         >
           {pageSize}
@@ -271,7 +264,8 @@
       {:else}
         {#each pageSizeArray as i}
           <button
-            class="btn-sm btn {currentPage === i ? 'btn-active' : ''}"
+            class="btn-sm btn"
+            class:btn-active={currentPage === i}
             on:pointerup={(e) => handleClickEvent(e)}
           >
             {i}
