@@ -355,7 +355,7 @@
                 )?.LeaderboardDefinitionId
                 goto(`/lb/${id}/${data.currentSeason}`)
               }}
-              class="btn box-border h-fit border-8 border-transparent px-6 text-left text-lg"
+              class="text-md btn box-border h-fit border-8 border-transparent px-6 text-left"
               class:btn-active={$categories.subcategory === subitem &&
                 $categories.category === item}
               class:border-l-primary={$categories.subcategory === subitem &&
