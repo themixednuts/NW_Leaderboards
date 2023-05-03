@@ -328,7 +328,7 @@
       {#each Object.keys(leaderboardData[$categories.firstlevelcategory]) as item}
         <!-- content here -->
         <div class="rounded-box hidden w-full flex-col gap-2 px-2 lg:flex">
-          <div class=" border-b-2 border-base-100 bg-base-300 px-2 text-xl">
+          <div class="border-b-2 border-base-100 bg-base-300 px-2 text-xl">
             {item}
           </div>
           {#each Object.keys(leaderboardData[$categories.firstlevelcategory][item] || {}) as subitem}
@@ -349,7 +349,7 @@
                 )?.LeaderboardDefinitionId
                 goto(`/lb/${id}/${data.currentSeason}`)
               }}
-              class="btn box-border border-8 border-transparent px-6 text-left text-lg"
+              class="btn box-border h-fit border-8 border-transparent px-6 text-left text-lg"
               class:btn-active={$categories.subcategory === subitem &&
                 $categories.category === item}
               class:border-l-primary={$categories.subcategory === subitem &&
