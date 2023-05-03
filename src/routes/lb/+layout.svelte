@@ -190,10 +190,11 @@
 
   function clearHierarchy(targetKey: string) {
     if (hierarchy[targetKey]) {
-      hierarchy[targetKey].forEach((item) => {
-        ;($categories as { [key: string]: string })[item] = ''
-      })
+      hierarchy[targetKey].forEach(
+        (item) => (($categories as { [key: string]: string })[item] = '')
+      )
     }
+    leaderboardId = ''
   }
 
   function removeFocus() {

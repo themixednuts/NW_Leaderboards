@@ -6,7 +6,6 @@
   export let leaderboardData: LeaderboardType
 
   const dispatch = createEventDispatcher()
-
   function handleEvent() {
     dispatch('selectCategory', 'firstlevelcategory')
   }
@@ -26,9 +25,7 @@
     {#each Object.keys(leaderboardData) as categoryKeys}
       <li>
         <button
-          class=" {$categories.firstlevelcategory === categoryKeys
-            ? 'active'
-            : ''}"
+          class:active={$categories.firstlevelcategory === categoryKeys}
           on:pointerup={(e) => {
             if (e.button !== 0) {
               return
@@ -43,8 +40,7 @@
     {/each}
   </ul>
   <div
-    class="absolute bottom-0 -z-10 h-[5%] w-[100%] grow {!$categories.firstlevelcategory
-      ? 'bg-accent'
-      : ''}"
+    class="absolute bottom-0 -z-10 h-[5%] w-[100%] grow"
+    class:bg-accent={!$categories.firstlevelcategory}
   />
 </div>
