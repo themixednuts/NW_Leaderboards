@@ -20,13 +20,15 @@
       tabindex="0"
       class="btn-xs btn m-1 md:btn-sm {!$categories.category
         ? ' border-b-accent'
-        : ''}">
+        : ''}"
+    >
       {$categories.category || 'Category'}
     </label>
     <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
     <ul
       tabindex="0"
-      class="min-h-24 small-scrollbar dropdown-content menu rounded-box left-1/2 max-h-[35vh] w-52 -translate-x-1/2 flex-nowrap overflow-y-auto overflow-x-hidden bg-base-100 p-2 shadow">
+      class="min-h-24 small-scrollbar dropdown-content menu rounded-box left-1/2 max-h-[35vh] w-52 -translate-x-1/2 flex-nowrap overflow-y-auto overflow-x-hidden bg-base-100 p-2 shadow"
+    >
       {#each Object.keys(leaderboardData[$categories.firstlevelcategory]) as categoryKeys}
         <li>
           <button
@@ -39,7 +41,8 @@
               }
               $categories.category = categoryKeys
               handleEvent()
-            }}>
+            }}
+          >
             {categoryKeys}
           </button>
         </li>

@@ -28,7 +28,8 @@
         tabindex="0"
         class="min-h-24 small-scrollbar dropdown-content menu rounded-box max-h-[35vh] w-52 flex-nowrap overflow-y-auto overflow-x-hidden bg-base-100 p-2 shadow {$categories.subcategory
           ? 'left-1/2 -translate-x-1/2'
-          : 'dropdown-end'}">
+          : 'dropdown-end'}"
+      >
         {#each Object.keys(leaderboardData[$categories.firstlevelcategory][$categories.category]) as categoryKeys}
           <li>
             <button
@@ -54,7 +55,8 @@
                     }/${data.currentSeason}`
                   )
                 }
-              }}>
+              }}
+            >
               {categoryKeys}
             </button>
           </li>
@@ -68,6 +70,7 @@
           $categories.subcategory
         ]?.length === 1)
         ? 'bg-accent'
-        : ''}" />
+        : ''}"
+    />
   </div>
 {/if}

@@ -1,17 +1,26 @@
-import { leaderboardIdMap, leaderboardMap, type LeaderboardIdMap, type LeaderboardType } from '$lib/leaderboardmap'
+import {
+  leaderboardIdMap,
+  leaderboardMap,
+  type LeaderboardIdMap,
+  type LeaderboardType,
+} from '$lib/leaderboardmap'
 import type { LayoutLoad } from './$types'
 
 export const load = (async ({ fetch, params }) => {
   const currentSeason = 's1'
-  let filter = 'CharacterLeaderboard' as 'CharacterLeaderboard' | 'CompanyLeaderboard' | 'FactionLeaderboard'
+  let filter = 'CharacterLeaderboard' as
+    | 'CharacterLeaderboard'
+    | 'CompanyLeaderboard'
+    | 'FactionLeaderboard'
 
   const leaderboardMapId: LeaderboardIdMap = leaderboardIdMap
   const leaderboardData: LeaderboardType = leaderboardMap
 
-
   if (params.leaderboardId) {
     const map = leaderboardMapId[params.leaderboardId]
-    const leaderboard = leaderboardData[map.FirstLevelCategory][map.Category][map.SecondLevelCategory].find(item => item.LeaderboardDefinitionId === params.leaderboardId)
+    const leaderboard = leaderboardData[map.FirstLevelCategory][map.Category][
+      map.SecondLevelCategory
+    ].find((item) => item.LeaderboardDefinitionId === params.leaderboardId)
 
     if (leaderboard?.CharacterLeaderboard === true) {
       filter = 'CharacterLeaderboard'
@@ -22,8 +31,6 @@ export const load = (async ({ fetch, params }) => {
     // if (leaderboard?.FactionLeaderboard === true) {
     //   filter = 'FactionLeaderboard'
     // }
-
-
 
     console.log(filter)
   }
@@ -64,7 +71,6 @@ export const load = (async ({ fetch, params }) => {
 
     return data
   }
-
 
   return {
     users: await getUniqueUserData(),

@@ -32,18 +32,22 @@
 <div
   class=" relative col-span-full row-span-1 flex max-h-full w-full place-content-center border-2 border-base-100 lg:col-start-2 lg:col-end-5 lg:place-self-start {$categories.firstlevelcategory
     ? 'lg:flex'
-    : 'lg:hidden'}  rounded-box p-2">
+    : 'lg:hidden'}  rounded-box p-2"
+>
   <div
-    class="rounded-box relative max-h-fit border-2 border-base-100 overflow-clip bg-black">
+    class="rounded-box relative max-h-fit overflow-clip border-2 border-base-100 bg-black"
+  >
     <a href="/lb" data-sveltekit-reload>
       <img
         src={`${assets}${
           bannerMap[$categories.firstlevelcategory || 'Mutated Expeditions']
         }`}
         alt=""
-        class="max-h-full w-full object-cover object-top" />
+        class="max-h-full w-full object-cover object-top"
+      />
       <div
-        class="absolute left-0 top-0 z-10 hidden h-full w-full cursor-pointer select-none place-items-center bg-base-100 bg-opacity-0 text-4xl hover:bg-opacity-60 lg:grid">
+        class="absolute left-0 top-0 z-10 hidden h-full w-full cursor-pointer select-none place-items-center bg-base-100 bg-opacity-0 text-4xl hover:bg-opacity-60 lg:grid"
+      >
         <div class="absolute bottom-4 left-4 text-white">
           {$categories.firstlevelcategory}
         </div>
@@ -54,7 +58,8 @@
 <div
   class=" col-span-full row-span-full hidden h-full max-h-[29rem] grid-cols-3 grid-rows-3 place-items-center gap-2 {!$categories.firstlevelcategory
     ? 'lg:grid'
-    : 'lg:hidden'} rounded-box w-full place-content-center border-2 border-base-100 p-2">
+    : 'lg:hidden'} rounded-box w-full place-content-center border-2 border-base-100 p-2"
+>
   {#each Object.keys(bannerMap) as banner, key}
     <button
       class="rounded-box relative grid h-full place-content-center overflow-clip border-2 border-base-100 bg-black hover:cursor-pointer hover:border-accent hover:bg-opacity-90 {key ===
@@ -69,14 +74,17 @@
         }
         dispatch('selectCategory', 'firstlevelcategory')
         $categories.firstlevelcategory = banner
-      }}>
+      }}
+    >
       <img
         src={`${assets}${bannerMap[banner]}`}
         alt=""
         title={banner}
-        class="h-full w-full" />
+        class="h-full w-full"
+      />
       <div
-        class="absolute left-0 top-0 z-10 grid h-full w-full place-items-center bg-base-100 bg-opacity-0 text-4xl hover:bg-opacity-60">
+        class="absolute left-0 top-0 z-10 grid h-full w-full place-items-center bg-base-100 bg-opacity-0 text-4xl hover:bg-opacity-60"
+      >
         <div class="absolute bottom-4 left-4 text-white">
           {banner}
         </div>

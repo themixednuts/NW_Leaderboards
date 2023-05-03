@@ -55,7 +55,8 @@
         : secondlevelcategory === leaderboard.DisplayName
         ? `${category}: ${secondlevelcategory}`
         : `${secondlevelcategory}: ${leaderboard.DisplayName}`}
-      property="og:title" />
+      property="og:title"
+    />
     <meta
       content="Leaderboard for {!isNaN(Number(leaderboard.DisplayName))
         ? `${category}, ${leaderboard.DisplayName}`
@@ -64,7 +65,8 @@
         category +
         ' ' +
         secondlevelcategory}"
-      property="og:description" />
+      property="og:description"
+    />
   {/if}
 </svelte:head>
 {#if $navigating}
@@ -75,7 +77,8 @@
   <Table {table} {id} season={$page.params.season} />
 {:else}
   <div
-    class="text-center w-full h-full col-span-full row-span-2 lg:col-span-3 lg:row-span-3">
-    <h1 class="text-3xl w-full h-full">No data available</h1>
+    class="col-span-full row-span-2 h-full w-full text-center lg:col-span-3 lg:row-span-3"
+  >
+    <h1 class="h-full w-full text-3xl">No data available</h1>
   </div>
 {/if}

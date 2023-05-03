@@ -53,7 +53,7 @@ for (const value of leaderboardJson) {
 
   if (
     !leaderboardDataObj[value.FirstLevelCategory][resolveKey(value.Category)][
-    resolveKey(value.SecondLevelCategory)
+      resolveKey(value.SecondLevelCategory)
     ]
   ) {
     leaderboardDataObj[value.FirstLevelCategory][resolveKey(value.Category)][
@@ -126,13 +126,13 @@ for (const value of leaderboardJson) {
       const isNumber = Number(innerObj.DisplayName) !== NaN
 
       if (isNumber) {
-        leaderboardDataObj[value.FirstLevelCategory][resolveKey(value.Category)][
-          resolveKey(value.SecondLevelCategory)
-        ].unshift(innerObj)
+        leaderboardDataObj[value.FirstLevelCategory][
+          resolveKey(value.Category)
+        ][resolveKey(value.SecondLevelCategory)].unshift(innerObj)
       } else {
-        leaderboardDataObj[value.FirstLevelCategory][resolveKey(value.Category)][
-          resolveKey(value.SecondLevelCategory)
-        ].push(innerObj)
+        leaderboardDataObj[value.FirstLevelCategory][
+          resolveKey(value.Category)
+        ][resolveKey(value.SecondLevelCategory)].push(innerObj)
       }
     }
   }
