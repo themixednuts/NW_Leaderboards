@@ -26,5 +26,5 @@
 }
 
 *::-webkit-scrollbar-thumb {
-    @apply bg-accent;
+    @apply bg-accent;   
 }

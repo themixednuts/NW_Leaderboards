@@ -1,49 +1,47 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher } from 'svelte'
+  import type { LeaderboardType } from './leaderboardmap'
 
-    export let categories;
-    export let leaderboardData;
+  export let categories
+  export let leaderboardData: LeaderboardType
 
-    const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher()
 
-    function handleEvent() {
-        dispatch("selectCategory", "firstlevelcategory");
-    }
+  function handleEvent() {
+    dispatch('selectCategory', 'firstlevelcategory')
+  }
 </script>
 
-<div class="dropdown">
-    <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-    <!-- svelte-ignore a11y-label-has-associated-control -->
-    <label tabindex="0" class="btn btn-xs md:btn-sm m-1"
-        >{$categories.firstlevelcategory || "Main Section"}</label
-    >
-    <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-    <ul
-        tabindex="0"
-        class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 overflow-y-auto overflow-x-hidden min-h-24 flex-nowrap max-h-[35vh] small-scrollbar"
-    >
-        {#each Object.keys(leaderboardData) as categoryKeys}
-            <li>
-                <button
-                    class=" {$categories.firstlevelcategory === categoryKeys
-                        ? 'active'
-                        : ''}"
-                    on:pointerup={(e) => {
-                        if (e.button !== 0) {
-                            return;
-                        }
-                        $categories.firstlevelcategory = categoryKeys;
-                        handleEvent();
-                    }}
-                >
-                    {categoryKeys}
-                </button>
-            </li>
-        {/each}
-    </ul>
-    <div
-        class="w-[100%] h-[5%] bottom-0 absolute grow -z-10 {!$categories.firstlevelcategory
-            ? 'bg-accent'
+<div class="dropdown lg:hidden">
+  <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+  <!-- svelte-ignore a11y-label-has-associated-control -->
+  <label tabindex="0" class="btn-xs btn m-1 md:btn-sm">
+    {$categories.firstlevelcategory || 'Main Section'}
+  </label>
+  <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+  <ul
+    tabindex="0"
+    class="min-h-24 small-scrollbar dropdown-content menu rounded-box max-h-[35vh] w-52 flex-nowrap overflow-y-auto overflow-x-hidden bg-base-100 p-2 shadow">
+    {#each Object.keys(leaderboardData) as categoryKeys}
+      <li>
+        <button
+          class=" {$categories.firstlevelcategory === categoryKeys
+            ? 'active'
             : ''}"
-    />
+          on:pointerup={(e) => {
+            if (e.button !== 0) {
+              return
+            }
+            $categories.firstlevelcategory = categoryKeys
+            handleEvent()
+          }}>
+          {categoryKeys}
+        </button>
+      </li>
+    {/each}
+  </ul>
+  <div
+    class="absolute bottom-0 -z-10 h-[5%] w-[100%] grow {!$categories.firstlevelcategory
+      ? 'bg-accent'
+      : ''}" />
 </div>
