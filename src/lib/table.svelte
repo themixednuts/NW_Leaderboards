@@ -96,7 +96,7 @@
 </script>
 
 <div
-  class="my-grid-row col-span-full row-span-2 row-start-3 grid max-h-full grid-cols-1 place-self-start lg:col-start-2 lg:col-end-5 lg:row-start-2 lg:row-end-5"
+  class="my-grid-row relative col-span-full row-span-2 row-start-3 grid max-h-full grid-cols-1 place-self-start lg:col-start-2 lg:col-end-5 lg:row-start-2 lg:row-end-5"
 >
   {#if data}
     <div
@@ -156,12 +156,15 @@
           {/each}
         </tbody>
       </table>
+      <div
+        class=" absolute left-0 top-0 flex h-full w-full select-none place-content-center place-items-center place-self-center text-2xl opacity-10"
+      >
+        <span class="translate-x-1/4 translate-y-1/4 rotate-45">
+          nwstats.info
+        </span>
+      </div>
     </div>
-    <div
-      class="absolute flex rotate-45 select-none place-content-center place-items-center place-self-center text-2xl opacity-10"
-    >
-      <span class="translate-x-1/4 translate-y-1/4">nwstats.info</span>
-    </div>
+
     <div class="btn-group my-0 flex justify-center place-self-center py-2">
       {#if pageSize > 5}
         <!-- Page 1 -->
