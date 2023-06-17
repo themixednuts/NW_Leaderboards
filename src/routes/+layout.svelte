@@ -5,10 +5,11 @@
 
   import Stats from '$lib/stats.svelte'
   import type { LayoutData } from './$types'
+    import UserStats from '$lib/userStats.svelte'
 
   export let data: LayoutData
 
-  const users = data.users.data[0]
+  const users = data.users
   const breaches = data.breaches.data[0]
   const legendaries = data.legendaries.data[0]
 
@@ -116,7 +117,7 @@
     <div
       class="no-scrollbar stats stats-vertical mb-2 max-h-full grow overflow-auto shadow md:stats-horizontal"
     >
-      <Stats title="Unique Characters" json={users} />
+      <UserStats json={users} />
 
       <Stats title="Legendaries Crafted" json={legendaries} />
 

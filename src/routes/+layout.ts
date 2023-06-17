@@ -8,6 +8,7 @@ import type { LayoutLoad } from './$types'
 
 export const load = (async ({ fetch, params }) => {
   const currentSeason = params.season || 's1'
+  const lastSeason = currentSeason === 's1' ? 'q1' : 's' + (parseInt(currentSeason.slice(1)) - 1)
   let filter = 'CharacterLeaderboard' as
     | 'CharacterLeaderboard'
     | 'CompanyLeaderboard'
@@ -37,12 +38,21 @@ export const load = (async ({ fetch, params }) => {
   }
 
   async function getUniqueUserData() {
-    const response = await fetch(`https://lb.jakel.rocks/users`)
+    const allUsersResponse = await fetch(`https://lb.jakel.rocks/users?filter=all`)
+    const currentUsersResponse = await fetch(`https://lb.jakel.rocks/users?filter=${currentSeason}`)
+    const lastUsersResponse = await fetch(`https://lb.jakel.rocks/users?filter=${lastSeason}`)
 
-    if (response.status !== 200) {
+    if (allUsersResponse.status !== 200) {
       throw new Error('Unique users not found')
     }
-    const data: LeaderboardAPIUserResponse = await response.json()
+    const allUsers: LeaderboardAPIUserResponse = await allUsersResponse.json()
+    const currentUsers: LeaderboardAPIUserResponse = await currentUsersResponse.json()
+    const lastUsers: LeaderboardAPIUserResponse = await lastUsersResponse.json()
+    const data = {
+      all: allUsers,
+      current: currentUsers,
+      last: lastUsers
+    }
 
     return data
   }
