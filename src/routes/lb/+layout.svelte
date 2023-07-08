@@ -229,6 +229,9 @@
               class="dropdown-content menu rounded-box no-animation w-52 bg-base-100 p-2 text-base-content shadow"
             >
               <li>
+                <a href="/lb/{leaderboardId}/s2">Season 2</a>
+              </li>
+              <li>
                 <a href="/lb/{leaderboardId}/s1">Season 1</a>
               </li>
               <li>

@@ -1,16 +1,13 @@
-import { readFile, writeFile } from 'fs/promises'
+import {  writeFile } from 'fs/promises'
 import jsdom from 'jsdom'
 
 const { JSDOM } = jsdom
 
-const leaderboardTablePath =
-  'C:/Users/jonfo/Documents/Github/themixednuts.github.io/static/sharedassests/springboardentitites/datatables/javelindata_leaderboard.json'
-const leaderboardFile = await readFile(leaderboardTablePath, 'utf8')
-const leaderboardJson = JSON.parse(leaderboardFile)
+const leadboardFetch = await fetch("https://raw.githubusercontent.com/new-world-tools/datasheets-json/ptr-2023-06-02/LeaderboardData/LeaderboardDataTable.json")
+const leaderboardJson = await leadboardFetch.json()
 
-const localizationPath =
-  'E:/Extract/NW PTR/localization/en-us/javelindata_leaderboards.loc.xml'
-const localizationFile = await readFile(localizationPath, 'utf8')
+const localizationPath = await fetch("https://raw.githubusercontent.com/new-world-tools/localization/main/javelindata_leaderboards.loc.xml")
+const localizationFile = await localizationPath.text()
 
 const DOMParser = new JSDOM().window.DOMParser
 const parser = new DOMParser()

@@ -32,7 +32,7 @@
 
   onMount(() => {
     const currentSeason = data.currentSeason
-    const validSeasons = ['q1', 's1']
+    const validSeasons = ['q1', 's1', 's2']
 
     if (!validSeasons.includes($page.params.season)) {
       goto(`/lb/${$page.params.leaderboardId}/${currentSeason}`)

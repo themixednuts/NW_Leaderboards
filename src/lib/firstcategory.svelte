@@ -20,8 +20,7 @@
   <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
   <ul
     tabindex="0"
-    class="min-h-24 small-scrollbar dropdown-content menu rounded-box max-h-[35vh] w-52 flex-nowrap overflow-y-auto overflow-x-hidden bg-base-100 p-2 shadow"
-  >
+    class="min-h-24 small-scrollbar dropdown-content menu rounded-box max-h-[35vh] w-52 flex-nowrap overflow-y-auto overflow-x-hidden bg-base-100 p-2 shadow">
     {#each Object.keys(leaderboardData) as categoryKeys}
       <li>
         <button
@@ -32,15 +31,14 @@
             }
             $categories.firstlevelcategory = categoryKeys
             handleEvent()
-          }}
-        >
+          }}>
           {categoryKeys}
         </button>
       </li>
     {/each}
   </ul>
+
   <div
     class="absolute bottom-0 -z-10 h-[5%] w-[100%] grow"
-    class:bg-accent={!$categories.firstlevelcategory}
-  />
+    class:bg-accent={!$categories.firstlevelcategory} />
 </div>

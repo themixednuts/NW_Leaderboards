@@ -7,7 +7,7 @@ import {
 import type { LayoutLoad } from './$types'
 
 export const load = (async ({ fetch, params }) => {
-  const currentSeason = params.season || 's1'
+  const currentSeason = params.season || 's2'
   const lastSeason = currentSeason === 's1' ? 'q1' : 's' + (parseInt(currentSeason.slice(1)) - 1)
   let filter = 'CharacterLeaderboard' as
     | 'CharacterLeaderboard'

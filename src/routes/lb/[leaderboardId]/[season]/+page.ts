@@ -5,7 +5,7 @@ import type { PageLoad } from './$types'
 export const load = (async ({ fetch, params, parent }) => {
   const leaderboardId = params.leaderboardId
   const { currentSeason } = await parent()
-  const validSeasons = ['q1', 's1']
+  const validSeasons = ['q1', 's1', 's2']
   const seasonId = validSeasons.includes(params.season)
     ? params.season
     : currentSeason
