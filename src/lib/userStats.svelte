@@ -9,7 +9,7 @@
 
   console.log(json.current.data[0].count / json.last.data[0].count)
   const compare =
-    Number(json.current.data[0].count) / Number(json.last.data[0].count) - 1
+    (Number(json.current.data[0].count) / Number(json.last.data[0].count) - 1) * 100
 </script>
 
 <div class="stat place-items-center">
