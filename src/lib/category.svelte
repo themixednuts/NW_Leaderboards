@@ -18,11 +18,11 @@
     <!-- svelte-ignore a11y-label-has-associated-control -->
     <label
       tabindex="0"
-      class="btn-xs btn m-1 md:btn-sm {!$categories.category
+      class="btn-xs flex flex-nowrap btn m-1 md:btn-sm {!$categories.category
         ? ' border-b-accent'
         : ''}"
     >
-      {$categories.category || 'Category'}
+      {@html $categories.category|| 'Category'}
     </label>
     <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
     <ul
@@ -43,7 +43,7 @@
               handleEvent()
             }}
           >
-            {categoryKeys}
+            {@html categoryKeys}
           </button>
         </li>
       {/each}

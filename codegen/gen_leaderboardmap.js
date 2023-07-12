@@ -3,7 +3,7 @@ import jsdom from 'jsdom'
 
 const { JSDOM } = jsdom
 
-const leadboardFetch = await fetch("https://raw.githubusercontent.com/new-world-tools/datasheets-json/ptr-2023-06-02/LeaderboardData/LeaderboardDataTable.json")
+const leadboardFetch = await fetch("https://raw.githubusercontent.com/new-world-tools/datasheets-json/main/LeaderboardData/LeaderboardDataTable.json")
 const leaderboardJson = await leadboardFetch.json()
 
 const localizationPath = await fetch("https://raw.githubusercontent.com/new-world-tools/localization/main/javelindata_leaderboards.loc.xml")
@@ -18,6 +18,19 @@ function resolveKey(string) {
   const key = xmlDoc.querySelector(`[key="${newString}"]`)
   return key.textContent
 }
+
+function addPNG(string) {
+  const regex = /img.*?src="(.*?)".*?/i;
+  const matches = regex.exec(string);
+  if (!matches) return string
+
+  const srcAttributeValue = matches[1];
+
+  // Append .png to the src attribute value
+  const modifiedSrc = '/' + srcAttributeValue + '.png';
+  const modifiedString = string.replace(srcAttributeValue, modifiedSrc);
+  return modifiedString
+} 
 
 const leaderboardIdCount = new Map()
 
@@ -38,22 +51,23 @@ for (const value of leaderboardJson) {
     (leaderboardIdCount.get(lbDefinitionId) || 0) + 1
   )
 
+  const category = addPNG(resolveKey(value.Category))
   if (!leaderboardDataObj[value.FirstLevelCategory]) {
     leaderboardDataObj[value.FirstLevelCategory] = {}
   }
   if (
-    !leaderboardDataObj[value.FirstLevelCategory][resolveKey(value.Category)]
+    !leaderboardDataObj[value.FirstLevelCategory][category]
   ) {
-    leaderboardDataObj[value.FirstLevelCategory][resolveKey(value.Category)] =
+    leaderboardDataObj[value.FirstLevelCategory][category] =
       {}
   }
 
   if (
-    !leaderboardDataObj[value.FirstLevelCategory][resolveKey(value.Category)][
+    !leaderboardDataObj[value.FirstLevelCategory][category][
       resolveKey(value.SecondLevelCategory)
     ]
   ) {
-    leaderboardDataObj[value.FirstLevelCategory][resolveKey(value.Category)][
+    leaderboardDataObj[value.FirstLevelCategory][category][
       resolveKey(value.SecondLevelCategory)
     ] = []
   }
@@ -68,12 +82,12 @@ for (const value of leaderboardJson) {
   innerObj['CompanyLeaderboard'] = value.CompanyLeaderboard
   innerObj['FactionLeaderboard'] = value.FactionLeaderboard
   innerObj['FirstLevelCategory'] = value.FirstLevelCategory
-  innerObj['Category'] = resolveKey(value.Category)
+  innerObj['Category'] = category
   innerObj['SecondLevelCategory'] = resolveKey(value.SecondLevelCategory)
 
   leaderboardIdMap[lbDefinitionId] = {
     FirstLevelCategory: value.FirstLevelCategory,
-    Category: resolveKey(value.Category),
+    Category: category,
     SecondLevelCategory: resolveKey(value.SecondLevelCategory),
   }
 
@@ -100,17 +114,17 @@ for (const value of leaderboardJson) {
   }
 
   if (
-    leaderboardDataObj[value.FirstLevelCategory][resolveKey(value.Category)][
+    leaderboardDataObj[value.FirstLevelCategory][category][
       resolveKey(value.SecondLevelCategory)
     ].length === 0
   ) {
-    leaderboardDataObj[value.FirstLevelCategory][resolveKey(value.Category)][
+    leaderboardDataObj[value.FirstLevelCategory][category][
       resolveKey(value.SecondLevelCategory)
     ].push(innerObj)
   } else {
     let shouldAddInnerObj = true
 
-    leaderboardDataObj[value.FirstLevelCategory][resolveKey(value.Category)][
+    leaderboardDataObj[value.FirstLevelCategory][category][
       resolveKey(value.SecondLevelCategory)
     ].forEach((element) => {
       if (element.LeaderboardDefinitionId === lbDefinitionId) {
@@ -123,13 +137,9 @@ for (const value of leaderboardJson) {
       const isNumber = Number(innerObj.DisplayName) !== NaN
 
       if (isNumber) {
-        leaderboardDataObj[value.FirstLevelCategory][
-          resolveKey(value.Category)
-        ][resolveKey(value.SecondLevelCategory)].unshift(innerObj)
+        leaderboardDataObj[value.FirstLevelCategory][category][resolveKey(value.SecondLevelCategory)].unshift(innerObj)
       } else {
-        leaderboardDataObj[value.FirstLevelCategory][
-          resolveKey(value.Category)
-        ][resolveKey(value.SecondLevelCategory)].push(innerObj)
+        leaderboardDataObj[value.FirstLevelCategory][category][resolveKey(value.SecondLevelCategory)].push(innerObj)
       }
     }
   }

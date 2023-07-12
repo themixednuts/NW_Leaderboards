@@ -6,8 +6,6 @@
     Number(json.current.data[0].count)
   )
   const lastUsers = Intl.NumberFormat().format(Number(json.last.data[0].count))
-
-  console.log(json.current.data[0].count / json.last.data[0].count)
   const compare =
     (Number(json.current.data[0].count) / Number(json.last.data[0].count) - 1) * 100
 </script>

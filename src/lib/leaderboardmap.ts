@@ -869,7 +869,7 @@ export const leaderboardMap = {
         }
     },
     "Vs. Players": {
-        "Outpost Rush <img src=\"lyshineui/images/icons/crossworld/icon_crossworld_identifier\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>": {
+        "Outpost Rush <img src=\"/lyshineui/images/icons/crossworld/icon_crossworld_identifier.png\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>": {
             "Score": [
                 {
                     "LeaderboardDefinitionId": "top_outpost_rush_score",
@@ -880,7 +880,7 @@ export const leaderboardMap = {
                     "CompanyLeaderboard": false,
                     "FactionLeaderboard": false,
                     "FirstLevelCategory": "Vs. Players",
-                    "Category": "Outpost Rush <img src=\"lyshineui/images/icons/crossworld/icon_crossworld_identifier\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
+                    "Category": "Outpost Rush <img src=\"/lyshineui/images/icons/crossworld/icon_crossworld_identifier.png\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
                     "SecondLevelCategory": "Score",
                     "CategoryDescription": "<img src=\"lyshineui/images/icons/crossworld/icon_crossworld_identifier\" scale=\"2.0\" xPadding=\"2\" yOffset=\"5\"></img> <font color=\"#ffffff\"><font face=\"lyshineui/fonts/Nimbus_Regular.font\">Regional Leaderboard</font></font>\\n\\nYour Outpost Rush Score is the top score you've received in a match.",
                     "Rotation": [
@@ -901,7 +901,7 @@ export const leaderboardMap = {
                     "CompanyLeaderboard": false,
                     "FactionLeaderboard": false,
                     "FirstLevelCategory": "Vs. Players",
-                    "Category": "Outpost Rush <img src=\"lyshineui/images/icons/crossworld/icon_crossworld_identifier\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
+                    "Category": "Outpost Rush <img src=\"/lyshineui/images/icons/crossworld/icon_crossworld_identifier.png\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
                     "SecondLevelCategory": "Heals",
                     "CategoryDescription": "<img src=\"lyshineui/images/icons/crossworld/icon_crossworld_identifier\" scale=\"2.0\" xPadding=\"2\" yOffset=\"5\"></img> <font color=\"#ffffff\"><font face=\"lyshineui/fonts/Nimbus_Regular.font\">Regional Leaderboard</font></font>",
                     "Rotation": [
@@ -922,7 +922,7 @@ export const leaderboardMap = {
                     "CompanyLeaderboard": false,
                     "FactionLeaderboard": false,
                     "FirstLevelCategory": "Vs. Players",
-                    "Category": "Outpost Rush <img src=\"lyshineui/images/icons/crossworld/icon_crossworld_identifier\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
+                    "Category": "Outpost Rush <img src=\"/lyshineui/images/icons/crossworld/icon_crossworld_identifier.png\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
                     "SecondLevelCategory": "Player Kills",
                     "CategoryDescription": "<img src=\"lyshineui/images/icons/crossworld/icon_crossworld_identifier\" scale=\"2.0\" xPadding=\"2\" yOffset=\"5\"></img> <font color=\"#ffffff\"><font face=\"lyshineui/fonts/Nimbus_Regular.font\">Regional Leaderboard</font></font>",
                     "Rotation": [
@@ -943,7 +943,7 @@ export const leaderboardMap = {
                     "CompanyLeaderboard": false,
                     "FactionLeaderboard": false,
                     "FirstLevelCategory": "Vs. Players",
-                    "Category": "Outpost Rush <img src=\"lyshineui/images/icons/crossworld/icon_crossworld_identifier\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
+                    "Category": "Outpost Rush <img src=\"/lyshineui/images/icons/crossworld/icon_crossworld_identifier.png\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
                     "SecondLevelCategory": "Resources Contributed",
                     "CategoryDescription": "<img src=\"lyshineui/images/icons/crossworld/icon_crossworld_identifier\" scale=\"2.0\" xPadding=\"2\" yOffset=\"5\"></img> <font color=\"#ffffff\"><font face=\"lyshineui/fonts/Nimbus_Regular.font\">Regional Leaderboard</font></font>",
                     "Rotation": [
@@ -964,7 +964,7 @@ export const leaderboardMap = {
                     "CompanyLeaderboard": false,
                     "FactionLeaderboard": false,
                     "FirstLevelCategory": "Vs. Players",
-                    "Category": "Outpost Rush <img src=\"lyshineui/images/icons/crossworld/icon_crossworld_identifier\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
+                    "Category": "Outpost Rush <img src=\"/lyshineui/images/icons/crossworld/icon_crossworld_identifier.png\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
                     "SecondLevelCategory": "NPC Kills",
                     "CategoryDescription": "<img src=\"lyshineui/images/icons/crossworld/icon_crossworld_identifier\" scale=\"2.0\" xPadding=\"2\" yOffset=\"5\"></img> <font color=\"#ffffff\"><font face=\"lyshineui/fonts/Nimbus_Regular.font\">Regional Leaderboard</font></font>",
                     "Rotation": [
@@ -985,7 +985,7 @@ export const leaderboardMap = {
                     "CompanyLeaderboard": false,
                     "FactionLeaderboard": false,
                     "FirstLevelCategory": "Vs. Players",
-                    "Category": "Outpost Rush <img src=\"lyshineui/images/icons/crossworld/icon_crossworld_identifier\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
+                    "Category": "Outpost Rush <img src=\"/lyshineui/images/icons/crossworld/icon_crossworld_identifier.png\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
                     "SecondLevelCategory": "Wins",
                     "CategoryDescription": "<img src=\"lyshineui/images/icons/crossworld/icon_crossworld_identifier\" scale=\"2.0\" xPadding=\"2\" yOffset=\"5\"></img> <font color=\"#ffffff\"><font face=\"lyshineui/fonts/Nimbus_Regular.font\">Regional Leaderboard</font></font>",
                     "Rotation": [
@@ -1006,7 +1006,7 @@ export const leaderboardMap = {
                     "CompanyLeaderboard": false,
                     "FactionLeaderboard": false,
                     "FirstLevelCategory": "Vs. Players",
-                    "Category": "Outpost Rush <img src=\"lyshineui/images/icons/crossworld/icon_crossworld_identifier\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
+                    "Category": "Outpost Rush <img src=\"/lyshineui/images/icons/crossworld/icon_crossworld_identifier.png\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
                     "SecondLevelCategory": "Kill/Death Ratio",
                     "CategoryDescription": "<img src=\"lyshineui/images/icons/crossworld/icon_crossworld_identifier\" scale=\"2.0\" xPadding=\"2\" yOffset=\"5\"></img> <font color=\"#ffffff\"><font face=\"lyshineui/fonts/Nimbus_Regular.font\">Regional Leaderboard</font></font>",
                     "Rotation": [
@@ -1027,7 +1027,7 @@ export const leaderboardMap = {
                     "CompanyLeaderboard": false,
                     "FactionLeaderboard": false,
                     "FirstLevelCategory": "Vs. Players",
-                    "Category": "Outpost Rush <img src=\"lyshineui/images/icons/crossworld/icon_crossworld_identifier\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
+                    "Category": "Outpost Rush <img src=\"/lyshineui/images/icons/crossworld/icon_crossworld_identifier.png\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
                     "SecondLevelCategory": "Damage Dealt",
                     "CategoryDescription": "<img src=\"lyshineui/images/icons/crossworld/icon_crossworld_identifier\" scale=\"2.0\" xPadding=\"2\" yOffset=\"5\"></img> <font color=\"#ffffff\"><font face=\"lyshineui/fonts/Nimbus_Regular.font\">Regional Leaderboard</font></font>",
                     "Rotation": [
@@ -4300,42 +4300,42 @@ export const leaderboardIdMap = {
     },
     "top_outpost_rush_score": {
         "FirstLevelCategory": "Vs. Players",
-        "Category": "Outpost Rush <img src=\"lyshineui/images/icons/crossworld/icon_crossworld_identifier\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
+        "Category": "Outpost Rush <img src=\"/lyshineui/images/icons/crossworld/icon_crossworld_identifier.png\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
         "SecondLevelCategory": "Score"
     },
     "top_outpost_rush_heals": {
         "FirstLevelCategory": "Vs. Players",
-        "Category": "Outpost Rush <img src=\"lyshineui/images/icons/crossworld/icon_crossworld_identifier\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
+        "Category": "Outpost Rush <img src=\"/lyshineui/images/icons/crossworld/icon_crossworld_identifier.png\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
         "SecondLevelCategory": "Heals"
     },
     "top_outpost_rush_kills": {
         "FirstLevelCategory": "Vs. Players",
-        "Category": "Outpost Rush <img src=\"lyshineui/images/icons/crossworld/icon_crossworld_identifier\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
+        "Category": "Outpost Rush <img src=\"/lyshineui/images/icons/crossworld/icon_crossworld_identifier.png\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
         "SecondLevelCategory": "Player Kills"
     },
     "top_outpost_rush_resource_contributed": {
         "FirstLevelCategory": "Vs. Players",
-        "Category": "Outpost Rush <img src=\"lyshineui/images/icons/crossworld/icon_crossworld_identifier\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
+        "Category": "Outpost Rush <img src=\"/lyshineui/images/icons/crossworld/icon_crossworld_identifier.png\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
         "SecondLevelCategory": "Resources Contributed"
     },
     "top_outpost_rush_npc_kills": {
         "FirstLevelCategory": "Vs. Players",
-        "Category": "Outpost Rush <img src=\"lyshineui/images/icons/crossworld/icon_crossworld_identifier\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
+        "Category": "Outpost Rush <img src=\"/lyshineui/images/icons/crossworld/icon_crossworld_identifier.png\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
         "SecondLevelCategory": "NPC Kills"
     },
     "top_outpost_rush_wins": {
         "FirstLevelCategory": "Vs. Players",
-        "Category": "Outpost Rush <img src=\"lyshineui/images/icons/crossworld/icon_crossworld_identifier\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
+        "Category": "Outpost Rush <img src=\"/lyshineui/images/icons/crossworld/icon_crossworld_identifier.png\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
         "SecondLevelCategory": "Wins"
     },
     "top_outpost_rush_kill_death_ratio": {
         "FirstLevelCategory": "Vs. Players",
-        "Category": "Outpost Rush <img src=\"lyshineui/images/icons/crossworld/icon_crossworld_identifier\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
+        "Category": "Outpost Rush <img src=\"/lyshineui/images/icons/crossworld/icon_crossworld_identifier.png\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
         "SecondLevelCategory": "Kill/Death Ratio"
     },
     "top_outpost_rush_damage_dealt": {
         "FirstLevelCategory": "Vs. Players",
-        "Category": "Outpost Rush <img src=\"lyshineui/images/icons/crossworld/icon_crossworld_identifier\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
+        "Category": "Outpost Rush <img src=\"/lyshineui/images/icons/crossworld/icon_crossworld_identifier.png\" scale=\"1.0\" xPadding=\"2\" yOffset=\"2\"></img>",
         "SecondLevelCategory": "Damage Dealt"
     },
     "top_character_darkness_breaches_score": {

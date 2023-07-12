@@ -14,6 +14,7 @@
   import Secondcategory from '$lib/secondcategory.svelte'
   import Leaderboard from '$lib/leaderboard.svelte'
   import Imagebanner from '$lib/imagebanner.svelte'
+    import { addPNG } from '../../utils'
 
   const leaderboardData: LeaderboardType = leaderboardMap
   const leaderboardMapId: LeaderboardIdMap = leaderboardIdMap
@@ -338,8 +339,8 @@
       {#each Object.keys(leaderboardData[$categories.firstlevelcategory]) as item}
         <!-- content here -->
         <div class="rounded-box hidden w-full flex-col gap-2 px-2 lg:flex">
-          <div class="border-b-2 border-base-100 bg-base-300 px-2 text-xl">
-            {item}
+          <div class="border-b-2 flex flex-nowrap border-base-100 bg-base-300 px-2 text-xl">
+            {@html item}
           </div>
           {#each Object.keys(leaderboardData[$categories.firstlevelcategory][item] || {}) as subitem}
             <button
