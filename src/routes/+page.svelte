@@ -3,9 +3,9 @@
   import { onMount } from 'svelte'
 
   //remove once we have a proper page
-  onMount(() => {
-    goto('./lb')
-  })
+  // onMount(() => {
+  //   goto('./lb')
+  // })
 </script>
 
 <svelte:head>

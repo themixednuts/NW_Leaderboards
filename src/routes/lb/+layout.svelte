@@ -14,7 +14,6 @@
   import Secondcategory from '$lib/secondcategory.svelte'
   import Leaderboard from '$lib/leaderboard.svelte'
   import Imagebanner from '$lib/imagebanner.svelte'
-    import { addPNG } from '../../utils'
 
   const leaderboardData: LeaderboardType = leaderboardMap
   const leaderboardMapId: LeaderboardIdMap = leaderboardIdMap
