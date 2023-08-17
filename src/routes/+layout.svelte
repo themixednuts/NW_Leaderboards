@@ -105,9 +105,9 @@
   <slot />
 
   <div
-    class="no-scrollbar flex max-h-24 place-content-center place-items-center overflow-auto md:max-h-fit">
+    class="hidden max-h-24 place-content-center place-items-center overflow-auto md:flex md:max-h-fit">
     <div
-      class="no-scrollbar stats stats-vertical mb-2 max-h-full grow overflow-auto shadow md:stats-horizontal">
+      class="stats stats-vertical mb-2 max-h-full grow overflow-auto shadow md:stats-horizontal">
       <UserStats json={users} />
 
       <Stats title="Legendaries Crafted" json={legendaries} />
