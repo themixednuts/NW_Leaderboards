@@ -208,7 +208,7 @@
     </div>
   </div>
   <div
-    class="col-start-1 col-end-5 row-start-3 row-end-4 grid min-h-[15vh] w-full gap-2 overflow-auto border-2 border-base-100 bg-base-300 py-2 uppercase md:col-start-3 md:row-start-2 md:row-end-3 md:max-h-[15vh] lg:col-start-1 lg:col-end-2 lg:row-start-2 lg:row-end-5 lg:h-full lg:max-h-full lg:gap-2">
+    class="col-start-1 col-end-5 row-start-3 row-end-4 grid min-h-[5vh] w-full gap-2 overflow-auto border-2 border-base-100 bg-base-300 py-2 uppercase md:col-start-3 md:row-start-2 md:row-end-3 md:max-h-[15vh] lg:col-start-1 lg:col-end-2 lg:row-start-2 lg:row-end-5 lg:h-full lg:max-h-full lg:gap-2">
     {#each firstLevelKeys as item}
       <!-- content here -->
       <div class="flex grow-0 flex-col gap-2 px-2">
@@ -255,10 +255,9 @@
 
 <style>
   .my-grid {
-    grid-template-rows: minmax(15vh, 0.5fr) minmax(15vh, auto) repeat(
-        2,
-        minmax(0, 1fr)
-      );
+    grid-template-rows:
+      minmax(15vh, 0.5fr) minmax(15vh, auto) minmax(15vh, min-content)
+      minmax(35vh, 1fr);
     grid-template-columns: repeat(2, minmax(min-content, auto)) repeat(
         2,
         minmax(min-content, 1fr)
