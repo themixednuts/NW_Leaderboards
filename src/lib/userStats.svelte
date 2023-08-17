@@ -3,16 +3,17 @@
 
   const allUsers = Intl.NumberFormat().format(Number(json.all.data[0].count))
   const currentUsers = Intl.NumberFormat().format(
-    Number(json.current.data[0].count)
+    Number(json.current.data[0].count),
   )
   const lastUsers = Intl.NumberFormat().format(Number(json.last.data[0].count))
   const compare =
-    (Number(json.current.data[0].count) / Number(json.last.data[0].count) - 1) * 100
+    (Number(json.current.data[0].count) / Number(json.last.data[0].count) - 1) *
+    100
 </script>
 
 <div class="stat place-items-center">
   <div class="stat-figure text-secondary" />
-  <div class="stat-title text-sm md:text-base">Unique Characters</div>
+  <div class="stat-title text-sm md:text-base">New Unique Characters</div>
   <div class="stat-value text-base text-secondary md:text-4xl">
     {#if currentUsers}
       {currentUsers}
@@ -22,14 +23,16 @@
   </div>
   <div class="stat-desc">
     <div>
-      <span>{compare >= 0 ? '↗︎ Growth: ' : '↘ Decline︎: '}</span>
+      {#if compare}
+        <span>{compare >= 0 ? '↗︎ Growth: ' : '↘ Decline︎: '}</span>
+      {/if}
       <span class="text-accent">{compare.toFixed(2)}%</span>
       <span class="tooltip" data-tip="from last season">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
-          class="inline-block w-4 h-4 stroke-current">
+          class="inline-block h-4 w-4 stroke-current">
           <path
             stroke-linecap="round"
             stroke-linejoin="round"

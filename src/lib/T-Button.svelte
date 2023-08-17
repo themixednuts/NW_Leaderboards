@@ -27,15 +27,14 @@
 </script>
 
 <button
-  class="btn outline-base-content"
+  class="btn outline-base-content bg-base-100"
   data-theme={theme ? theme : prefersDark ? 'dark' : 'light'}
   on:pointerup={(e) => {
     if (e.button === 0) {
       $currentTheme = theme
       changeTheme(theme)
     }
-  }}
->
+  }}>
   <div class="flex w-full gap-6">
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -43,11 +42,9 @@
       height="16"
       viewBox="0 0 24 24"
       fill="currentColor"
-      class="h-3 w-3 {$currentTheme === theme ? 'visible' : 'invisible'}"
-    >
+      class="h-3 w-3 {$currentTheme === theme ? 'visible' : 'invisible'}">
       <path
-        d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"
-      />
+        d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z" />
     </svg>
     <span class="grow">
       {theme ? theme.charAt(0).toUpperCase() + theme.slice(1) : 'Default'}

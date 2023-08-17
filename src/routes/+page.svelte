@@ -1,11 +1,5 @@
 <script>
-  import { goto } from '$app/navigation'
-  import { onMount } from 'svelte'
-
-  //remove once we have a proper page
-  // onMount(() => {
-  //   goto('./lb')
-  // })
+  import { page } from '$app/stores'
 </script>
 
 <svelte:head>
@@ -13,18 +7,7 @@
   <meta content="New World Global Leaderboards" property="og:title" />
   <meta
     content="A site to view leaderboards for New World"
-    property="og:description"
-  />
+    property="og:description" />
 </svelte:head>
 
-<button
-  class="btn-ghost btn"
-  on:pointerup={(e) => {
-    if (e.button !== 0) {
-      return
-    }
-    goto('./lb')
-  }}
->
-  Leaderboards
-</button>
+<a href="{$page.url.href}lb" class="btn-ghost btn">Leaderboards</a>

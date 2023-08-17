@@ -5,10 +5,6 @@
   export let categories
 
   const dispatch = createEventDispatcher()
-  type BannerMap = {
-    [key: string]: string
-  }
-
   const factionImagePaths = [
     '/lyshineui/images/leaderboards/leaderboard_cat_bg_faction_syndicate.png',
     '/lyshineui/images/leaderboards/leaderboard_cat_bg_faction_maruaders.png',
@@ -28,7 +24,7 @@
       '/lyshineui/images/leaderboards/leaderboard_cat_bg_player.png',
     'Trade Skills':
       '/lyshineui/images/leaderboards/leaderboard_cat_bg_trade.png',
-  }
+  } as const
 
   onMount(() => {
     const interval = setInterval(() => {
