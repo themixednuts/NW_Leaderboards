@@ -16,7 +16,7 @@
   const pullDate = table[0].date
 
   $: data = leaderboardData[firstlevelcategory][category][subcategory].find(
-    (item) => item.LeaderboardDefinitionId === id
+    (item) => item.LeaderboardDefinitionId === id,
   )
 
   const pageSize = Math.ceil(table.length / 10)
@@ -90,197 +90,171 @@
     } as const
     return `${dateObject.toLocaleDateString(
       'en-US',
-      dateOptions
+      dateOptions,
     )} ${dateObject.toLocaleTimeString('en-US', timeOptions)}`
   }
 </script>
 
-<div
-  class="my-grid-row relative col-span-full row-span-2 row-start-3 grid max-h-full grid-cols-1 place-self-start lg:col-start-2 lg:col-end-5 lg:row-start-2 lg:row-end-5"
->
-  {#if data}
-    <div
-      class="flex w-full justify-center bg-base-300 py-4 text-2xl capitalize"
-    >
-      {!isNaN(Number(data.DisplayName))
-        ? `${category}, ${data.DisplayName}`
-        : data.DisplayName}
-      {#if data.CategoryAdditionalHeader}
-        <div
-          class="tooltip tooltip-info hover:z-50"
-          data-tip={data.CategoryAdditionalHeader.replace(/<[^>]*>/g, '')}
-        >
-          <!-- .replace(/(\<.*\>)/g, "") -->
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            class="h-4 w-4 stroke-current"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-        </div>
-      {/if}
-    </div>
-    <div
-      class="relative max-h-full min-h-[21rem] overflow-y-auto overflow-x-hidden"
-    >
-      <table
-        class="table-zebra table-compact relative table h-full w-full table-fixed select-none md:table-normal"
-      >
-        <thead class="sticky top-0">
-          <tr>
-            <th scope="col">Rank</th>
-            <th scope="col">{data.Value}</th>
-            <th scope="col">Server</th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each pageArrayIndex as i}
-            {#if table[i]}
-              <tr>
-                <td>{ranks[i]}</td>
-                <td>
-                  {data.Value === 'Time'
-                    ? secondsToTimeFormat(table[i].value)
-                    : table[i].value.toLocaleString()}
-                </td>
-                <td>{table[i].server}</td>
-              </tr>
-            {/if}
-          {/each}
-        </tbody>
-      </table>
+{#if data}
+  <div
+    class="relative flex w-full justify-center bg-base-300 py-4 text-2xl capitalize">
+    {!isNaN(Number(data.DisplayName))
+      ? `${category}, ${data.DisplayName}`
+      : data.DisplayName}
+    {#if data.CategoryAdditionalHeader}
       <div
-        class="absolute left-0 top-0 flex h-full w-full select-none place-content-center place-items-center place-self-center text-2xl opacity-10"
-      >
-        <span class="translate-x-1/4 translate-y-1/4 rotate-45">
-          nwstats.info
-        </span>
+        class="tooltip tooltip-info hover:z-50"
+        data-tip={data.CategoryAdditionalHeader.replace(/<[^>]*>/g, '')}>
+        <!-- .replace(/(\<.*\>)/g, "") -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          class="h-4 w-4 stroke-current">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
       </div>
+    {/if}
+  </div>
+  <div class="flex flex-col overflow-y-auto overflow-x-hidden">
+    <table
+      class="table-compact md:table-normal table table-zebra table-pin-rows relative h-full w-full table-fixed select-none">
+      <thead class="">
+        <tr>
+          <th scope="col">Rank</th>
+          <th scope="col">{data.Value}</th>
+          <th scope="col">Server</th>
+        </tr>
+      </thead>
+      <tbody>
+        {#each pageArrayIndex as i}
+          {#if table[i]}
+            <tr>
+              <td>{ranks[i]}</td>
+              <td>
+                {data.Value === 'Time'
+                  ? secondsToTimeFormat(table[i].value)
+                  : table[i].value.toLocaleString()}
+              </td>
+              <td>{table[i].server}</td>
+            </tr>
+          {/if}
+        {/each}
+      </tbody>
+    </table>
+    <div
+      class="absolute left-1/2 top-1/2 flex -translate-x-[25%] translate-y-[25%] select-none text-2xl opacity-20">
+      <span class="rotate-45">nwstats.info</span>
     </div>
+  </div>
 
-    <div class="btn-group my-0 flex justify-center place-self-center py-2">
-      {#if pageSize > 5}
-        <!-- Page 1 -->
+  <div class="btn-group my-0 flex justify-center place-self-center py-2">
+    {#if pageSize > 5}
+      <!-- Page 1 -->
+      <button
+        class="btn btn-sm"
+        class:btn-active={currentPage === pageSizeArray[0]}
+        on:pointerup={(e) => handleClickEvent(e)}>
+        {pageSizeArray[0]}
+      </button>
+      <!-- Page 2 or currentPage - 1 -->
+      {#if currentPage - 1 > 2 && currentPage - 1 <= pageSize - 3}
         <button
-          class="btn-sm btn"
-          class:btn-active={currentPage === pageSizeArray[0]}
-          on:pointerup={(e) => handleClickEvent(e)}
-        >
-          {pageSizeArray[0]}
+          class="btn btn-sm"
+          class:btn-active={currentPage === currentPage - 1}
+          on:pointerup={(e) => handleClickEvent(e)}>
+          {currentPage - 1}
         </button>
-        <!-- Page 2 or currentPage - 1 -->
-        {#if currentPage - 1 > 2 && currentPage - 1 <= pageSize - 3}
-          <button
-            class="btn-sm btn"
-            class:btn-active={currentPage === currentPage - 1}
-            on:pointerup={(e) => handleClickEvent(e)}
-          >
-            {currentPage - 1}
-          </button>
-        {:else if currentPage - 1 >= pageSize - 3}
-          <button
-            class="btn-sm btn"
-            class:btn-active={currentPage === pageSize - 3}
-            on:pointerup={(e) => handleClickEvent(e)}
-          >
-            {pageSize - 3}
-          </button>
-        {:else}
-          <button
-            class="btn-sm btn"
-            class:btn-active={currentPage === pageSizeArray[1]}
-            on:pointerup={(e) => handleClickEvent(e)}
-          >
-            {pageSizeArray[1]}
-          </button>
-        {/if}
-        <!-- Page 3 or currentPage -->
-        {#if currentPage > 3 && currentPage < pageSize - 1}
-          <button
-            class="btn-sm btn"
-            class:btn-active={currentPage === currentPage}
-            on:pointerup={(e) => handleClickEvent(e)}
-          >
-            {currentPage}
-          </button>
-        {:else if currentPage >= 1 && currentPage < 4}
-          <button
-            class="btn-sm btn"
-            class:btn-active={currentPage === pageSizeArray[2]}
-            on:pointerup={(e) => handleClickEvent(e)}
-          >
-            {pageSizeArray[2]}
-          </button>
-        {:else}
-          <button
-            class="btn-sm btn"
-            class:btn-active={currentPage === pageSize - 2}
-            on:pointerup={(e) => handleClickEvent(e)}
-          >
-            {pageSize - 2}
-          </button>
-        {/if}
-        <!-- Page 4 or Page 5 or currentPage + 1 -->
-        {#if currentPage + 1 < pageSize - 1 && currentPage + 1 > pageSizeArray[2]}
-          <button
-            class="btn-sm btn"
-            class:btn-active={currentPage === currentPage + 1}
-            on:pointerup={(e) => handleClickEvent(e)}
-          >
-            {currentPage + 1}
-          </button>
-        {:else if currentPage + 1 <= pageSizeArray[2]}
-          <button
-            class="btn-sm btn"
-            class:btn-active={currentPage === pageSizeArray[3]}
-            on:pointerup={(e) => handleClickEvent(e)}
-          >
-            {pageSizeArray[3]}
-          </button>
-        {:else}
-          <button
-            class="btn-sm btn"
-            class:btn-active={currentPage === pageSize - 1}
-            on:pointerup={(e) => handleClickEvent(e)}
-          >
-            {pageSize - 1}
-          </button>
-        {/if}
-        <!-- Page 6 or last page -->
+      {:else if currentPage - 1 >= pageSize - 3}
         <button
-          class="btn-sm btn"
-          class:btn-active={currentPage === pageSize}
-          on:pointerup={(e) => handleClickEvent(e)}
-        >
-          {pageSize}
+          class="btn btn-sm"
+          class:btn-active={currentPage === pageSize - 3}
+          on:pointerup={(e) => handleClickEvent(e)}>
+          {pageSize - 3}
         </button>
       {:else}
-        {#each pageSizeArray as i}
-          <button
-            class="btn-sm btn"
-            class:btn-active={currentPage === i}
-            on:pointerup={(e) => handleClickEvent(e)}
-          >
-            {i}
-          </button>
-        {/each}
+        <button
+          class="btn btn-sm"
+          class:btn-active={currentPage === pageSizeArray[1]}
+          on:pointerup={(e) => handleClickEvent(e)}>
+          {pageSizeArray[1]}
+        </button>
       {/if}
-    </div>
-    <div class="flex justify-center text-sm md:text-base">
-      {season.replace('s', 'Season: ').replace('q', 'Quarter: ')} - Date Pulled:
-      {getDateAndTime(pullDate)}
-    </div>
-  {:else}
-    <div>No Table</div>
-  {/if}
-</div>
+      <!-- Page 3 or currentPage -->
+      {#if currentPage > 3 && currentPage < pageSize - 1}
+        <button
+          class="btn btn-sm"
+          class:btn-active={currentPage === currentPage}
+          on:pointerup={(e) => handleClickEvent(e)}>
+          {currentPage}
+        </button>
+      {:else if currentPage >= 1 && currentPage < 4}
+        <button
+          class="btn btn-sm"
+          class:btn-active={currentPage === pageSizeArray[2]}
+          on:pointerup={(e) => handleClickEvent(e)}>
+          {pageSizeArray[2]}
+        </button>
+      {:else}
+        <button
+          class="btn btn-sm"
+          class:btn-active={currentPage === pageSize - 2}
+          on:pointerup={(e) => handleClickEvent(e)}>
+          {pageSize - 2}
+        </button>
+      {/if}
+      <!-- Page 4 or Page 5 or currentPage + 1 -->
+      {#if currentPage + 1 < pageSize - 1 && currentPage + 1 > pageSizeArray[2]}
+        <button
+          class="btn btn-sm"
+          class:btn-active={currentPage === currentPage + 1}
+          on:pointerup={(e) => handleClickEvent(e)}>
+          {currentPage + 1}
+        </button>
+      {:else if currentPage + 1 <= pageSizeArray[2]}
+        <button
+          class="btn btn-sm"
+          class:btn-active={currentPage === pageSizeArray[3]}
+          on:pointerup={(e) => handleClickEvent(e)}>
+          {pageSizeArray[3]}
+        </button>
+      {:else}
+        <button
+          class="btn btn-sm"
+          class:btn-active={currentPage === pageSize - 1}
+          on:pointerup={(e) => handleClickEvent(e)}>
+          {pageSize - 1}
+        </button>
+      {/if}
+      <!-- Page 6 or last page -->
+      <button
+        class="btn btn-sm"
+        class:btn-active={currentPage === pageSize}
+        on:pointerup={(e) => handleClickEvent(e)}>
+        {pageSize}
+      </button>
+    {:else}
+      {#each pageSizeArray as i}
+        <button
+          class="btn btn-sm"
+          class:btn-active={currentPage === i}
+          on:pointerup={(e) => handleClickEvent(e)}>
+          {i}
+        </button>
+      {/each}
+    {/if}
+  </div>
+  <div class="flex justify-center text-sm md:text-base">
+    {season.replace('s', 'Season: ').replace('q', 'Quarter: ')} - Date Pulled:
+    {getDateAndTime(pullDate)}
+  </div>
+{:else}
+  <div>No Table</div>
+{/if}
 
 <style>
   .my-grid-row {

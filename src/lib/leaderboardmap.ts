@@ -4200,7 +4200,7 @@ export const leaderboardMap = {
             ]
         }
     }
-}
+} as const
 
 export const leaderboardIdMap = {
     "top_war_score": {
@@ -5468,7 +5468,7 @@ export const leaderboardIdMap = {
         "Category": "Legendaries",
         "SecondLevelCategory": "Fishing"
     }
-}
+} as const
 
 export type LeaderboardDefinition = {
     Rotation: string[];

@@ -8,13 +8,13 @@
     LeaderboardIdMap,
     LeaderboardDefinition,
   } from '$lib/leaderboardmap'
-  import type { LayoutData } from '../$types'
+
+  import type { LayoutData } from '../../../$types'
   import Category from '$lib/category.svelte'
   import Firstcategory from '$lib/firstcategory.svelte'
   import Secondcategory from '$lib/secondcategory.svelte'
   import Leaderboard from '$lib/leaderboard.svelte'
   import Imagebanner from '$lib/imagebanner.svelte'
-    import { addPNG } from '../../utils'
 
   const leaderboardData: LeaderboardType = leaderboardMap
   const leaderboardMapId: LeaderboardIdMap = leaderboardIdMap
@@ -206,15 +206,12 @@
 </script>
 
 <div
-  class="my-grid rounded-box relative z-20 grid max-h-full min-w-fit place-content-center place-items-center gap-2 overflow-y-auto overflow-x-hidden bg-base-300 px-4 py-4"
->
+  class="my-grid rounded-box relative z-20 grid max-h-full min-w-fit place-content-center place-items-center gap-2 overflow-y-auto overflow-x-hidden bg-base-300 px-4 py-4">
   {#if $categories.firstlevelcategory}
     <div
-      class="rounded-box z-50 col-start-1 col-end-2 row-start-1 row-end-2 hidden h-full w-full grid-cols-2 grid-rows-2 border-2 border-base-100 px-2 lg:grid"
-    >
+      class="rounded-box z-50 col-start-1 col-end-2 row-start-1 row-end-2 hidden h-full w-full grid-cols-2 grid-rows-2 border-2 border-base-100 px-2 lg:grid">
       <div
-        class="btn-group col-span-full row-start-2 row-end-3 place-self-center"
-      >
+        class="btn-group col-span-full row-start-2 row-end-3 place-self-center">
         {#if $page.params.season}
           <button class="dropdown btn-primary no-animation btn">
             <!-- svelte-ignore a11y-label-has-associated-control -->
@@ -227,8 +224,7 @@
             <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
             <ul
               tabindex="0"
-              class="dropdown-content menu rounded-box no-animation w-52 bg-base-100 p-2 text-base-content shadow"
-            >
+              class="dropdown-content menu rounded-box no-animation w-52 bg-base-100 p-2 text-base-content shadow">
               <li>
                 <a href="/lb/{leaderboardId}/s2">Season 2</a>
               </li>
@@ -251,14 +247,12 @@
             <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
             <ul
               tabindex="0"
-              class="dropdown-content menu rounded-box no-animation w-52 bg-base-100 p-2 text-base-content shadow"
-            >
+              class="dropdown-content menu rounded-box no-animation w-52 bg-base-100 p-2 text-base-content shadow">
               {#each leaderboards as leaderboard}
                 {#if leaderboard[data.filter]}
                   <li>
                     <a
-                      href="/lb/{leaderboard.LeaderboardDefinitionId}/{data.currentSeason}"
-                    >
+                      href="/lb/{leaderboard.LeaderboardDefinitionId}/{data.currentSeason}">
                       {leaderboard.DisplayName}
                     </a>
                   </li>
@@ -269,16 +263,14 @@
         {/if}
       </div>
       <div
-        class="btn-group col-span-full row-start-1 row-end-2 place-self-center"
-      >
+        class="btn-group col-span-full row-start-1 row-end-2 place-self-center">
         <button
           class="btn text-center"
           disabled={true}
           class:btn-active={data.filter === 'FactionLeaderboard'}
           on:pointerup={() => {
             data.filter = 'FactionLeaderboard'
-          }}
-        >
+          }}>
           Faction
         </button>
         <button
@@ -303,8 +295,7 @@
             if (id) {
               goto(`/lb/${id}/${data.currentSeason}`)
             }
-          }}
-        >
+          }}>
           Company
         </button>
         <button
@@ -319,8 +310,7 @@
             if (id) {
               goto(`/lb/${id}/${data.currentSeason}`)
             }
-          }}
-        >
+          }}>
           Character
         </button>
       </div>
@@ -328,18 +318,17 @@
   {/if}
   <Imagebanner
     {categories}
-    on:selectCatergory={(e) => clearHierarchy(e.detail)}
-  />
+    on:selectCatergory={(e) => clearHierarchy(e.detail)} />
   <div
     class=" rounded-box col-span-full row-start-2 row-end-3 flex h-full w-full min-w-fit place-content-center place-items-center gap-0 border-2 border-base-100 bg-base-300 py-2 lg:col-start-1 lg:col-end-2 lg:row-start-2 lg:row-end-5 lg:flex-col lg:place-content-start lg:place-items-start lg:gap-2 lg:overflow-y-auto {!$categories.firstlevelcategory
       ? 'lg:hidden'
-      : 'lg:visible'}"
-  >
+      : 'lg:visible'}">
     {#if $categories.firstlevelcategory}
       {#each Object.keys(leaderboardData[$categories.firstlevelcategory]) as item}
         <!-- content here -->
         <div class="rounded-box hidden w-full flex-col gap-2 px-2 lg:flex">
-          <div class="border-b-2 flex flex-nowrap border-base-100 bg-base-300 px-2 text-xl">
+          <div
+            class="flex flex-nowrap border-b-2 border-base-100 bg-base-300 px-2 text-xl">
             {@html item}
           </div>
           {#each Object.keys(leaderboardData[$categories.firstlevelcategory][item] || {}) as subitem}
@@ -364,8 +353,7 @@
               class:btn-active={$categories.subcategory === subitem &&
                 $categories.category === item}
               class:border-l-primary={$categories.subcategory === subitem &&
-                $categories.category === item}
-            >
+                $categories.category === item}>
               {subitem}
             </button>
           {/each}
@@ -378,8 +366,7 @@
       on:selectCategory={(e) => {
         removeFocus()
         clearHierarchy(e.detail)
-      }}
-    />
+      }} />
 
     <Category
       {categories}
@@ -387,8 +374,7 @@
       on:selectCategory={(e) => {
         removeFocus()
         clearHierarchy(e.detail)
-      }}
-    />
+      }} />
 
     <Secondcategory
       {categories}
@@ -397,8 +383,7 @@
       on:selectCategory={(e) => {
         removeFocus()
         clearHierarchy(e.detail)
-      }}
-    />
+      }} />
 
     <Leaderboard
       {categories}
@@ -410,8 +395,7 @@
       on:selectCategory={(e) => {
         removeFocus()
         clearHierarchy(e.detail)
-      }}
-    />
+      }} />
   </div>
   <slot />
 </div>

@@ -1,28 +1,26 @@
 import {
   leaderboardIdMap,
   leaderboardMap,
-  type LeaderboardIdMap,
-  type LeaderboardType,
+  type LeaderboardDefinition,
 } from '$lib/leaderboardmap'
 import type { LayoutLoad } from './$types'
 
 export const load = (async ({ fetch, params }) => {
-  const currentSeason = params.season || 's2'
-  const lastSeason = currentSeason === 's1' ? 'q1' : 's' + (parseInt(currentSeason.slice(1)) - 1)
+  const validSeasons = ['q1', 's1', 's2']
+  const currentSeason = validSeasons.includes(params.season || '') ? params.season || validSeasons.at(-1) : validSeasons.at(-1)
+
   let filter = 'CharacterLeaderboard' as
     | 'CharacterLeaderboard'
     | 'CompanyLeaderboard'
     | 'FactionLeaderboard'
 
-  const leaderboardMapId: LeaderboardIdMap = leaderboardIdMap
-  const leaderboardData: LeaderboardType = leaderboardMap
 
   if (params.leaderboardId) {
-    const map = leaderboardMapId[params.leaderboardId]
+    const map = leaderboardIdMap[params.leaderboardId as keyof typeof leaderboardIdMap]
     if (map) {
-      const leaderboard = leaderboardData[map.FirstLevelCategory][map.Category][
+      const leaderboard: LeaderboardDefinition = leaderboardMap[map.FirstLevelCategory as keyof typeof leaderboardMap][map.Category as keyof typeof leaderboardMap[keyof typeof leaderboardMap]][
         map.SecondLevelCategory
-      ].find((item) => item.LeaderboardDefinitionId === params.leaderboardId)
+      ].find((item: LeaderboardDefinition) => item.LeaderboardDefinitionId === params.leaderboardId)
 
       if (leaderboard?.CharacterLeaderboard === true) {
         filter = 'CharacterLeaderboard'
@@ -31,20 +29,17 @@ export const load = (async ({ fetch, params }) => {
         filter = 'CompanyLeaderboard'
       }
     }
-
-    // if (leaderboard?.FactionLeaderboard === true) {
-    //   filter = 'FactionLeaderboard'
-    // }
   }
 
   async function getUniqueUserData() {
     const allUsersResponse = await fetch(`https://lb.jakel.rocks/users?filter=all`)
-    const currentUsersResponse = await fetch(`https://lb.jakel.rocks/users?filter=${currentSeason}`)
-    const lastUsersResponse = await fetch(`https://lb.jakel.rocks/users?filter=${lastSeason}`)
+    const currentUsersResponse = await fetch(`https://lb.jakel.rocks/users?filter=${validSeasons.at(-1)}`)
+    const lastUsersResponse = await fetch(`https://lb.jakel.rocks/users?filter=${validSeasons.at(-2)}`)
 
     if (allUsersResponse.status !== 200) {
       throw new Error('Unique users not found')
     }
+
     const allUsers: LeaderboardAPIUserResponse = await allUsersResponse.json()
     const currentUsers: LeaderboardAPIUserResponse = await currentUsersResponse.json()
     const lastUsers: LeaderboardAPIUserResponse = await lastUsersResponse.json()
