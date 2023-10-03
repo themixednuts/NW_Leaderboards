@@ -104,13 +104,13 @@
 </svelte:head>
 
 <div
-  class="my-grid relative z-20 grid max-h-full min-w-fit gap-2 overflow-x-hidden overflow-y bg-base-300 px-4 py-4">
+  class="my-grid overflow-y relative z-20 grid max-h-full min-w-fit gap-2 overflow-x-hidden bg-base-300 px-4 py-4">
   <div
-    class="gap-2 col-start-1 col-end-5 row-start-2 row-end-3 grid h-full w-full grid-cols-2 grid-rows-2 border-2 border-base-100 px-2 md:col-end-3 lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-2">
-    <div class="join col-span-full row-start-2 row-end-3 place-self-center">
+    class="col-start-1 col-end-5 row-start-2 row-end-3 grid h-full w-full grid-cols-2 grid-rows-2 gap-2 border-2 border-base-100 px-2 md:col-end-3 lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-2">
+    <div class="join col-span-full row-start-2 row-end-3 place-self-center rounded-none">
       {#if $page.params.season}
         <select
-          class="select join-item select-primary uppercase"
+          class="select join-item select-primary uppercase rounded-none"
           on:change={(e) => goto(e.target?.value)}>
           <option value="/lb/{leaderboardId}/s2">Season 2</option>
           <option value="/lb/{leaderboardId}/s1">Season 1</option>
@@ -133,7 +133,8 @@
       {/if}
     </div>
     {#if leaderboard}
-      <div class="join col-span-full row-start-1 row-end-2 place-self-center">
+      <div
+        class="join col-span-full row-start-1 row-end-2 place-self-center rounded-none">
         <button
           class="btn join-item text-center"
           disabled={true}
@@ -144,13 +145,14 @@
           Faction
         </button>
         <button
-          class="btn join-item text-center"
+          class="btn join-item text-center outline outline-transparent focus:outline-primary"
           disabled={!Object.keys(
             leaderboardMap[firstlevelcategory][category],
           ).some((key) =>
+            //@ts-ignore
             leaderboardMap[firstlevelcategory][category][key].some(
-              (/**@type {LeaderboardDefinition} */ item) =>
-                item.CompanyLeaderboard === true,
+              //@ts-ignore
+              (item) => item.CompanyLeaderboard === true,
             ),
           )}
           class:btn-primary={leaderboard['CompanyLeaderboard']}
@@ -168,7 +170,7 @@
           Company
         </button>
         <button
-          class="btn join-item text-center"
+          class="btn join-item text-center outline outline-transparent focus:outline-primary"
           class:btn-primary={leaderboard['CharacterLeaderboard']}
           on:pointerup={() => {
             data.filter = 'CharacterLeaderboard'
