@@ -104,9 +104,9 @@
 </svelte:head>
 
 <div
-  class="my-grid relative z-20 grid max-h-full min-w-fit gap-2 overflow-x-hidden overflow-y-hidden bg-base-300 px-4 py-4">
+  class="my-grid relative z-20 grid max-h-full min-w-fit gap-2 overflow-x-hidden overflow-y bg-base-300 px-4 py-4">
   <div
-    class="col-start-1 col-end-5 row-start-2 row-end-3 grid h-full w-full grid-cols-2 grid-rows-2 border-2 border-base-100 px-2 md:col-end-3 lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-2">
+    class="gap-2 col-start-1 col-end-5 row-start-2 row-end-3 grid h-full w-full grid-cols-2 grid-rows-2 border-2 border-base-100 px-2 md:col-end-3 lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-2">
     <div class="join col-span-full row-start-2 row-end-3 place-self-center">
       {#if $page.params.season}
         <select
@@ -256,7 +256,7 @@
 <style>
   .my-grid {
     grid-template-rows:
-      minmax(15vh, 0.5fr) minmax(15vh, auto) minmax(15vh, min-content)
+      minmax(15vh, 0.5fr) min-content minmax(15vh, min-content)
       minmax(35vh, 1fr);
     grid-template-columns: repeat(2, minmax(min-content, auto)) repeat(
         2,

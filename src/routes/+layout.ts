@@ -3,11 +3,14 @@ import {
   leaderboardMap,
   type LeaderboardDefinition,
 } from '$lib/leaderboardmap'
+import { redirect } from '@sveltejs/kit'
 import type { LayoutLoad } from './$types'
 
-export const load = (async ({ fetch, params }) => {
+export const load = (async ({route, fetch, params }) => {
   const validSeasons = ['q1', 's1', 's2']
   const currentSeason = validSeasons.includes(params.season || '') ? params.season || validSeasons.at(-1) : validSeasons.at(-1)
+
+  if(route.id === '/') throw redirect(301,'/lb')
 
   let filter = 'CharacterLeaderboard' as
     | 'CharacterLeaderboard'
