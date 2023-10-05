@@ -137,7 +137,7 @@
           </option>
         </select>
       {/if}
-      {#if leaderboard && filteredLeaderboards.length > 1 && leaderboards.find((item) => item[filter] === 'true')}
+      {#if leaderboard && filteredLeaderboards.length > 1 && leaderboards.find((item) => item[filter] === true)}
         <select
           class="select join-item select-primary rounded-none uppercase"
           on:change={(e) => goto(e.target?.value)}>
