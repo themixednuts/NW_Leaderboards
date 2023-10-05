@@ -3,8 +3,8 @@
   import type { PageData } from './$types'
   import { navigating, page } from '$app/stores'
   import {
-    leaderboardIdMap,
-    leaderboardMap,
+    LEADERBOARD_ID_MAP,
+    LEADERBOARD_DATA,
     type LeaderboardDefinition,
   } from '$lib/leaderboardmap'
   import { assets } from '$app/paths'
@@ -14,9 +14,10 @@
   export let data: PageData
 
   $: table = data.json
-  $: id = data.id
+  $: id = data.id as keyof typeof LEADERBOARD_ID_MAP
+  $: leaderboardId = $page.params.lbid || ''
 
-  $: leaderboardId = $page.params.leaderboardId || ''
+  $: filter = $page.url.searchParams.get('filter') ?? data.filter
 
   const factionImagePaths = [
     '/lyshineui/images/leaderboards/leaderboard_cat_bg_faction_syndicate.png',
@@ -49,20 +50,21 @@
     }
   })
 
-  $: firstlevelcategory = leaderboardIdMap[id].FirstLevelCategory
-  $: secondlevelcategory = leaderboardIdMap[id].SecondLevelCategory
-  $: category = leaderboardIdMap[id]
-    .Category as keyof (typeof leaderboardMap)[typeof firstlevelcategory]
-  $: leaderboard = leaderboardMap[firstlevelcategory][category][
+  $: firstlevelcategory = LEADERBOARD_ID_MAP[id].FirstLevelCategory
+  $: secondlevelcategory = LEADERBOARD_ID_MAP[id].SecondLevelCategory
+  $: category = LEADERBOARD_ID_MAP[id]
+    .Category as keyof (typeof LEADERBOARD_DATA)[typeof firstlevelcategory]
+
+  $: leaderboard = LEADERBOARD_DATA[firstlevelcategory][category][
     secondlevelcategory
   ].find(
     (item: LeaderboardDefinition) => item.LeaderboardDefinitionId === id,
   ) as LeaderboardDefinition
 
   $: firstLevelKeys = Object.keys(
-    leaderboardMap[firstlevelcategory],
-  ) as (keyof typeof leaderboardMap)[]
-  $: filteredLeaderboards = leaderboardMap[firstlevelcategory][category][
+    LEADERBOARD_DATA[firstlevelcategory],
+  ) as (keyof typeof LEADERBOARD_DATA)[]
+  $: filteredLeaderboards = LEADERBOARD_DATA[firstlevelcategory][category][
     secondlevelcategory
   ].reduce((acc: LeaderboardDefinition[], item: LeaderboardDefinition) => {
     if (item[data.filter] === true) {
@@ -70,7 +72,7 @@
     }
     return acc
   }, [])
-  $: leaderboards = leaderboardMap[firstlevelcategory][category][
+  $: leaderboards = LEADERBOARD_DATA[firstlevelcategory][category][
     secondlevelcategory
   ] as LeaderboardDefinition[]
 </script>
@@ -107,19 +109,37 @@
   class="my-grid overflow-y relative z-20 grid max-h-full min-w-fit gap-2 overflow-x-hidden bg-base-300 px-4 py-4">
   <div
     class="col-start-1 col-end-5 row-start-2 row-end-3 grid h-full w-full grid-cols-2 grid-rows-2 gap-2 border-2 border-base-100 px-2 md:col-end-3 lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-2">
-    <div class="join col-span-full row-start-2 row-end-3 place-self-center rounded-none">
+    <div
+      class="join col-span-full row-start-2 row-end-3 place-self-center rounded-none">
       {#if $page.params.season}
         <select
-          class="select join-item select-primary uppercase rounded-none"
+          class="select join-item select-primary rounded-none uppercase"
           on:change={(e) => goto(e.target?.value)}>
-          <option value="/lb/{leaderboardId}/s2">Season 2</option>
-          <option value="/lb/{leaderboardId}/s1">Season 1</option>
-          <option value="/lb/{leaderboardId}/q1">Quarter 1</option>
+          <option
+            value="/lb/{leaderboardId}/s3"
+            selected={$page.params.season === 's3'}>
+            Season 3
+          </option>
+          <option
+            value="/lb/{leaderboardId}/s2"
+            selected={$page.params.season === 's2'}>
+            Season 2
+          </option>
+          <option
+            value="/lb/{leaderboardId}/s1"
+            selected={$page.params.season === 's1'}>
+            Season 1
+          </option>
+          <option
+            value="/lb/{leaderboardId}/q1"
+            selected={$page.params.season === 'q1'}>
+            Quarter 1
+          </option>
         </select>
       {/if}
-      {#if leaderboard && filteredLeaderboards.length > 1 && leaderboards.find((item) => item[data.filter] === true)}
+      {#if leaderboard && filteredLeaderboards.length > 1 && leaderboards.find((item) => item[filter] === 'true')}
         <select
-          class="select join-item select-primary uppercase"
+          class="select join-item select-primary rounded-none uppercase"
           on:change={(e) => goto(e.target?.value)}>
           {#each leaderboards as leaderboard}
             {#if leaderboard[data.filter]}
@@ -133,6 +153,9 @@
       {/if}
     </div>
     {#if leaderboard}
+      {@const t = Object.values(LEADERBOARD_DATA[firstlevelcategory][category])
+        .map((arr) => arr.filter((item) => item.CompanyLeaderboard === true))
+        .some((arr) => arr.length)}
       <div
         class="join col-span-full row-start-1 row-end-2 place-self-center rounded-none">
         <button
@@ -145,44 +168,39 @@
           Faction
         </button>
         <button
-          class="btn join-item text-center outline outline-transparent focus:outline-primary"
-          disabled={!Object.keys(
-            leaderboardMap[firstlevelcategory][category],
-          ).some((key) =>
-            //@ts-ignore
-            leaderboardMap[firstlevelcategory][category][key].some(
-              //@ts-ignore
-              (item) => item.CompanyLeaderboard === true,
-            ),
-          )}
-          class:btn-primary={leaderboard['CompanyLeaderboard']}
+          class="btn join-item text-center outline outline-transparent hover:outline-primary"
+          disabled={!t}
+          class:btn-primary={leaderboard['CompanyLeaderboard'] === true}
           on:pointerup={() => {
             data.filter = 'CompanyLeaderboard'
-
-            const id = leaderboards.find(
-              (item) => item['CompanyLeaderboard'] === true,
-            )?.LeaderboardDefinitionId
-
-            if (id) {
-              goto(`/lb/${id}/${data.currentSeason}`)
-            }
           }}>
-          Company
+          {#if leaderboards}
+            {@const id = leaderboards.find(
+              (item) => item['CompanyLeaderboard'] === true,
+            )?.LeaderboardDefinitionId}
+            <a
+              href={`/lb/${id || $page.params.lbid}/${data.currentSeason}`}
+              class="flex h-full w-full place-items-center">
+              Company
+            </a>
+          {/if}
         </button>
         <button
-          class="btn join-item text-center outline outline-transparent focus:outline-primary"
-          class:btn-primary={leaderboard['CharacterLeaderboard']}
+          class="btn join-item text-center outline outline-transparent hover:outline-primary"
+          class:btn-primary={leaderboard['CharacterLeaderboard'] === true}
           on:pointerup={() => {
             data.filter = 'CharacterLeaderboard'
-            const id = leaderboards.find(
-              (item) => item['CharacterLeaderboard'] === true,
-            )?.LeaderboardDefinitionId
-
-            if (id) {
-              goto(`/lb/${id}/${data.currentSeason}`)
-            }
           }}>
-          Character
+          {#if leaderboards}
+            {@const id = leaderboards.find(
+              (item) => item['CharacterLeaderboard'] === true,
+            )?.LeaderboardDefinitionId}
+            <a
+              href={`/lb/${id || $page.params.lbid}/${data.currentSeason}`}
+              class="flex h-full w-full place-items-center">
+              Character
+            </a>
+          {/if}
         </button>
       </div>
     {/if}
@@ -218,20 +236,21 @@
           class="flex flex-nowrap border-b-2 border-base-100 bg-base-300 px-2 text-xl">
           {@html item}
         </div>
-        {#each Object.keys(leaderboardMap[firstlevelcategory][item] || {}) as subitem}
+        {#each Object.keys(LEADERBOARD_DATA[firstlevelcategory][item]) as subitem}
+          {@const definitions =
+            LEADERBOARD_DATA[firstlevelcategory][item][subitem]}
           <button
-            disabled={!leaderboardMap[firstlevelcategory][item][subitem].find(
-              (item) => item[data.filter] === true,
-            )}
+            disabled={!definitions.find((item) => item[filter] === true)}
             class="text-md btn relative rounded-none border-4 border-transparent p-0 text-left hover:link hover:animate-[pulse_1.5s_ease-in-out_infinite] hover:border-l-primary"
             class:btn-active={secondlevelcategory === subitem &&
               category === item}
             class:border-l-primary={secondlevelcategory === subitem &&
               category === item}>
             <a
-              href="/lb/{leaderboardMap[firstlevelcategory][item][subitem].find(
-                (item) => item[data.filter] === true,
-              )?.LeaderboardDefinitionId}/{data.currentSeason}"
+              href={`/lb/${
+                definitions.find((item) => item[filter] === true)
+                  ?.LeaderboardDefinitionId
+              }/${data.currentSeason}`}
               class="flex h-full w-full place-content-start place-items-center px-2 capitalize">
               {subitem}
             </a>
@@ -244,8 +263,8 @@
     class="my-grid-row relative col-span-full row-span-2 row-start-4 grid h-full w-full grid-cols-1 place-self-start border-2 border-base-100 md:row-span-full md:row-start-3 lg:col-start-2 lg:col-end-5 lg:row-start-2 lg:row-end-5">
     {#if $navigating}
       <span class="loading loading-spinner loading-lg place-self-center"></span>
-    {:else if table && table.length > 0}
-      <Table {table} {id} season={$page.params.season} />
+    {:else if table}
+      <Table table={table.data} {id} season={$page.params.season} />
     {:else}
       <div
         class="col-span-full row-span-2 h-full w-full text-center lg:col-span-3 lg:row-span-3">

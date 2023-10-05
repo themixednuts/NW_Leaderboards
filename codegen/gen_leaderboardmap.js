@@ -1,10 +1,50 @@
-import {  writeFile } from 'fs/promises'
+import { writeFile } from 'fs/promises'
 import jsdom from 'jsdom'
+import csvParser from 'csv-parser'
+import { Readable } from 'stream'
 
 const { JSDOM } = jsdom
 
-const leadboardFetch = await fetch("https://raw.githubusercontent.com/new-world-tools/datasheets-json/main/LeaderboardData/LeaderboardDataTable.json")
-const leaderboardJson = await leadboardFetch.json()
+const leaderboard_response = await fetch("https://raw.githubusercontent.com/new-world-tools/datasheets-csv/main/LeaderboardData/LeaderboardDataTable.csv")
+const data = []
+const stream = new Readable()
+stream.push(await leaderboard_response.text())
+stream.push(null)
+
+stream.pipe(csvParser())
+  .on('data', row => {
+    const convertedRow = {};
+
+    for (const key in row) {
+      if (row.hasOwnProperty(key)) {
+        const value = row[key];
+        // Attempt to parse the value to a number
+        const parsedNumber = parseFloat(value);
+
+        // Check if the parsed value is a valid number
+        if (!isNaN(parsedNumber)) {
+          // If it's a number, use the parsed value
+          convertedRow[key] = parsedNumber;
+        } else if (value.toLowerCase() === 'true') {
+          // Check if the value is 'true' (case-insensitive)
+          convertedRow[key] = true;
+        } else if (value.toLowerCase() === 'false') {
+          // Check if the value is 'false' (case-insensitive)
+          convertedRow[key] = false;
+        } else if (value.toLowerCase() === 'null' || value.toLowerCase() === 'undefined') {
+          // Check if the value is 'null' or 'undefined' (case-insensitive)
+          convertedRow[key] = null;
+        } else {
+          // If none of the above conditions match, keep it as a string
+          convertedRow[key] = value;
+        }
+      }
+    }
+    data.push(convertedRow)
+  })
+  .on('end', () => {
+    console.log('csv parsed?: ', data)
+  })
 
 const localizationPath = await fetch("https://raw.githubusercontent.com/new-world-tools/localization/main/javelindata_leaderboards.loc.xml")
 const localizationFile = await localizationPath.text()
@@ -30,105 +70,105 @@ function addPNG(string) {
   const modifiedSrc = '/' + srcAttributeValue + '.png';
   const modifiedString = string.replace(srcAttributeValue, modifiedSrc);
   return modifiedString
-} 
+}
 
 const leaderboardIdCount = new Map()
 
-const leaderboardDataObj = {}
-const leaderboardIdMap = {}
+const LEADERBOARD_DATA = {}
+const LEADERBOARD_ID_MAP = {}
+// https://raw.githubusercontent.com/new-world-tools/datasheets-csv/main/LeaderboardData/LeaderboardDataTable.csv
+for (const value of data) {
 
-for (const value of leaderboardJson) {
-  const lbDefinitionId = value.LeaderboardDefinitionId.replace(
+  const {
+    FirstLevelCategory,
+    SecondLevelCategory,
+    Category,
+    DisplayName,
+    ValueString,
+    CharacterLeaderboard,
+    GroupLeaderboard,
+    CompanyLeaderboard,
+    FactionLeaderboard,
+    EntitlementRewards,
+    Rewards,
+    CategoryDescription,
+    CategoryAdditionalHeader,
+    Rotation,
+    LeaderboardDefinitionId,
+  } = value
+
+  const lbid = LeaderboardDefinitionId.replace(
     'min-dungeon-group-gold-medal-expedition-clear-time',
-    'group_gold_time'
-  )
+    'group_gold_time')
     .replace(/\-/g, '_')
     .replace(/\.\{.*\}/g, '')
     .replace(/\./g, '_')
 
-  leaderboardIdCount.set(
-    lbDefinitionId,
-    (leaderboardIdCount.get(lbDefinitionId) || 0) + 1
-  )
+  const category = addPNG(resolveKey(Category))
 
-  const category = addPNG(resolveKey(value.Category))
-  if (!leaderboardDataObj[value.FirstLevelCategory]) {
-    leaderboardDataObj[value.FirstLevelCategory] = {}
-  }
-  if (
-    !leaderboardDataObj[value.FirstLevelCategory][category]
-  ) {
-    leaderboardDataObj[value.FirstLevelCategory][category] =
-      {}
-  }
+  leaderboardIdCount.set(lbid, (leaderboardIdCount.get(lbid) || 0) + 1)
 
-  if (
-    !leaderboardDataObj[value.FirstLevelCategory][category][
-      resolveKey(value.SecondLevelCategory)
-    ]
-  ) {
-    leaderboardDataObj[value.FirstLevelCategory][category][
-      resolveKey(value.SecondLevelCategory)
-    ] = []
-  }
+  LEADERBOARD_DATA[FirstLevelCategory] ??= {}
+  LEADERBOARD_DATA[FirstLevelCategory][category] ??= {}
+  LEADERBOARD_DATA[FirstLevelCategory][category][resolveKey(SecondLevelCategory)] ??= []
 
   const innerObj = {}
 
-  innerObj['LeaderboardDefinitionId'] = lbDefinitionId
-  innerObj['DisplayName'] = resolveKey(value.DisplayName)
-  innerObj['Value'] = resolveKey(value.ValueString)
-  innerObj['CharacterLeaderboard'] = value.CharacterLeaderboard
-  innerObj['GroupLeaderboard'] = value.GroupLeaderboard
-  innerObj['CompanyLeaderboard'] = value.CompanyLeaderboard
-  innerObj['FactionLeaderboard'] = value.FactionLeaderboard
-  innerObj['FirstLevelCategory'] = value.FirstLevelCategory
+  innerObj['LeaderboardDefinitionId'] = lbid
+  innerObj['DisplayName'] = resolveKey(DisplayName)
+  innerObj['Value'] = resolveKey(ValueString)
+  innerObj['CharacterLeaderboard'] = CharacterLeaderboard
+  innerObj['GroupLeaderboard'] = GroupLeaderboard
+  innerObj['CompanyLeaderboard'] = CompanyLeaderboard
+  innerObj['FactionLeaderboard'] = FactionLeaderboard
+  innerObj['FirstLevelCategory'] = FirstLevelCategory
   innerObj['Category'] = category
-  innerObj['SecondLevelCategory'] = resolveKey(value.SecondLevelCategory)
+  innerObj['SecondLevelCategory'] = resolveKey(SecondLevelCategory)
 
-  leaderboardIdMap[lbDefinitionId] = {
-    FirstLevelCategory: value.FirstLevelCategory,
+  LEADERBOARD_ID_MAP[lbid] = {
+    FirstLevelCategory: FirstLevelCategory,
     Category: category,
-    SecondLevelCategory: resolveKey(value.SecondLevelCategory),
+    SecondLevelCategory: resolveKey(SecondLevelCategory),
   }
 
-  if (!innerObj['EntitlementRewards'] && value.EntitlementRewards) {
-    innerObj['EntitlementRewards'] = value.EntitlementRewards
+  if (!innerObj['EntitlementRewards'] && EntitlementRewards) {
+    innerObj['EntitlementRewards'] = EntitlementRewards
   }
-  if (!innerObj['Rewards'] && value.Rewards) {
-    innerObj['Rewards'] = value.Rewards
+  if (!innerObj['Rewards'] && Rewards) {
+    innerObj['Rewards'] = Rewards
   }
-  if (!innerObj['CategoryDescription'] && value.CategoryDescription) {
-    innerObj['CategoryDescription'] = resolveKey(value.CategoryDescription)
+  if (!innerObj['CategoryDescription'] && CategoryDescription) {
+    innerObj['CategoryDescription'] = resolveKey(CategoryDescription)
   }
-  if (!innerObj['CategoryAdditionalHeader'] && value.CategoryAdditionalHeader) {
+  if (!innerObj['CategoryAdditionalHeader'] && CategoryAdditionalHeader) {
     innerObj['CategoryAdditionalHeader'] = resolveKey(
-      value.CategoryAdditionalHeader
+      CategoryAdditionalHeader
     )
   }
 
   if (!innerObj['Rotation']) {
     innerObj['Rotation'] = []
   }
-  if (!innerObj['Rotation'].includes(value.Rotation)) {
-    innerObj['Rotation'].push(value.Rotation)
+  if (!innerObj['Rotation'].includes(Rotation)) {
+    innerObj['Rotation'].push(Rotation)
   }
 
   if (
-    leaderboardDataObj[value.FirstLevelCategory][category][
-      resolveKey(value.SecondLevelCategory)
+    LEADERBOARD_DATA[FirstLevelCategory][category][
+      resolveKey(SecondLevelCategory)
     ].length === 0
   ) {
-    leaderboardDataObj[value.FirstLevelCategory][category][
-      resolveKey(value.SecondLevelCategory)
+    LEADERBOARD_DATA[FirstLevelCategory][category][
+      resolveKey(SecondLevelCategory)
     ].push(innerObj)
   } else {
     let shouldAddInnerObj = true
 
-    leaderboardDataObj[value.FirstLevelCategory][category][
-      resolveKey(value.SecondLevelCategory)
+    LEADERBOARD_DATA[FirstLevelCategory][category][
+      resolveKey(SecondLevelCategory)
     ].forEach((element) => {
-      if (element.LeaderboardDefinitionId === lbDefinitionId) {
-        element['Rotation'].push(value.Rotation)
+      if (element.LeaderboardDefinitionId === lbid) {
+        element['Rotation'].push(Rotation)
         shouldAddInnerObj = false
       }
     })
@@ -137,9 +177,9 @@ for (const value of leaderboardJson) {
       const isNumber = Number(innerObj.DisplayName) !== NaN
 
       if (isNumber) {
-        leaderboardDataObj[value.FirstLevelCategory][category][resolveKey(value.SecondLevelCategory)].unshift(innerObj)
+        LEADERBOARD_DATA[FirstLevelCategory][category][resolveKey(SecondLevelCategory)].unshift(innerObj)
       } else {
-        leaderboardDataObj[value.FirstLevelCategory][category][resolveKey(value.SecondLevelCategory)].push(innerObj)
+        LEADERBOARD_DATA[FirstLevelCategory][category][resolveKey(SecondLevelCategory)].push(innerObj)
       }
     }
   }
@@ -148,12 +188,12 @@ for (const value of leaderboardJson) {
 const writePath = './src/lib/leaderboardmap.ts'
 await writeFile(
   writePath,
-  `export const leaderboardMap = ${JSON.stringify(
-    leaderboardDataObj,
+  `export const LEADERBOARD_DATA = ${JSON.stringify(
+    LEADERBOARD_DATA,
     null,
     4
-  )}\n
-export const leaderboardIdMap = ${JSON.stringify(leaderboardIdMap, null, 4)}\n
+  )} as const\n
+export const LEADERBOARD_ID_MAP = ${JSON.stringify(LEADERBOARD_ID_MAP, null, 4)} as const\n
 export type LeaderboardDefinition = {
     Rotation: string[];
     Value: string;
@@ -170,19 +210,5 @@ export type LeaderboardDefinition = {
     FirstLevelCategory?: string;
     Category?: string;
     SecondLevelCategory?: string;
-}
-
-export type LeaderboardType = typeof leaderboardMap & {
-    [key: string]: {
-        [key: string]: {
-            [key: string]: LeaderboardDefinition[];
-        };
-    };
-}
-
-export type LeaderboardIdMap = typeof leaderboardIdMap & {
-    [key: string]: {
-        [key: string]: string
-    }
-}`
+}\n`
 )

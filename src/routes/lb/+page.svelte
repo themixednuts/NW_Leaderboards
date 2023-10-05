@@ -2,7 +2,8 @@
   import { assets } from '$app/paths'
   import { onMount } from 'svelte'
   import { page } from '$app/stores'
-  import { leaderboardMap } from '$lib/leaderboardmap'
+  import { LEADERBOARD_DATA } from '$lib/leaderboardmap'
+  import type { PageData } from '../$types'
 
   export let data: PageData
 
@@ -44,11 +45,11 @@
   class="col-span-full row-span-1 grid h-fit w-full grid-cols-[1fr,1.31967213fr,1fr] grid-rows-3 gap-2 place-self-center border-2 border-base-100">
   {#each bannerKeys as banner, key}
     <a
-      href="{$page.url.href}/{leaderboardMap[banner][
-        Object.keys(leaderboardMap[banner])[0]
+      href="{$page.url.href}/{LEADERBOARD_DATA[banner][
+        Object.keys(LEADERBOARD_DATA[banner])[0]
       ][
         Object.keys(
-          leaderboardMap[banner][Object.keys(leaderboardMap[banner])[0]],
+          LEADERBOARD_DATA[banner][Object.keys(LEADERBOARD_DATA[banner])[0]],
         )[0]
       ][0].LeaderboardDefinitionId}/{data.currentSeason}"
       class="relative grid h-full max-h-min place-content-center overflow-clip border-[1px] border-stone-400 border-opacity-80 bg-base-100 bg-center hover:cursor-pointer hover:border-accent {key ===

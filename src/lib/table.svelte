@@ -1,23 +1,25 @@
 <script lang="ts">
+  // import Category as TableCategory from './category.svelte'
+
   export let table: LeaderboardAPIBoardItem[]
-  export let id: string
+  export let id: keyof typeof LEADERBOARD_ID_MAP
   export let season: string
 
-  import { leaderboardMap, leaderboardIdMap } from './leaderboardmap'
-  import type { LeaderboardType, LeaderboardIdMap } from './leaderboardmap'
+  import {
+    LEADERBOARD_DATA,
+    LEADERBOARD_ID_MAP,
+    type LeaderboardDefinition,
+  } from './leaderboardmap'
 
-  const leaderboardData: LeaderboardType = leaderboardMap
-  const leaderboardIdM: LeaderboardIdMap = leaderboardIdMap
-
-  const firstlevelcategory = leaderboardIdM[id].FirstLevelCategory
-  const category = leaderboardIdM[id].Category
-  const subcategory = leaderboardIdM[id].SecondLevelCategory
+  const { FirstLevelCategory, SecondLevelCategory, Category } =
+    LEADERBOARD_ID_MAP[id]
 
   const pullDate = table[0].date
 
-  $: data = leaderboardData[firstlevelcategory][category][subcategory].find(
-    (item) => item.LeaderboardDefinitionId === id,
-  )
+  //@ts-expect-error
+  $: data = LEADERBOARD_DATA[FirstLevelCategory][Category][
+    SecondLevelCategory
+  ].find((item: LeaderboardDefinition) => item.LeaderboardDefinitionId === id)
 
   const pageSize = Math.ceil(table.length / 10)
   const pageSizeArray = Array.from({ length: pageSize }, (_, i) => i + 1)
@@ -99,7 +101,7 @@
   <div
     class="relative flex w-full justify-center bg-base-300 py-4 text-2xl capitalize">
     {!isNaN(Number(data.DisplayName))
-      ? `${category}, ${data.DisplayName}`
+      ? `${Category}, ${data.DisplayName}`
       : data.DisplayName}
     {#if data.CategoryAdditionalHeader}
       <div

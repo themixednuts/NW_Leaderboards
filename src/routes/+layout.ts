@@ -1,90 +1,53 @@
 import {
-  leaderboardIdMap,
-  leaderboardMap,
+  LEADERBOARD_ID_MAP,
+  LEADERBOARD_DATA,
   type LeaderboardDefinition,
 } from '$lib/leaderboardmap'
-import { redirect } from '@sveltejs/kit'
+import { error, redirect } from '@sveltejs/kit'
 import type { LayoutLoad } from './$types'
 
-export const load = (async ({route, fetch, params }) => {
-  const validSeasons = ['q1', 's1', 's2']
+export const load = (async ({ route, fetch, params }) => {
+  const validSeasons = ['q1', 's1', 's2', 's3']
   const currentSeason = validSeasons.includes(params.season || '') ? params.season || validSeasons.at(-1) : validSeasons.at(-1)
 
-  if(route.id === '/') throw redirect(301,'/lb')
+  if (route.id === '/') throw redirect(301, '/lb')
 
   let filter = 'CharacterLeaderboard' as
     | 'CharacterLeaderboard'
     | 'CompanyLeaderboard'
     | 'FactionLeaderboard'
 
+  const { lbid } = params
 
-  if (params.leaderboardId) {
-    const map = leaderboardIdMap[params.leaderboardId as keyof typeof leaderboardIdMap]
-    if (map) {
-      const leaderboard: LeaderboardDefinition = leaderboardMap[map.FirstLevelCategory as keyof typeof leaderboardMap][map.Category as keyof typeof leaderboardMap[keyof typeof leaderboardMap]][
-        map.SecondLevelCategory
-      ].find((item: LeaderboardDefinition) => item.LeaderboardDefinitionId === params.leaderboardId)
+  console.log(lbid)
+  if (lbid && !(lbid in LEADERBOARD_ID_MAP)) throw error(404)
 
-      if (leaderboard?.CharacterLeaderboard === true) {
-        filter = 'CharacterLeaderboard'
-      }
-      if (leaderboard?.CompanyLeaderboard === true) {
-        filter = 'CompanyLeaderboard'
-      }
-    }
+  if (lbid) {
+    const { FirstLevelCategory, Category, SecondLevelCategory } = LEADERBOARD_ID_MAP[lbid as keyof typeof LEADERBOARD_ID_MAP]
+    //@ts-expect-error
+    const leaderboard: LeaderboardDefinition = LEADERBOARD_DATA[FirstLevelCategory][Category][SecondLevelCategory].find((item: LeaderboardDefinition) => item.LeaderboardDefinitionId === lbid)
+    if (leaderboard?.CharacterLeaderboard === true) filter = 'CharacterLeaderboard'
+    if (leaderboard?.CompanyLeaderboard === true) filter = 'CompanyLeaderboard'
   }
 
-  async function getUniqueUserData() {
-    const allUsersResponse = await fetch(`https://lb.jakel.rocks/users?filter=all`)
-    const currentUsersResponse = await fetch(`https://lb.jakel.rocks/users?filter=${validSeasons.at(-1)}`)
-    const lastUsersResponse = await fetch(`https://lb.jakel.rocks/users?filter=${validSeasons.at(-2)}`)
+  const all = fetch(`https://lb.jakel.rocks/users?filter=all`).then(res => res.json() as Promise<LeaderboardAPIUserResponse>)
+  const current = fetch(`https://lb.jakel.rocks/users?filter=${validSeasons.at(-1)}`).then(res => res.json() as Promise<LeaderboardAPIUserResponse>)
+  const last = fetch(`https://lb.jakel.rocks/users?filter=${validSeasons.at(-2)}`).then(res => res.json() as Promise<LeaderboardAPIUserResponse>)
+  const legendaries = fetch(`https://lb.jakel.rocks/legendaries/${currentSeason}`).then(res => res.json() as Promise<LeaderboardAPILegendaryResponse>)
+  const breaches = fetch(`https://lb.jakel.rocks/breaches/${currentSeason}`).then(res => res.json() as Promise<LeaderboardAPIBreachesResponse>)
 
-    if (allUsersResponse.status !== 200) {
-      throw new Error('Unique users not found')
+  const promise = async () => {
+    return {
+      all: await all,
+      current: await current,
+      last: await last
     }
-
-    const allUsers: LeaderboardAPIUserResponse = await allUsersResponse.json()
-    const currentUsers: LeaderboardAPIUserResponse = await currentUsersResponse.json()
-    const lastUsers: LeaderboardAPIUserResponse = await lastUsersResponse.json()
-    const data = {
-      all: allUsers,
-      current: currentUsers,
-      last: lastUsers
-    }
-
-    return data
-  }
-
-  async function getLegendaryData() {
-    const response = await fetch(
-      `https://lb.jakel.rocks/legendaries/${currentSeason}`
-    )
-
-    if (response.status !== 200) {
-      throw new Error('Legendary data not found')
-    }
-    const data: LeaderboardAPILegendaryResponse = await response.json()
-
-    return data
-  }
-
-  async function getBreachesData() {
-    const response = await fetch(
-      `https://lb.jakel.rocks/breaches/${currentSeason}`
-    )
-
-    if (response.status !== 200) {
-      throw new Error('Breaches data not found')
-    }
-    const data: LeaderboardAPIBreachesResponse = await response.json()
-
-    return data
   }
 
   return {
-    users: await getUniqueUserData(),
-    legendaries: await getLegendaryData(),
-    breaches: await getBreachesData(),
+    users: promise(),
+    legendaries,
+    breaches,
     currentSeason,
     filter,
   }
