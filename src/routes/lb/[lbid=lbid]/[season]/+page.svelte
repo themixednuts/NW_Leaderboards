@@ -106,14 +106,14 @@
 </svelte:head>
 
 <div
-  class="my-grid overflow-y relative z-20 grid max-h-full min-w-fit gap-2 overflow-x-hidden bg-base-300 px-4 py-4">
+  class="my-grid overflow-y relative z-20 grid max-h-full min-w-fit gap-2 overflow-x-hidden bg-base-300 px-2 py-2">
   <div
-    class="col-start-1 col-end-5 row-start-2 row-end-3 grid h-full w-full grid-cols-2 grid-rows-2 gap-2 border-2 border-base-100 px-2 md:col-end-3 lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-2">
+    class="col-start-1 col-end-5 row-start-2 row-end-3 grid h-full w-full grid-cols-2 grid-rows-2 place-items-center gap-2 border-2 border-base-100 p-2 md:col-end-3 lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-2">
     <div
-      class="join col-span-full row-start-2 row-end-3 place-self-center rounded-none">
+      class="join col-span-full row-start-2 row-end-3 self-start rounded-none">
       {#if $page.params.season}
         <select
-          class="select join-item select-primary rounded-none uppercase"
+          class="select join-item select-primary select-xs rounded-none uppercase sm:select-md"
           on:change={(e) => goto(e.target?.value)}>
           <option
             value="/lb/{leaderboardId}/s3"
@@ -139,7 +139,7 @@
       {/if}
       {#if leaderboard && filteredLeaderboards.length > 1 && leaderboards.find((item) => item[filter] === true)}
         <select
-          class="select join-item select-primary rounded-none uppercase"
+          class="select join-item select-primary select-xs rounded-none uppercase sm:select-md"
           on:change={(e) => goto(e.target?.value)}>
           {#each leaderboards as leaderboard}
             {#if leaderboard[data.filter]}
@@ -154,12 +154,13 @@
     </div>
     {#if leaderboard}
       {@const t = Object.values(LEADERBOARD_DATA[firstlevelcategory][category])
+        //@ts-ignore
         .map((arr) => arr.filter((item) => item.CompanyLeaderboard === true))
         .some((arr) => arr.length)}
       <div
-        class="join col-span-full row-start-1 row-end-2 place-self-center rounded-none">
+        class="join col-span-full row-start-1 row-end-2 place-self-center self-end rounded-none">
         <button
-          class="btn join-item text-center"
+          class="btn join-item btn-xs text-center sm:btn-md"
           disabled={true}
           class:btn-primary={leaderboard['FactionLeaderboard']}
           on:pointerup={() => {
@@ -168,7 +169,7 @@
           Faction
         </button>
         <button
-          class="btn join-item text-center outline outline-transparent hover:outline-primary"
+          class="btn join-item btn-xs text-center outline outline-transparent sm:btn-md hover:outline-primary"
           disabled={!t}
           class:btn-primary={leaderboard['CompanyLeaderboard'] === true}
           on:pointerup={() => {
@@ -186,7 +187,7 @@
           {/if}
         </button>
         <button
-          class="btn join-item text-center outline outline-transparent hover:outline-primary"
+          class="join-item btn-xs text-center outline outline-transparent sm:btn-md hover:outline-primary"
           class:btn-primary={leaderboard['CharacterLeaderboard'] === true}
           on:pointerup={() => {
             data.filter = 'CharacterLeaderboard'
@@ -206,16 +207,17 @@
     {/if}
   </div>
   <div
-    class=" relative col-span-full row-span-1 flex max-h-full w-full place-content-center border-2 border-base-100 p-2 lg:col-start-2 lg:col-end-5 lg:place-self-start">
+    class=" relative col-span-full row-span-1 flex h-full w-full place-content-center border-2 border-base-100 p-2 lg:col-start-2 lg:col-end-5 lg:place-self-start">
     <div
-      class="relative max-h-fit overflow-clip border-2 border-stone-400 border-opacity-80 bg-black">
+      class="relative max-h-min overflow-clip border-2 border-stone-400 border-opacity-80 bg-black">
       <a href="/lb" data-sveltekit-reload>
         <img
           src={`${assets}${
+            //@ts-ignore
             bannerMap[firstlevelcategory || 'Mutated Expeditions']
           }`}
           alt=""
-          class="max-h-full w-full object-cover object-top" />
+          class="h-min w-full object-center" />
         <div
           class="absolute left-0 top-0 z-10 grid h-full w-full bg-base-100 bg-opacity-25 text-2xl hover:bg-opacity-0 sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
           <div class="self-end px-4 py-6 text-white">
@@ -238,6 +240,7 @@
         </div>
         {#each Object.keys(LEADERBOARD_DATA[firstlevelcategory][item]) as subitem}
           {@const definitions =
+            //@ts-ignore
             LEADERBOARD_DATA[firstlevelcategory][item][subitem]}
           <button
             disabled={!definitions.find((item) => item[filter] === true)}

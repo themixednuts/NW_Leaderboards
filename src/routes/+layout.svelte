@@ -104,7 +104,7 @@
 
   <slot />
 
-  <div
+  <!-- <div
     class="hidden max-h-24 place-content-center place-items-center overflow-auto md:flex md:max-h-fit">
     <div
       class="stats stats-vertical mb-2 max-h-full grow overflow-auto shadow md:stats-horizontal">
@@ -114,5 +114,5 @@
 
       <Stats title="Corrupted Breach Participants" json={breaches} />
     </div>
-  </div>
+  </div> -->
 </div>

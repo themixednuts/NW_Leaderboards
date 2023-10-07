@@ -1,6 +1,4 @@
 <script lang="ts">
-  // import Category as TableCategory from './category.svelte'
-
   export let table: LeaderboardAPIBoardItem[]
   export let id: keyof typeof LEADERBOARD_ID_MAP
   export let season: string
@@ -16,10 +14,11 @@
 
   const pullDate = table[0].date
 
+  let data: LeaderboardDefinition
   //@ts-expect-error
-  $: data = LEADERBOARD_DATA[FirstLevelCategory][Category][
+  $: data = LEADERBOARD_DATA?.[FirstLevelCategory]?.[Category]?.[
     SecondLevelCategory
-  ].find((item: LeaderboardDefinition) => item.LeaderboardDefinitionId === id)
+  ]?.find((item: LeaderboardDefinition) => item.LeaderboardDefinitionId === id)
 
   const pageSize = Math.ceil(table.length / 10)
   const pageSizeArray = Array.from({ length: pageSize }, (_, i) => i + 1)
@@ -99,8 +98,8 @@
 
 {#if data}
   <div
-    class="relative flex w-full justify-center bg-base-300 py-4 text-2xl capitalize">
-    {!isNaN(Number(data.DisplayName))
+    class="relative flex w-full place-items-center justify-center bg-base-300 py-4 text-2xl capitalize lg:text-4xl">
+    {@html data.Category} - {!isNaN(Number(data.DisplayName))
       ? `${Category}, ${data.DisplayName}`
       : data.DisplayName}
     {#if data.CategoryAdditionalHeader}
@@ -124,7 +123,7 @@
   </div>
   <div class="flex flex-col overflow-y-auto overflow-x-hidden">
     <table
-      class="table-compact md:table-normal table table-zebra table-pin-rows relative h-full w-full table-fixed select-none">
+      class="table table-zebra table-pin-rows table-xs relative h-full w-full table-fixed select-none sm:table-md md:table-lg">
       <thead class="">
         <tr>
           <th scope="col">Rank</th>
@@ -154,11 +153,12 @@
     </div>
   </div>
 
-  <div class="btn-group my-0 flex justify-center place-self-center py-2">
+  <div
+    class="btn-group flex justify-center place-self-center rounded-none py-2">
     {#if pageSize > 5}
       <!-- Page 1 -->
       <button
-        class="btn btn-sm"
+        class="btn btn-sm rounded-none"
         class:btn-active={currentPage === pageSizeArray[0]}
         on:pointerup={(e) => handleClickEvent(e)}>
         {pageSizeArray[0]}
@@ -166,21 +166,21 @@
       <!-- Page 2 or currentPage - 1 -->
       {#if currentPage - 1 > 2 && currentPage - 1 <= pageSize - 3}
         <button
-          class="btn btn-sm"
+          class="btn btn-sm rounded-none"
           class:btn-active={currentPage === currentPage - 1}
           on:pointerup={(e) => handleClickEvent(e)}>
           {currentPage - 1}
         </button>
       {:else if currentPage - 1 >= pageSize - 3}
         <button
-          class="btn btn-sm"
+          class="btn btn-sm rounded-none"
           class:btn-active={currentPage === pageSize - 3}
           on:pointerup={(e) => handleClickEvent(e)}>
           {pageSize - 3}
         </button>
       {:else}
         <button
-          class="btn btn-sm"
+          class="btn btn-sm rounded-none"
           class:btn-active={currentPage === pageSizeArray[1]}
           on:pointerup={(e) => handleClickEvent(e)}>
           {pageSizeArray[1]}
@@ -189,21 +189,21 @@
       <!-- Page 3 or currentPage -->
       {#if currentPage > 3 && currentPage < pageSize - 1}
         <button
-          class="btn btn-sm"
+          class="btn btn-sm rounded-none"
           class:btn-active={currentPage === currentPage}
           on:pointerup={(e) => handleClickEvent(e)}>
           {currentPage}
         </button>
       {:else if currentPage >= 1 && currentPage < 4}
         <button
-          class="btn btn-sm"
+          class="btn btn-sm rounded-none"
           class:btn-active={currentPage === pageSizeArray[2]}
           on:pointerup={(e) => handleClickEvent(e)}>
           {pageSizeArray[2]}
         </button>
       {:else}
         <button
-          class="btn btn-sm"
+          class="btn btn-sm rounded-none"
           class:btn-active={currentPage === pageSize - 2}
           on:pointerup={(e) => handleClickEvent(e)}>
           {pageSize - 2}
@@ -212,21 +212,21 @@
       <!-- Page 4 or Page 5 or currentPage + 1 -->
       {#if currentPage + 1 < pageSize - 1 && currentPage + 1 > pageSizeArray[2]}
         <button
-          class="btn btn-sm"
+          class="btn btn-sm rounded-none"
           class:btn-active={currentPage === currentPage + 1}
           on:pointerup={(e) => handleClickEvent(e)}>
           {currentPage + 1}
         </button>
       {:else if currentPage + 1 <= pageSizeArray[2]}
         <button
-          class="btn btn-sm"
+          class="btn btn-sm rounded-none"
           class:btn-active={currentPage === pageSizeArray[3]}
           on:pointerup={(e) => handleClickEvent(e)}>
           {pageSizeArray[3]}
         </button>
       {:else}
         <button
-          class="btn btn-sm"
+          class="btn btn-sm rounded-none"
           class:btn-active={currentPage === pageSize - 1}
           on:pointerup={(e) => handleClickEvent(e)}>
           {pageSize - 1}
@@ -234,7 +234,7 @@
       {/if}
       <!-- Page 6 or last page -->
       <button
-        class="btn btn-sm"
+        class="btn btn-sm rounded-none"
         class:btn-active={currentPage === pageSize}
         on:pointerup={(e) => handleClickEvent(e)}>
         {pageSize}
@@ -242,7 +242,7 @@
     {:else}
       {#each pageSizeArray as i}
         <button
-          class="btn btn-sm"
+          class="btn btn-sm rounded-none"
           class:btn-active={currentPage === i}
           on:pointerup={(e) => handleClickEvent(e)}>
           {i}

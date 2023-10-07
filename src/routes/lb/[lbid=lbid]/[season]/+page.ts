@@ -11,7 +11,6 @@ export const load = (async ({ fetch, params, parent }) => {
   const json = fetch(`https://lb.jakel.rocks/json/${lbid}/${seasonId}?size=1000`).then(res => res.json() as Promise<LeaderboardAPIBoardResponse>)
 
   if (!validSeasons.includes(season)) {
-    console.log("here")
     throw redirect(301, `/lb/${lbid}/${currentSeason}`)
   }
   return {
