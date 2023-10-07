@@ -1,13 +1,14 @@
 <script lang="ts">
-  export let table: LeaderboardAPIBoardItem[]
-  export let id: keyof typeof LEADERBOARD_ID_MAP
-  export let season: string
-
   import {
     LEADERBOARD_DATA,
     LEADERBOARD_ID_MAP,
     type LeaderboardDefinition,
   } from './leaderboardmap'
+  import { replaceLynshineSrc, appendPngToSrc } from '$lib/utils'
+
+  export let table: LeaderboardAPIBoardItem[]
+  export let id: keyof typeof LEADERBOARD_ID_MAP
+  export let season: string
 
   const { FirstLevelCategory, SecondLevelCategory, Category } =
     LEADERBOARD_ID_MAP[id]
@@ -99,14 +100,19 @@
 {#if data}
   <div
     class="relative flex w-full place-items-center justify-center bg-base-300 py-4 text-2xl capitalize lg:text-4xl">
-    {@html data.Category} - {!isNaN(Number(data.DisplayName))
+    {@html replaceLynshineSrc(data.Category)}
+    - {!isNaN(Number(data.DisplayName))
       ? `${Category}, ${data.DisplayName}`
       : data.DisplayName}
     {#if data.CategoryAdditionalHeader}
-      <div
+      <div class="flex h-2/5 place-items-end gap-[2px] pl-2 text-sm">
+        {@html appendPngToSrc(data.CategoryAdditionalHeader)
+          .replace('scale="2.0"', 'height="24" width="24"')
+          .replace('lys', '/lys')}
+      </div>
+      <!-- <div
         class="tooltip tooltip-info hover:z-50"
-        data-tip={data.CategoryAdditionalHeader.replace(/<[^>]*>/g, '')}>
-        <!-- .replace(/(\<.*\>)/g, "") -->
+        data-tip={replaceLynshineSrc(data.CategoryAdditionalHeader)}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -118,7 +124,7 @@
             stroke-width="2"
             d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-      </div>
+      </div> -->
     {/if}
   </div>
   <div class="flex flex-col overflow-y-auto overflow-x-hidden">

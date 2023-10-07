@@ -209,15 +209,15 @@
   <div
     class=" relative col-span-full row-span-1 flex h-full w-full place-content-center border-2 border-base-100 p-2 lg:col-start-2 lg:col-end-5 lg:place-self-start">
     <div
-      class="relative max-h-min overflow-clip border-2 border-stone-400 border-opacity-80 bg-black">
-      <a href="/lb" data-sveltekit-reload>
+      class="relative max-h-min min-w-full overflow-clip border-2 border-stone-400 border-opacity-80 bg-black">
+      <a href="/lb" class="" data-sveltekit-reload>
         <img
           src={`${assets}${
             //@ts-ignore
             bannerMap[firstlevelcategory || 'Mutated Expeditions']
           }`}
           alt=""
-          class="h-min w-full object-center" />
+          class="h-full w-full object-right-top object-cover" />
         <div
           class="absolute left-0 top-0 z-10 grid h-full w-full bg-base-100 bg-opacity-25 text-2xl hover:bg-opacity-0 sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
           <div class="self-end px-4 py-6 text-white">
@@ -236,7 +236,7 @@
       <div class="flex grow-0 flex-col gap-2 px-2">
         <div
           class="flex flex-nowrap border-b-2 border-base-100 bg-base-300 px-2 text-xl">
-          {@html item}
+          {@html item.replace("/lyshineui/images",'https://cdn.nwdb.info/db/images/live/v35')}
         </div>
         {#each Object.keys(LEADERBOARD_DATA[firstlevelcategory][item]) as subitem}
           {@const definitions =
