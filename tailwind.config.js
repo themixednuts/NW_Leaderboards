@@ -37,7 +37,7 @@ export default {
         'contract-subcategory':
           "url('/lyshineui/images/contracts/contracts_subcategorybutton_glow.png'), url('/lyshineui/images/contracts/contracts_subcategorybutton_hash.png')",
         'contract-browser': "url('/lyshineui/images/tradingpost/tradingpostbg.png')",
-        search: "url('/lyshineui/images/slices/textinputsearch/primarysearchbg.png')",
+        'search': "url('/lyshineui/images/slices/textinputsearch/primarysearchbg.png')",
         'search-hover': "url('/lyshineui/images/slices/textinputsearch/primarysearchbgfocus.png')",
         'contract-item': "url('/lyshineui/images/tradingpost/tradeentryhighlight.png')",
         'contract-tab': "url('/lyshineui/images/tradingpost/tabbg.png')",
