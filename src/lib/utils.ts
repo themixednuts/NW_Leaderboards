@@ -124,15 +124,14 @@ export function MarketBrowserQuery(server: string, type: number, sort: string) {
                             WHERE ',' || server.perks || ',' LIKE '%,' || ItemPerks.PerkID || ',%'
     ) AS perks,
     server.queryDate
-  FROM ${server} AS server
+  FROM ${server}_latest AS server
   LEFT JOIN MasterItemDefinitions AS master ON server.itemKey = master.ItemId COLLATE NOCASE
   LEFT JOIN ArmorAppearances AS armor ON armor.ItemID = master.ArmorAppearanceM COLLATE NOCASE
   LEFT JOIN WeaponAppearanceDefinitions AS weapon ON weapon.WeaponAppearanceID = master.WeaponAppearanceOverride COLLATE NOCASE
   LEFT JOIN InstrumentsAppearanceDefinitions AS instruments ON instruments.WeaponAppearanceID = master.WeaponAppearanceOverride COLLATE NOCASE
   LEFT JOIN server_metadata AS metadata ON metadata.name = :server COLLATE NOCASE
   LEFT JOIN masteritem_en_us AS master_locale ON SUBSTR(master.Name, 2) = master_locale.key COLLATE NOCASE
-  WHERE metadata.lastSessionDate = server.sessionDate
-  AND (:category = 'all' OR master.TradingCategory = :category COLLATE NOCASE)
+  WHERE (:category = 'all' OR master.TradingCategory = :category COLLATE NOCASE)
   AND (:family = 'all' OR master.TradingFamily = :family COLLATE NOCASE)
   AND (:group = 'all' OR master.TradingGroup = :group COLLATE NOCASE)
   AND server.contractType = ${type}
