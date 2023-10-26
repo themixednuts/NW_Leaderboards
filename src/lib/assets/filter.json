@@ -1,0 +1,317 @@
+{
+    "Ammo": {
+        "AmmoIron": [
+            "Arrows",
+            "Shots"
+        ],
+        "AmmoOrichalcum": [
+            "Arrows",
+            "Shots"
+        ],
+        "AmmoStarmetal": [
+            "Arrows",
+            "Shots"
+        ],
+        "AmmoSteel": [
+            "Arrows",
+            "Shots"
+        ]
+    },
+    "Apparel": {
+        "Amulets": [
+            "CraftedAmulet",
+            "DroppedAmulet"
+        ],
+        "ArmorHeavy": [
+            "SlotHead",
+            "SlotHands",
+            "SlotFeet",
+            "SlotChest",
+            "SlotLegs"
+        ],
+        "ArmorLight": [
+            "SlotLegs",
+            "SlotChest",
+            "SlotHead",
+            "SlotHands",
+            "SlotFeet"
+        ],
+        "ArmorMedium": [
+            "SlotChest",
+            "SlotLegs",
+            "SlotHead",
+            "SlotHands",
+            "SlotFeet"
+        ],
+        "Bags": [
+            "BagA"
+        ],
+        "Earrings": [
+            "DroppedEarring",
+            "CraftedEarring"
+        ],
+        "Rings": [
+            "DroppedRing",
+            "CraftedRing"
+        ]
+    },
+    "Furnishings": {
+        "HousingTrdF_Decorations": [
+            "HousingTrdG_Rugs",
+            "HousingTrdG_Curtains",
+            "HousingTrdG_Paintings",
+            "HousingTrdG_Lighting",
+            "HousingTrdG_Dishes",
+            "HousingTrdG_DecorOther",
+            "HousingTrdG_BooksPaper"
+        ],
+        "HousingTrdF_Furniture": [
+            "HousingTrdG_Tables",
+            "HousingTrdG_Shelves",
+            "HousingTrdG_Chairs",
+            "HousingTrdG_Cabinets",
+            "HousingTrdG_Stoves",
+            "HousingTrdG_Rugs",
+            "HousingTrdG_Beds"
+        ],
+        "HousingTrdF_Misc": [
+            "HousingTrdG_Veg",
+            "HousingTrdG_MiscOther",
+            "HousingTrdG_Storage",
+            "HousingTrdG_Animals",
+            "HousingTrdG_DecorOther"
+        ],
+        "HousingTrdF_Trophies": [
+            "HousingTrdG_BuffGathering",
+            "HousingTrdG_BuffOther",
+            "HousingTrdG_BuffCrafting",
+            "HousingTrdG_BuffCombat"
+        ],
+        "SchematicsFurnishing": [
+            "RecipeFurnishing"
+        ]
+    },
+    "Resources": {
+        "AlchemyResources": [
+            "AlchemyProtective",
+            "AlchemyOffensive",
+            "AlchemyMedicinal",
+            "AlchemyMagical"
+        ],
+        "ArcanaResources": [
+            "ArcanaDeath",
+            "ArcanaAir",
+            "ArcanaEarth",
+            "ArcanaWater",
+            "ArcanaFire",
+            "ArcanaSpirit",
+            "ArcanaLife"
+        ],
+        "Azoth": [
+            "AzothVial"
+        ],
+        "Components": [
+            "Stone",
+            "TrinketComponents",
+            "RefiningComponents",
+            "CraftingComponents",
+            "CraftingPatterns",
+            "InstrumentComponents"
+        ],
+        "CookingIngredients": [
+            "FishMedium",
+            "Meat",
+            "Honey",
+            "Egg",
+            "Nut",
+            "FishLarge",
+            "CookingComponents",
+            "Vegetable",
+            "FishSmall",
+            "Water",
+            "Seasonings",
+            "Berry",
+            "Grain",
+            "Fruit"
+        ],
+        "DyeIngredients": [
+            "Pigments"
+        ],
+        "RawResources": [
+            "Feather",
+            "Beeswax",
+            "Oil",
+            "Ore",
+            "RawGem",
+            "Rawhide",
+            "Stone",
+            "CraftingComponents",
+            "Salvage",
+            "Wood",
+            "Fiber",
+            "FishingSalvage",
+            "OrePrecious",
+            "Cloth"
+        ],
+        "RefinedResources": [
+            "Timber",
+            "CutGem",
+            "Gunpowder",
+            "Ingot",
+            "Leather",
+            "Cloth",
+            "IngotPrecious",
+            "Charcoal",
+            "Block"
+        ],
+        "RuneglassFamily": [
+            "RuneglassSapphire",
+            "RuneglassRuby",
+            "RuneglassEmerald",
+            "RuneglassCarnelian",
+            "RuneglassDiamond",
+            "RuneglassJasper",
+            "RuneglassAmethyst",
+            "RuneglassOpal",
+            "RuneglassTopaz",
+            "RuneglassMoonstone",
+            "RuneglassAmber",
+            "RuneglassAquamarine",
+            "RuneglassEmpty",
+            "RuneglassMalachite",
+            "RuneglassOnyx"
+        ],
+        "SpecialResources": [
+            "Utility",
+            "Offensive",
+            "AttributeItem",
+            "Defensive",
+            "Conditional"
+        ]
+    },
+    "Tools": {
+        "GatheringTools": [
+            "1hSickle",
+            "2hAxe",
+            "1hSkinningKnife",
+            "2hPick",
+            "FishingPoles"
+        ],
+        "Instruments": [
+            "Drums",
+            "Guitars",
+            "Flutes",
+            "UprightBass",
+            "Mandolins"
+        ]
+    },
+    "Utilities": {
+        "Bait": [
+            "BaitFresh",
+            "BaitSalt"
+        ],
+        "Coating": [
+            "CoatingAeternian",
+            "CoatingLost",
+            "CoatingBeast",
+            "CoatingCorrupted",
+            "CoatingAncient",
+            "CoatingAngryEarth"
+        ],
+        "CookingRecipes": [
+            "Recipes"
+        ],
+        "CraftingConsumables": [
+            "RepairKit"
+        ],
+        "Dyes": [
+            "DyePurple",
+            "DyeMagenta",
+            "DyeBrown",
+            "DyeRed",
+            "DyeGrey",
+            "DyeYellow",
+            "DyeCyan",
+            "DyeOrange",
+            "DyeBlue",
+            "DyeGreen",
+            "DyeTurquoise"
+        ],
+        "Enhancements": [
+            "CraftingConsumables"
+        ],
+        "EventConsumables": [
+            "ConsumableLuck",
+            "FoodAttribute"
+        ],
+        "FoodAttribute": [
+            "FoodAttribute",
+            "FoodINT",
+            "FoodDEX",
+            "FoodSTR",
+            "FoodFOC",
+            "FoodCON"
+        ],
+        "FoodRecovery": [
+            "FoodHealthRecovery",
+            "FoodMana"
+        ],
+        "FoodTradeskill": [
+            "FoodLumberjack",
+            "FoodHunter",
+            "FoodMiner",
+            "FoodJewelcrafter",
+            "FoodHarvester",
+            "FoodEngineer",
+            "FoodArcanist",
+            "FoodWeaponsmith",
+            "FoodArmorer"
+        ],
+        "MusicSheets": [
+            "UprightBass",
+            "Flutes",
+            "Guitars",
+            "Drums",
+            "Mandolins"
+        ],
+        "Potion": [
+            "PotionHealth",
+            "PotionFocus",
+            "PotionElemDefense",
+            "PotionMana",
+            "PotionEncumbrance"
+        ],
+        "Tincture": [
+            "PotionPurifyB",
+            "PotionWellness"
+        ]
+    },
+    "Weapons": {
+        "1Handed": [
+            "Rapiers",
+            "Flail",
+            "Swords",
+            "Hatchets"
+        ],
+        "2Handed": [
+            "GreatSword",
+            "Blunderbuss",
+            "Spears",
+            "GreatAxes",
+            "Muskets",
+            "Bows",
+            "WarHammers"
+        ],
+        "Magical": [
+            "StavesFire",
+            "StavesLife",
+            "GauntletIce",
+            "GauntletVoid"
+        ],
+        "Shields": [
+            "ShieldsKite",
+            "ShieldsRound",
+            "ShieldsTower"
+        ]
+    }
+}

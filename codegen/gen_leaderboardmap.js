@@ -5,38 +5,41 @@ import { Readable } from 'stream'
 
 const { JSDOM } = jsdom
 
-const leaderboard_response = await fetch("https://raw.githubusercontent.com/new-world-tools/datasheets-csv/main/LeaderboardData/LeaderboardDataTable.csv")
+const leaderboard_response = await fetch(
+  'https://raw.githubusercontent.com/new-world-tools/datasheets-csv/main/LeaderboardData/LeaderboardDataTable.csv',
+)
 const data = []
 const stream = new Readable()
 stream.push(await leaderboard_response.text())
 stream.push(null)
 
-stream.pipe(csvParser())
-  .on('data', row => {
-    const convertedRow = {};
+stream
+  .pipe(csvParser())
+  .on('data', (row) => {
+    const convertedRow = {}
 
     for (const key in row) {
       if (row.hasOwnProperty(key)) {
-        const value = row[key];
+        const value = row[key]
         // Attempt to parse the value to a number
-        const parsedNumber = parseFloat(value);
+        const parsedNumber = parseFloat(value)
 
         // Check if the parsed value is a valid number
         if (!isNaN(parsedNumber)) {
           // If it's a number, use the parsed value
-          convertedRow[key] = parsedNumber;
+          convertedRow[key] = parsedNumber
         } else if (value.toLowerCase() === 'true') {
           // Check if the value is 'true' (case-insensitive)
-          convertedRow[key] = true;
+          convertedRow[key] = true
         } else if (value.toLowerCase() === 'false') {
           // Check if the value is 'false' (case-insensitive)
-          convertedRow[key] = false;
+          convertedRow[key] = false
         } else if (value.toLowerCase() === 'null' || value.toLowerCase() === 'undefined') {
           // Check if the value is 'null' or 'undefined' (case-insensitive)
-          convertedRow[key] = null;
+          convertedRow[key] = null
         } else {
           // If none of the above conditions match, keep it as a string
-          convertedRow[key] = value;
+          convertedRow[key] = value
         }
       }
     }
@@ -46,7 +49,9 @@ stream.pipe(csvParser())
     console.log('csv parsed?: ', data)
   })
 
-const localizationPath = await fetch("https://raw.githubusercontent.com/new-world-tools/localization/main/javelindata_leaderboards.loc.xml")
+const localizationPath = await fetch(
+  'https://raw.githubusercontent.com/new-world-tools/localization/main/javelindata_leaderboards.loc.xml',
+)
 const localizationFile = await localizationPath.text()
 
 const DOMParser = new JSDOM().window.DOMParser
@@ -60,15 +65,15 @@ function resolveKey(string) {
 }
 
 function addPNG(string) {
-  const regex = /img.*?src="(.*?)".*?/i;
-  const matches = regex.exec(string);
+  const regex = /img.*?src="(.*?)".*?/i
+  const matches = regex.exec(string)
   if (!matches) return string
 
-  const srcAttributeValue = matches[1];
+  const srcAttributeValue = matches[1]
 
   // Append .png to the src attribute value
-  const modifiedSrc = '/' + srcAttributeValue + '.png';
-  const modifiedString = string.replace(srcAttributeValue, modifiedSrc);
+  const modifiedSrc = '/' + srcAttributeValue + '.png'
+  const modifiedString = string.replace(srcAttributeValue, modifiedSrc)
   return modifiedString
 }
 
@@ -78,7 +83,6 @@ const LEADERBOARD_DATA = {}
 const LEADERBOARD_ID_MAP = {}
 // https://raw.githubusercontent.com/new-world-tools/datasheets-csv/main/LeaderboardData/LeaderboardDataTable.csv
 for (const value of data) {
-
   const {
     FirstLevelCategory,
     SecondLevelCategory,
@@ -97,9 +101,7 @@ for (const value of data) {
     LeaderboardDefinitionId,
   } = value
 
-  const lbid = LeaderboardDefinitionId.replace(
-    'min-dungeon-group-gold-medal-expedition-clear-time',
-    'group_gold_time')
+  const lbid = LeaderboardDefinitionId.replace('min-dungeon-group-gold-medal-expedition-clear-time', 'group_gold_time')
     .replace(/\-/g, '_')
     .replace(/\.\{.*\}/g, '')
     .replace(/\./g, '_')
@@ -141,9 +143,7 @@ for (const value of data) {
     innerObj['CategoryDescription'] = resolveKey(CategoryDescription)
   }
   if (!innerObj['CategoryAdditionalHeader'] && CategoryAdditionalHeader) {
-    innerObj['CategoryAdditionalHeader'] = resolveKey(
-      CategoryAdditionalHeader
-    )
+    innerObj['CategoryAdditionalHeader'] = resolveKey(CategoryAdditionalHeader)
   }
 
   if (!innerObj['Rotation']) {
@@ -153,20 +153,12 @@ for (const value of data) {
     innerObj['Rotation'].push(Rotation)
   }
 
-  if (
-    LEADERBOARD_DATA[FirstLevelCategory][category][
-      resolveKey(SecondLevelCategory)
-    ].length === 0
-  ) {
-    LEADERBOARD_DATA[FirstLevelCategory][category][
-      resolveKey(SecondLevelCategory)
-    ].push(innerObj)
+  if (LEADERBOARD_DATA[FirstLevelCategory][category][resolveKey(SecondLevelCategory)].length === 0) {
+    LEADERBOARD_DATA[FirstLevelCategory][category][resolveKey(SecondLevelCategory)].push(innerObj)
   } else {
     let shouldAddInnerObj = true
 
-    LEADERBOARD_DATA[FirstLevelCategory][category][
-      resolveKey(SecondLevelCategory)
-    ].forEach((element) => {
+    LEADERBOARD_DATA[FirstLevelCategory][category][resolveKey(SecondLevelCategory)].forEach((element) => {
       if (element.LeaderboardDefinitionId === lbid) {
         element['Rotation'].push(Rotation)
         shouldAddInnerObj = false
@@ -188,11 +180,7 @@ for (const value of data) {
 const writePath = './src/lib/leaderboardmap.ts'
 await writeFile(
   writePath,
-  `export const LEADERBOARD_DATA = ${JSON.stringify(
-    LEADERBOARD_DATA,
-    null,
-    4
-  )} as const\n
+  `export const LEADERBOARD_DATA = ${JSON.stringify(LEADERBOARD_DATA, null, 4)} as const\n
 export const LEADERBOARD_ID_MAP = ${JSON.stringify(LEADERBOARD_ID_MAP, null, 4)} as const\n
 export type LeaderboardDefinition = {
     Rotation: string[];
@@ -210,5 +198,5 @@ export type LeaderboardDefinition = {
     FirstLevelCategory?: string;
     Category?: string;
     SecondLevelCategory?: string;
-}\n`
+}\n`,
 )

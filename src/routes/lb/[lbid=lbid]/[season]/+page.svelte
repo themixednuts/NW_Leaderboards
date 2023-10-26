@@ -1,12 +1,8 @@
 <script lang="ts">
-  import Table from '$lib/table.svelte'
+  import Table from '$lib/leaderboard/table.svelte'
   import type { PageData } from './$types'
   import { navigating, page } from '$app/stores'
-  import {
-    LEADERBOARD_ID_MAP,
-    LEADERBOARD_DATA,
-    type LeaderboardDefinition,
-  } from '$lib/leaderboardmap'
+  import { LEADERBOARD_ID_MAP, LEADERBOARD_DATA, type LeaderboardDefinition } from '$lib/leaderboard/leaderboardmap'
   import { assets } from '$app/paths'
   import { onMount } from 'svelte'
   import { goto } from '$app/navigation'
@@ -27,15 +23,11 @@
 
   let currentIndex = 0
   $: bannerMap = {
-    'Mutated Expeditions':
-      '/lyshineui/images/leaderboards/leaderboard_cat_bg_expeditions.png',
+    'Mutated Expeditions': '/lyshineui/images/leaderboards/leaderboard_cat_bg_expeditions.png',
     'Faction War': factionImagePaths[currentIndex],
-    'Vs. Environment':
-      '/lyshineui/images/leaderboards/leaderboard_cat_bg_environment.png',
-    'Vs. Players':
-      '/lyshineui/images/leaderboards/leaderboard_cat_bg_player.png',
-    'Trade Skills':
-      '/lyshineui/images/leaderboards/leaderboard_cat_bg_trade.png',
+    'Vs. Environment': '/lyshineui/images/leaderboards/leaderboard_cat_bg_environment.png',
+    'Vs. Players': '/lyshineui/images/leaderboards/leaderboard_cat_bg_player.png',
+    'Trade Skills': '/lyshineui/images/leaderboards/leaderboard_cat_bg_trade.png',
   } as const
 
   $: bannerKeys = Object.keys(bannerMap) as (keyof typeof bannerMap)[]
@@ -52,29 +44,23 @@
 
   $: firstlevelcategory = LEADERBOARD_ID_MAP[id].FirstLevelCategory
   $: secondlevelcategory = LEADERBOARD_ID_MAP[id].SecondLevelCategory
-  $: category = LEADERBOARD_ID_MAP[id]
-    .Category as keyof (typeof LEADERBOARD_DATA)[typeof firstlevelcategory]
+  $: category = LEADERBOARD_ID_MAP[id].Category as keyof (typeof LEADERBOARD_DATA)[typeof firstlevelcategory]
 
-  $: leaderboard = LEADERBOARD_DATA[firstlevelcategory][category][
-    secondlevelcategory
-  ].find(
+  $: leaderboard = LEADERBOARD_DATA[firstlevelcategory][category][secondlevelcategory].find(
     (item: LeaderboardDefinition) => item.LeaderboardDefinitionId === id,
   ) as LeaderboardDefinition
 
-  $: firstLevelKeys = Object.keys(
-    LEADERBOARD_DATA[firstlevelcategory],
-  ) as (keyof typeof LEADERBOARD_DATA)[]
-  $: filteredLeaderboards = LEADERBOARD_DATA[firstlevelcategory][category][
-    secondlevelcategory
-  ].reduce((acc: LeaderboardDefinition[], item: LeaderboardDefinition) => {
-    if (item[data.filter] === true) {
-      acc.push(item)
-    }
-    return acc
-  }, [])
-  $: leaderboards = LEADERBOARD_DATA[firstlevelcategory][category][
-    secondlevelcategory
-  ] as LeaderboardDefinition[]
+  $: firstLevelKeys = Object.keys(LEADERBOARD_DATA[firstlevelcategory]) as (keyof typeof LEADERBOARD_DATA)[]
+  $: filteredLeaderboards = LEADERBOARD_DATA[firstlevelcategory][category][secondlevelcategory].reduce(
+    (acc: LeaderboardDefinition[], item: LeaderboardDefinition) => {
+      if (item[data.filter] === true) {
+        acc.push(item)
+      }
+      return acc
+    },
+    [],
+  )
+  $: leaderboards = LEADERBOARD_DATA[firstlevelcategory][category][secondlevelcategory] as LeaderboardDefinition[]
 </script>
 
 <svelte:head>
@@ -96,45 +82,23 @@
     <meta
       content="Leaderboard for {!isNaN(Number(leaderboard.DisplayName))
         ? `${category}, ${leaderboard.DisplayName}`
-        : leaderboard.DisplayName} in {firstlevelcategory +
-        ' ' +
-        category +
-        ' ' +
-        secondlevelcategory}"
+        : leaderboard.DisplayName} in {firstlevelcategory + ' ' + category + ' ' + secondlevelcategory}"
       property="og:description" />
   {/if}
 </svelte:head>
 
-<div
-  class="my-grid overflow-y relative z-20 grid max-h-full min-w-fit gap-2 overflow-x-hidden bg-base-300 px-2 py-2">
+<div class="my-grid overflow-y relative z-20 grid max-h-full min-w-fit gap-2 overflow-x-hidden bg-base-300 px-2 py-2">
   <div
     class="col-start-1 col-end-5 row-start-2 row-end-3 grid h-full w-full grid-cols-2 grid-rows-2 place-items-center gap-2 border-2 border-base-100 p-2 md:col-end-3 lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-2">
-    <div
-      class="join col-span-full row-start-2 row-end-3 self-start rounded-none">
+    <div class="join col-span-full row-start-2 row-end-3 self-start rounded-none">
       {#if $page.params.season}
         <select
           class="select join-item select-primary select-xs rounded-none uppercase sm:select-md"
           on:change={(e) => goto(e.target?.value)}>
-          <option
-            value="/lb/{leaderboardId}/s3"
-            selected={$page.params.season === 's3'}>
-            Season 3
-          </option>
-          <option
-            value="/lb/{leaderboardId}/s2"
-            selected={$page.params.season === 's2'}>
-            Season 2
-          </option>
-          <option
-            value="/lb/{leaderboardId}/s1"
-            selected={$page.params.season === 's1'}>
-            Season 1
-          </option>
-          <option
-            value="/lb/{leaderboardId}/q1"
-            selected={$page.params.season === 'q1'}>
-            Quarter 1
-          </option>
+          <option value="/lb/{leaderboardId}/s3" selected={$page.params.season === 's3'}>Season 3</option>
+          <option value="/lb/{leaderboardId}/s2" selected={$page.params.season === 's2'}>Season 2</option>
+          <option value="/lb/{leaderboardId}/s1" selected={$page.params.season === 's1'}>Season 1</option>
+          <option value="/lb/{leaderboardId}/q1" selected={$page.params.season === 'q1'}>Quarter 1</option>
         </select>
       {/if}
       {#if leaderboard && filteredLeaderboards.length > 1 && leaderboards.find((item) => item[filter] === true)}
@@ -143,8 +107,7 @@
           on:change={(e) => goto(e.target?.value)}>
           {#each leaderboards as leaderboard}
             {#if leaderboard[data.filter]}
-              <option
-                value="/lb/{leaderboard.LeaderboardDefinitionId}/{data.currentSeason}">
+              <option value="/lb/{leaderboard.LeaderboardDefinitionId}/{data.currentSeason}">
                 {leaderboard.DisplayName}
               </option>
             {/if}
@@ -157,8 +120,7 @@
         //@ts-ignore
         .map((arr) => arr.filter((item) => item.CompanyLeaderboard === true))
         .some((arr) => arr.length)}
-      <div
-        class="join col-span-full row-start-1 row-end-2 place-self-center self-end rounded-none">
+      <div class="join col-span-full row-start-1 row-end-2 place-self-center self-end rounded-none">
         <button
           class="btn join-item btn-xs text-center sm:btn-md"
           disabled={true}
@@ -176,9 +138,7 @@
             data.filter = 'CompanyLeaderboard'
           }}>
           {#if leaderboards}
-            {@const id = leaderboards.find(
-              (item) => item['CompanyLeaderboard'] === true,
-            )?.LeaderboardDefinitionId}
+            {@const id = leaderboards.find((item) => item['CompanyLeaderboard'] === true)?.LeaderboardDefinitionId}
             <a
               href={`/lb/${id || $page.params.lbid}/${data.currentSeason}`}
               class="flex h-full w-full place-items-center">
@@ -193,9 +153,7 @@
             data.filter = 'CharacterLeaderboard'
           }}>
           {#if leaderboards}
-            {@const id = leaderboards.find(
-              (item) => item['CharacterLeaderboard'] === true,
-            )?.LeaderboardDefinitionId}
+            {@const id = leaderboards.find((item) => item['CharacterLeaderboard'] === true)?.LeaderboardDefinitionId}
             <a
               href={`/lb/${id || $page.params.lbid}/${data.currentSeason}`}
               class="flex h-full w-full place-items-center">
@@ -208,8 +166,7 @@
   </div>
   <div
     class=" relative col-span-full row-span-1 flex h-full w-full place-content-center border-2 border-base-100 p-2 lg:col-start-2 lg:col-end-5 lg:place-self-start">
-    <div
-      class="relative max-h-min min-w-full overflow-clip border-2 border-stone-400 border-opacity-80 bg-black">
+    <div class="relative max-h-min min-w-full overflow-clip border-2 border-stone-400 border-opacity-80 bg-black">
       <a href="/lb" class="" data-sveltekit-reload>
         <img
           src={`${assets}${
@@ -217,7 +174,7 @@
             bannerMap[firstlevelcategory || 'Mutated Expeditions']
           }`}
           alt=""
-          class="h-full w-full object-right-top object-cover" />
+          class="h-full w-full object-cover object-right-top" />
         <div
           class="absolute left-0 top-0 z-10 grid h-full w-full bg-base-100 bg-opacity-25 text-2xl hover:bg-opacity-0 sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
           <div class="self-end px-4 py-6 text-white">
@@ -234,9 +191,8 @@
     {#each firstLevelKeys as item}
       <!-- content here -->
       <div class="flex grow-0 flex-col gap-2 px-2">
-        <div
-          class="flex flex-nowrap border-b-2 border-base-100 bg-base-300 px-2 text-xl">
-          {@html item.replace("/lyshineui/images",'https://cdn.nwdb.info/db/images/live/v35')}
+        <div class="flex flex-nowrap border-b-2 border-base-100 bg-base-300 px-2 text-xl">
+          {@html item.replace('/lyshineui/images', 'https://cdn.nwdb.info/db/images/live/v35')}
         </div>
         {#each Object.keys(LEADERBOARD_DATA[firstlevelcategory][item]) as subitem}
           {@const definitions =
@@ -245,15 +201,12 @@
           <button
             disabled={!definitions.find((item) => item[filter] === true)}
             class="text-md btn relative rounded-none border-4 border-transparent p-0 text-left hover:link hover:animate-[pulse_1.5s_ease-in-out_infinite] hover:border-l-primary"
-            class:btn-active={secondlevelcategory === subitem &&
-              category === item}
-            class:border-l-primary={secondlevelcategory === subitem &&
-              category === item}>
+            class:btn-active={secondlevelcategory === subitem && category === item}
+            class:border-l-primary={secondlevelcategory === subitem && category === item}>
             <a
-              href={`/lb/${
-                definitions.find((item) => item[filter] === true)
-                  ?.LeaderboardDefinitionId
-              }/${data.currentSeason}`}
+              href={`/lb/${definitions.find((item) => item[filter] === true)?.LeaderboardDefinitionId}/${
+                data.currentSeason
+              }`}
               class="flex h-full w-full place-content-start place-items-center px-2 capitalize">
               {subitem}
             </a>
@@ -269,8 +222,7 @@
     {:else if table}
       <Table table={table.data} {id} season={$page.params.season} />
     {:else}
-      <div
-        class="col-span-full row-span-2 h-full w-full text-center lg:col-span-3 lg:row-span-3">
+      <div class="col-span-full row-span-2 h-full w-full text-center lg:col-span-3 lg:row-span-3">
         <h1 class="h-full w-full text-3xl">No data available</h1>
       </div>
     {/if}
@@ -282,9 +234,6 @@
     grid-template-rows:
       minmax(15vh, 0.5fr) min-content minmax(15vh, min-content)
       minmax(35vh, 1fr);
-    grid-template-columns: repeat(2, minmax(min-content, auto)) repeat(
-        2,
-        minmax(min-content, 1fr)
-      );
+    grid-template-columns: repeat(2, minmax(min-content, auto)) repeat(2, minmax(min-content, 1fr));
   }
 </style>

@@ -8,7 +8,9 @@ export const load = (async ({ fetch, params, parent }) => {
   const validSeasons = ['q1', 's1', 's2', 's3']
   const seasonId = validSeasons.includes(season) ? season : currentSeason
 
-  const json = fetch(`https://lb.jakel.rocks/json/${lbid}/${seasonId}?size=1000`).then(res => res.json() as Promise<LeaderboardAPIBoardResponse>)
+  const json = fetch(`https://lb.jakel.rocks/json/${lbid}/${seasonId}?size=1000`).then(
+    (res) => res.json() as Promise<LeaderboardAPIBoardResponse>,
+  )
 
   if (!validSeasons.includes(season)) {
     throw redirect(301, `/lb/${lbid}/${currentSeason}`)

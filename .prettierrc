@@ -1,12 +1,14 @@
 {
-    "bracketSameLine": false,
+    "bracketSameLine": true,
     "semi": false,
     "singleQuote": true,
-    "svelteBracketNewLine": false,
+    "svelteBracketNewLine": true,
     "plugins":[
         "prettier-plugin-svelte",
         "prettier-plugin-tailwindcss"
     ],
     "pluginSearchDirs": false,
-    "htmlWhitespaceSensitivity": "ignore"
+    "htmlWhitespaceSensitivity": "ignore",
+    "printWidth": 120,
+    "trailingComma": "all"
 }
