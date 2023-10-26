@@ -204,7 +204,7 @@
             {item.quantity}
           </td>
           <td class="col-start-9 row-start-[{i + 1}]">
-            {item.currentExpiration}
+            {item.currentExpiration || ''}
           </td>
         </tr>
       {/each}

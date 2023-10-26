@@ -86,7 +86,7 @@ export function ItemPerkScaling(scalingPerGearscore: string, gearScore: number, 
 
 export function MarketBrowserQuery(server: string, type: number, sort: string) {
   const query = `
-SELECT 
+  SELECT 
     server.itemKey,
     COALESCE (master_locale.text, master.Name) AS name,
     server.price,
@@ -106,38 +106,39 @@ SELECT
     COALESCE(weapon.IconPath, instruments.IconPath, armor.IconPath, master.IconPath) AS iconPath,
     (
       SELECT json_group_array(
-		json_object(
-		'id', PerkID,
-		'iconPath', IconPath,
-		'type', PerkType,
-		'scaling', ScalingPerGearScore,
-		'affixes', (SELECT json_object(
-					'str', MODStrength,
-					'dex', MODDexterity,
-					'int', MODIntelligence,
-					'foc', MODFocus,
-					'con', MODConstitution
-					) FROM "AffixStatDataTable" WHERE ',' || Affix || ',' LIKE '%,' || "AffixStatDataTable".StatusID || ',%')
-		)
-	)
-      FROM ItemPerks
-      WHERE ',' || server.perks || ',' LIKE '%,' || ItemPerks.PerkID || ',%'
+            	json_object(
+            	'id', PerkID,
+            	'iconPath', IconPath,
+            	'type', PerkType,
+            	'scaling', ScalingPerGearScore,
+            	'affixes', (SELECT json_object(
+                        				 'str', MODStrength,
+                        				 'dex', MODDexterity,
+                        				 'int', MODIntelligence,
+                        				 'foc', MODFocus,
+                        				 'con', MODConstitution
+                        				 ) FROM "AffixStatDataTable" WHERE ',' || Affix || ',' LIKE '%,' || "AffixStatDataTable".StatusID || ',%')
+                              	)
+                                )
+                            FROM ItemPerks
+                            WHERE ',' || server.perks || ',' LIKE '%,' || ItemPerks.PerkID || ',%'
     ) AS perks,
     server.queryDate
-FROM ${server} AS server
-LEFT JOIN MasterItemDefinitions AS master ON server.itemKey = master.ItemId COLLATE NOCASE
-LEFT JOIN ArmorAppearances AS armor ON armor.ItemID = master.ArmorAppearanceM COLLATE NOCASE
-LEFT JOIN WeaponAppearanceDefinitions AS weapon ON weapon.WeaponAppearanceID = master.WeaponAppearanceOverride COLLATE NOCASE
-LEFT JOIN InstrumentsAppearanceDefinitions AS instruments ON instruments.WeaponAppearanceID = master.WeaponAppearanceOverride COLLATE NOCASE
-LEFT JOIN server_metadata AS metadata ON metadata.name = :server COLLATE NOCASE
-LEFT JOIN masteritem_en_us AS master_locale ON SUBSTR(master.Name, 2) = master_locale.key COLLATE NOCASE
-WHERE metadata.lastSessionDate = server.sessionDate
-AND (:category = 'all' OR master.TradingCategory = :category COLLATE NOCASE)
-AND (:family = 'all' OR master.TradingFamily = :family COLLATE NOCASE)
-AND (:group = 'all' OR master.TradingGroup = :group COLLATE NOCASE)
-AND server.contractType = ${type}
-${sort}
-LIMIT 20 OFFSET (:page - 1) * 20;`
+  FROM ${server} AS server
+  LEFT JOIN MasterItemDefinitions AS master ON server.itemKey = master.ItemId COLLATE NOCASE
+  LEFT JOIN ArmorAppearances AS armor ON armor.ItemID = master.ArmorAppearanceM COLLATE NOCASE
+  LEFT JOIN WeaponAppearanceDefinitions AS weapon ON weapon.WeaponAppearanceID = master.WeaponAppearanceOverride COLLATE NOCASE
+  LEFT JOIN InstrumentsAppearanceDefinitions AS instruments ON instruments.WeaponAppearanceID = master.WeaponAppearanceOverride COLLATE NOCASE
+  LEFT JOIN server_metadata AS metadata ON metadata.name = :server COLLATE NOCASE
+  LEFT JOIN masteritem_en_us AS master_locale ON SUBSTR(master.Name, 2) = master_locale.key COLLATE NOCASE
+  WHERE metadata.lastSessionDate = server.sessionDate
+  AND (:category = 'all' OR master.TradingCategory = :category COLLATE NOCASE)
+  AND (:family = 'all' OR master.TradingFamily = :family COLLATE NOCASE)
+  AND (:group = 'all' OR master.TradingGroup = :group COLLATE NOCASE)
+  AND server.contractType = ${type}
+  ${sort}
+  LIMIT 20 OFFSET (:page - 1) * 20;
+  `
   return query
 }
 

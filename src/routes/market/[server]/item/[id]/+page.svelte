@@ -2,14 +2,13 @@
   import type { PageData } from './$types'
   import PriceChart from '$lib/market/priceChart.svelte'
   import type { MarketData } from '$lib/market.types'
+    import { onMount } from 'svelte'
 
   export let data: PageData
 
   let unitAmount = 0
 
-  $: console.log(data.itemData)
   $: sellOrders = data.itemData.filter((item) => item.contractType === 1)
-  $: console.log(sellOrders)
   $: buyOrders = data.itemData.filter((item) => item.contractType === 0)
   $: sellOrderCap = sellOrders
     .filter((item) => item.sessionDate === data.lastSession)
@@ -45,10 +44,9 @@
 
     return totalCost.toLocaleString(undefined, { maximumFractionDigits: 2 })
   }
-  function setUnitAmount(e: Event){
-    const target = e.target as HTMLSelectElement
-    unitAmount = +target.value
-  }
+  onMount(() => {
+    unitAmount = sellOrderQuantity < 1000 ? sellOrderQuantity : 1000
+  })
 </script>
 
 <div class="grid max-h-full grid-cols-2 grid-rows-[auto,1fr]">
@@ -63,9 +61,12 @@
           <th>Market Cap</th>
           <th>
             Cost Per
-            <select name="" id="" on:change={setUnitAmount}>
+            <select name="" id="" bind:value={unitAmount}>
+              {#if sellOrderQuantity < 1000}
+              <option value={sellOrderQuantity} selected>{sellOrderQuantity}</option>
+              {/if}
               {#if sellOrderQuantity >= 1000}
-                <option value={1000}>1000</option>
+                <option value={1000} selected>1000</option>
               {/if}
               {#if sellOrderQuantity >= 5000}
                 <option value={5000}>5000</option>
@@ -73,7 +74,6 @@
               {#if sellOrderQuantity >= 10000}
                 <option value={10000}>10000</option>
               {/if}
-              <option value={sellOrderQuantity} selected>{sellOrderQuantity}</option>
             </select>
           </th>
         </tr>
