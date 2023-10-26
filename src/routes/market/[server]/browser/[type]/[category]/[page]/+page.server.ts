@@ -17,7 +17,7 @@ const browserType = {
 export const config: Config = {
     isr: {
         expiration: 3600,
-        allowQuery: ['family', 'group', 'item']
+        allowQuery: ['family', 'group', 'item', 'sort']
     },
     runtime: 'nodejs18.x',
 }
