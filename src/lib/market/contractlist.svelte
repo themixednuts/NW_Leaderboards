@@ -142,9 +142,9 @@
                 .map((perk) => perk.id.toLowerCase())
                 .join(',')}"
               class="flex aspect-square w-10 place-content-center place-items-center bg-contain bg-center bg-no-repeat
-              {type !== 'resource' && type !== 'housingitem' && type !== 'ammo' && type !== 'consumable'
-                ? `bg-item-rarity-square-${item.rarity}`
-                : `bg-item-rarity-circle-${item.rarity}`}"
+              {(type !== 'resource' && type !== 'housingitem' && type !== 'ammo' && type !== 'consumable')
+                ? `bg-item-rarity-square-${item.rarity || 0}`
+                : `bg-item-rarity-circle-${item.rarity || 0}`}"
               class:bg-item-rarity-square-0={type === 'ammo' || type === 'consumable'}
               target="_blank"
             >

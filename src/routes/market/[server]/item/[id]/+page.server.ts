@@ -4,9 +4,9 @@ import { db } from '$lib/server/db'
 import type { MarketData } from '$lib/market.types'
 
 export const load = (async ({ params: { server, id } }) => {
-  const query = `SELECT 
-  *,
-strftime('%Y-%m-%dT%H:%M:%S', 'now', '-30 days', 'start of day')
+  const query = `
+  SELECT 
+  *
    FROM ${server} 
   WHERE itemKey = ? COLLATE NOCASE
   AND sessionDate >= strftime('%Y-%m-%dT%H:%M:%S', 'now', '-30 days', 'start of day') 
