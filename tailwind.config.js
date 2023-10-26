@@ -51,4 +51,8 @@ export default {
   daisyui: {
     themes: ['light', 'dark', 'cupcake', 'pastel', 'halloween', 'lofi', 'autumn', 'coffee'],
   },
+  safelist: [
+    { pattern: /^bg-item-rarity-/ }
+
+  ]
 }
