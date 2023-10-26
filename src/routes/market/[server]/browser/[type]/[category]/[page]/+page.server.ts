@@ -15,10 +15,10 @@ const browserType = {
     buy: 1,
 }
 export const config: Config = {
-    isr: {
-        expiration: 3600,
-        allowQuery: ['family', 'group', 'item', 'sort']
-    },
+    // isr: {
+    //     expiration: 3600,
+    //     allowQuery: ['family', 'group', 'item', 'sort']
+    // },
     runtime: 'nodejs18.x',
 }
 

@@ -4,7 +4,6 @@
   import { getLocalizedDate } from '$lib/utils.js'
 
   export let data
-  // $: console.log(data)
   $: $endPage = data.marketdata.end
 </script>
 

@@ -178,7 +178,7 @@
                 return str
               })}
           </td>
-          <td class="col-start-6 row-start-[{i + 1}] w-full max-w-[8rem]">
+          <td class="w-full max-w-[8rem]">
             <div class="flex w-full flex-nowrap place-items-center gap-1">
               {#each perks as perk}
                 {#if perk.type !== 'Gem'}
@@ -189,7 +189,7 @@
               {/each}
             </div>
           </td>
-          <td class="col-start-7 row-start-[{i + 1}]">
+          <td class="">
             <div class="flex w-7 place-content-center place-items-center">
               {#each perks as perk}
                 {#if perk.type === 'Gem'}
@@ -200,11 +200,11 @@
               {/each}
             </div>
           </td>
-          <td class="col-start-8 row-start-[{i + 1}] text-right">
+          <td class="text-right">
             {item.quantity}
           </td>
-          <td class="col-start-9 row-start-[{i + 1}]">
-            {item.currentExpiration || ''}
+          <td class=" whitespace-nowrap">
+            {item.currentExpiration?.replace('about', '~').replace('less than', '<') || ''}
           </td>
         </tr>
       {/each}
