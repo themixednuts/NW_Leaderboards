@@ -5,7 +5,6 @@
   import { onMount } from 'svelte'
 
   export let data: PageData
-  $: console.log(data)
 
   let sellOrdersUnitAmount = 0
   let buyOrdersUnitAmount = 0
