@@ -50,7 +50,9 @@ export const load = (async ({ params: { server, category, page, type }, url: { s
     const sort = (searchParams.get('sort')?.toLowerCase() || "") as SortBy
 
     const query = MarketBrowserQuery(server, browserType[type as keyof typeof browserType], SORT_MAP[sort])
+
     const start = performance.now()
+    
     const marketdata = await db.execute({
         sql: query,
         args: {
@@ -63,8 +65,6 @@ export const load = (async ({ params: { server, category, page, type }, url: { s
     })
     
     console.log(performance.now() - start, " ms")
-
-    console.log(marketdata.rows)
 
     const marketdata_copy: MarketData[] = []
     marketdata.rows.forEach((row) => {
