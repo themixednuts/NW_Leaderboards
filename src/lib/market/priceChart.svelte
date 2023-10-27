@@ -92,7 +92,7 @@
         y: value.quantity,
       }
 
-      console.log(value)
+      // console.log(value)
       //@ts-expect-error
       chartData[0].data.push(avg)
       //@ts-expect-error

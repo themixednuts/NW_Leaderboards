@@ -52,6 +52,7 @@ export default {
     themes: ['light', 'dark'],
   },
   safelist: [
-    { pattern: /^bg-item-rarity-/ }
+    { pattern: /^bg-item-rarity-/ },
+    "rotate-180"
   ]
 }

@@ -103,7 +103,7 @@
       <tr class="">
         {#each columns as { key, label, sortKey, isImage, isRotation } (key)}
           <th class="relative h-full" class:w-80={key === 'name'} class:w-full={key !== 'name'}>
-            <a href="?sort={sort === `${sortKey}_asc` ? `${sortKey}_desc` : `${sortKey}_asc`}" class="h-full w-full pl-2 flex place-items-center">
+            <a href="?sort={sort === `${sortKey}_asc` ? `${sortKey}_desc` : `${sortKey}_asc`}" class="h-full w-full pl-2 flex place-items-center" data-sveltekit-reload>
               {#if isImage}
                 <img
                   src={replaceLynshineSrc('/lyshineui/images/icons/misc/icon_gearscore_tan.png')}
@@ -129,7 +129,7 @@
     <tbody class="">
       {#each items as item, i}
         <!-- {@const sortedPerks = item.perks?.sort((a, b) => b.type - a.type)} -->
-        {@const type = item.itemType.toLowerCase()}
+        {@const type = item.itemType?.toLowerCase()}
         {@const perks = item.perks}
         {@const tier = GetRomanFromNumber(item.tier)}
         <tr
@@ -148,7 +148,7 @@
               class:bg-item-rarity-square-0={type === 'ammo' || type === 'consumable'}
               target="_blank"
             >
-              <img src={replaceLynshineSrc(item.iconPath.replaceAll('\\', '/'))} alt="" class="aspect-square w-[90%]" />
+              <img src={replaceLynshineSrc(item.iconPath?.replaceAll('\\', '/'))} alt="" class="aspect-square w-[90%]" />
             </a>
             <a href="/market/{$page.params.server}/item/{item.itemKey}">
               {item.name}

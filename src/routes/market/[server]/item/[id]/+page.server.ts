@@ -2,7 +2,11 @@ import type { PageServerLoad } from './$types'
 import { error } from '@sveltejs/kit'
 import { db } from '$lib/server/db'
 import type { MarketData } from '$lib/market.types'
+import type { Config } from '@sveltejs/adapter-vercel'
 
+export const config: Config = {
+  runtime: 'edge'
+}
 export const load = (async ({ params: { server, id } }) => {
   const query = `
   SELECT 
@@ -22,7 +26,7 @@ export const load = (async ({ params: { server, id } }) => {
   SELECT 
   locale.text AS name 
   FROM MasterItemDefinitions
-  LEFT JOIN masteritem_en_us AS locale ON locale.key = SUBSTR(Name,2)
+  LEFT JOIN locale_en_us AS locale ON locale.key = SUBSTR(Name,2)
   WHERE ItemID = ? COLLATE NOCASE
   `
   const name = await db.execute({

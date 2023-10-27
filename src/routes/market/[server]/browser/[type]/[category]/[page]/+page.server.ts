@@ -15,10 +15,10 @@ const browserType = {
     buy: 1,
 }
 export const config: Config = {
-    // isr: {
-    //     expiration: 3600,
-    //     allowQuery: ['family', 'group', 'item', 'sort']
-    // },
+    isr: {
+        expiration: 3600,
+        allowQuery: ['family', 'group', 'item', 'sort']
+    },
     runtime: 'nodejs18.x',
 }
 
@@ -40,7 +40,7 @@ const SORT_MAP: { [k in SortBy]: string } = {
     "gem_desc": 'ORDER BY gemPerkCount DESC',
     "exp_asc": 'ORDER BY expirationSec',
     "exp_desc": 'ORDER BY expirationSec DESC',
-    "": 'ORDER BY price',
+    "": '',
 }
 
 export const load = (async ({ params: { server, category, page, type }, url: { searchParams }, fetch }) => {
@@ -57,13 +57,14 @@ export const load = (async ({ params: { server, category, page, type }, url: { s
             category: category,
             family: family || 'all',
             group: group || 'all',
-            server: server_lowercase,
+            // server: server_lowercase,
             page
         }
     })
     
     console.log(performance.now() - start, " ms")
 
+    console.log(marketdata.rows)
 
     const marketdata_copy: MarketData[] = []
     marketdata.rows.forEach((row) => {
