@@ -16,7 +16,7 @@ const browserType = {
 }
 export const config: Config = {
     isr: {
-        expiration: 3600,
+        expiration: 10,
         allowQuery: ['family', 'group', 'item', 'sort']
     },
     runtime: 'nodejs18.x',
@@ -52,7 +52,7 @@ export const load = (async ({ params: { server, category, page, type }, url: { s
     const query = MarketBrowserQuery(server, browserType[type as keyof typeof browserType], SORT_MAP[sort])
 
     const start = performance.now()
-    
+
     const marketdata = await db.execute({
         sql: query,
         args: {
