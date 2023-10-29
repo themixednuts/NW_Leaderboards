@@ -84,7 +84,7 @@ export function ItemPerkScaling(scalingPerGearscore: string, gearScore: number, 
   return 1 + +base * (Math.min(gearScore, +limit) - 100) + +extraScaling * Math.max(gearScore - +limit, 0)
 }
 
-export function MarketBrowserQuery(server: string, type: number, sort: string) {
+export function MarketBrowserQuery(sort?: string) {
   const query = `
   -- EXPLAIN QUERY PLAN
   SELECT 
@@ -130,9 +130,9 @@ export function MarketBrowserQuery(server: string, type: number, sort: string) {
   WHERE (:category = 'all' OR :category = master.TradingCategory COLLATE NOCASE)
   AND (:family = 'all' OR :family = master.TradingFamily COLLATE NOCASE)
   AND (:group = 'all' OR :group = master.TradingGroup COLLATE NOCASE)
-  AND server.contractType = ${type}
-  AND server.sessionDate = (SELECT sessionDate FROM server_metadata WHERE server = '${server}')
-  ${sort}
+  AND server.contractType = :type
+  AND server.sessionDate = (SELECT sessionDate FROM server_metadata WHERE server = :server)
+  ${sort ? sort : ''}
   LIMIT 20 OFFSET (:page - 1) * 20;
   `
   return query

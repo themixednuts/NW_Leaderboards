@@ -22,25 +22,24 @@ export const config: Config = {
     runtime: 'nodejs18.x',
 }
 
-type SortBy = "price_asc" | "price_desc" | "name_asc" | "name_desc" | "tier_asc" | "tier_desc" | "gs_asc" | "gs_desc" | "perks_asc" | "perks_desc" | "avail_asc" | "avail_desc" | "gem_asc" | "gem_desc" | "exp_asc" | "exp_desc" | ""
-const SORT_MAP: { [k in SortBy]: string } = {
-    "price_asc": 'ORDER BY price',
-    "price_desc": 'ORDER BY price DESC',
-    "name_asc": 'ORDER BY name',
-    "name_desc": 'ORDER BY name DESC',
-    "gs_asc": 'ORDER BY gearScore',
-    "gs_desc": 'ORDER BY gearScore DESC',
-    "perks_asc": 'ORDER BY perkCount',
-    "perks_desc": 'ORDER BY perkCount DESC',
-    "avail_asc": 'ORDER BY quantity',
-    "avail_desc": 'ORDER BY quantity DESC',
-    "tier_asc": 'ORDER BY tier',
-    "tier_desc": 'ORDER BY tier DESC',
-    "gem_asc": 'ORDER BY gemPerkCount',
-    "gem_desc": 'ORDER BY gemPerkCount DESC',
-    "exp_asc": 'ORDER BY expirationSec',
-    "exp_desc": 'ORDER BY expirationSec DESC',
-    "": '',
+type SortBy = "price_asc" | "price_desc" | "name_asc" | "name_desc" | "tier_asc" | "tier_desc" | "gs_asc" | "gs_desc" | "perks_asc" | "perks_desc" | "avail_asc" | "avail_desc" | "gem_asc" | "gem_desc" | "exp_asc" | "exp_desc"
+const SORT_MAP: { [k in SortBy]: string[] } = {
+    "price_asc": ['price', ''],
+    "price_desc": ['price', 'DESC'],
+    "name_asc": ['name', ''],
+    "name_desc": ['name', 'DESC'],
+    "gs_asc": ['gearScore', ''],
+    "gs_desc": ['gearScore', 'DESC'],
+    "perks_asc": ['perkCount', ''],
+    "perks_desc": ['perkCount', 'DESC'],
+    "avail_asc": ['quantity', ''],
+    "avail_desc": ['quantity', 'DESC'],
+    "tier_asc": ['tier', ''],
+    "tier_desc": ['tier', 'DESC'],
+    "gem_asc": ['gemPerkCount', ''],
+    "gem_desc": ['gemPerkCount', 'DESC'],
+    "exp_asc": ['expirationSec', ''],
+    "exp_desc": ['expirationSec', 'DESC'],
 }
 
 export const load = (async ({ params: { server, category, page, type }, url: { searchParams } }) => {
@@ -48,17 +47,26 @@ export const load = (async ({ params: { server, category, page, type }, url: { s
     const group = searchParams.get('group')?.toLowerCase()
     const sort = (searchParams.get('sort')?.toLowerCase() || "") as SortBy
 
-    const query = MarketBrowserQuery(server, browserType[type as keyof typeof browserType], SORT_MAP[sort])
-
+    let query = MarketBrowserQuery()
     let startTime = performance.now()
+    const args = {
+        category: category,
+        family: family || 'all',
+        group: group || 'all',
+        page,
+        server,
+        type: browserType[type as keyof typeof browserType],
+    }
+    if(sort){
+        //@ts-expect-error
+        args.sort_column = SORT_MAP[sort as keyof typeof SORT_MAP][0]
+        //@ts-expect-error
+        args.sort_direction = SORT_MAP[sort as keyof typeof SORT_MAP][1]
+        query = MarketBrowserQuery('ORDER BY :sort_column :sort_direction')
+    }
     const marketdata = await db.execute({
         sql: query,
-        args: {
-            category: category,
-            family: family || 'all',
-            group: group || 'all',
-            page
-        }
+        args
     })
     console.log("db timer - MarketData: ", performance.now() - startTime, " ms")
 
@@ -95,10 +103,15 @@ export const load = (async ({ params: { server, category, page, type }, url: { s
     const sessionDateQuery = `
     SELECT
     sessionDate
-    FROM server_latest
-    WHERE server = '${server}'
+    FROM server_metadata
+    WHERE server = :server
     `
-    const sessionDate = await db.execute(sessionDateQuery)
+    const sessionDate = await db.execute({
+        sql: sessionDateQuery,
+        args: {
+            server
+        }
+    })
     console.log("db timer - SessionData: ", performance.now() - startTime, " ms")
 
     const paginated: Paginated = {
