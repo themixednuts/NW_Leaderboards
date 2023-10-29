@@ -23,7 +23,7 @@
 
   function goToItem(ev: Event, item: MarketData) {
     const target = ev.target as HTMLElement
-    if (target.tagName !== 'IMG') goto(`/market/${$page.params.server}/item/${item.itemKey}`)
+    if (target.tagName !== 'IMG') goto(`/market/item/${$page.params.server}/${item.itemKey}`)
   }
   const columns = [
     {
@@ -142,17 +142,14 @@
                 .map((perk) => perk.id.toLowerCase())
                 .join(',')}"
               class="flex aspect-square w-10 place-content-center place-items-center bg-contain bg-center bg-no-repeat
-              {(type !== 'resource' && type !== 'housingitem' && type !== 'ammo' && type !== 'consumable')
-                ? `bg-item-rarity-square-${item.rarity || 0}`
-                : `bg-item-rarity-circle-${item.rarity || 0}`}"
-              class:bg-item-rarity-square-0={type === 'ammo' || type === 'consumable'}
+              {(type !== 'resource' && type !== 'housingitem')
+                ? `bg-item-rarity-square-${item.rarity ?? 0}`
+                : `bg-item-rarity-circle-${item.rarity ?? 0}`}"
               target="_blank"
             >
               <img src={replaceLynshineSrc(item.iconPath?.replaceAll('\\', '/'))} alt="" class="aspect-square w-[90%]" />
             </a>
-            <a href="/market/{$page.params.server}/item/{item.itemKey}">
               {item.name}
-            </a>
           </td>
           <td class="col-start-2 row-start-[{i + 1}] text-right">
             {new Intl.NumberFormat('en-US', {

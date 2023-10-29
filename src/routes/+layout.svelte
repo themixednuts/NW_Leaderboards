@@ -6,16 +6,16 @@
   export let data: LayoutData
 
   onMount(() => {
-    let prefersDark = true
-    prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    // let prefersDark = true
+    // prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
 
-    const defaultTheme = localStorage.getItem('theme') || prefersDark ? 'dark' : 'light'
+    // const defaultTheme = localStorage.getItem('theme') || prefersDark ? 'dark' : 'light'
 
-    if (localStorage.getItem('theme')) {
-      window.document.querySelector('html')?.setAttribute('data-theme', localStorage.getItem('theme')!)
-    } else {
-      window.document.querySelector('html')?.setAttribute('data-theme', defaultTheme)
-    }
+    // if (localStorage.getItem('theme')) {
+    //   window.document.querySelector('html')?.setAttribute('data-theme', localStorage.getItem('theme')!)
+    // } else {
+    //   window.document.querySelector('html')?.setAttribute('data-theme', defaultTheme)
+    // }
   })
 </script>
 

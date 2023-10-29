@@ -3,18 +3,45 @@
   import { Chart, type ChartConfiguration } from 'chart.js/auto'
   import type { MarketData } from '$lib/market.types'
   import 'chartjs-adapter-date-fns'
+  import * as stats from 'simple-statistics'
   // import zoomPlugin from 'chartjs-plugin-zoom'
-  import type { PageData } from '../../routes/market/[server]/item/[id]/$types'
+  import type { PageData } from '../../routes/market/item/[server]/[id]/$types'
 
   export let itemData: PageData['itemData']
   export let title: string
+  export let days: number
 
-  const newChart: Action<HTMLCanvasElement, MarketData[]> = (canvas: HTMLCanvasElement, itemData: MarketData[]) => {
+  // const processedData = itemData.map((item) => {
+  //   // Split perks and trim spaces
+  //   const perks = item.perks.split(',').map((perk) => perk.trim())
+  //   return {
+  //     ...item,
+  //     perks,
+  //   }
+  // })
+  // const uniquePerks = Array.from(new Set(processedData.flatMap((item) => item.perks)))
+
+  // const perkEffects: Record<string, number> = {}
+
+  // uniquePerks.forEach((perk) => {
+  //   const prices = processedData.filter((item) => item.perks.includes(perk)).map((item) => item.price)
+
+  //   if (prices.length > 1) {
+  //     // Perform linear regression to estimate the effect of the perk on prices
+  //     const x = prices.map((price, index) => [index])
+  //     const y = prices
+  //     const regression = stats.linearRegression([x, y])
+  //     perkEffects[perk] = regression.m
+  //   }
+  // })
+  // console.log(perkEffects)
+
+  const myChart: Action<HTMLCanvasElement, MarketData[]> = (canvas: HTMLCanvasElement, itemData: MarketData[]) => {
     const resultMap = new Map()
     const labels = []
     const currentDate = new Date()
 
-    for (let i = 29; i >= 0; i--) {
+    for (let i = days; i >= 0; i--) {
       const date = new Date(currentDate)
       date.setDate(date.getDate() - i)
       date.setHours(0, 0, 0, 0)
@@ -51,19 +78,19 @@
       chartData[0] ??= {
         data: [],
         borderWidth: 2,
-        label: 'Avg (Price)',
+        label: 'Avg (Gold)',
       } as ChartConfiguration
       //@ts-expect-error
       chartData[1] ??= {
         data: [],
         borderWidth: 2,
-        label: 'Min (Price)',
+        label: 'Min (Gold)',
       } as ChartConfiguration
       //@ts-expect-error
       chartData[2] ??= {
         data: [],
         borderWidth: 2,
-        label: 'Max (Price)',
+        label: 'Max (Gold)',
       } as ChartConfiguration
       //@ts-expect-error
       chartData[3] ??= {
@@ -71,7 +98,7 @@
         borderWidth: 2,
         label: 'Quantity',
         yAxisID: 'y1',
-        borderDash: [5 ,5]
+        borderDash: [5, 5],
         // type: 'bar',
       } as ChartConfiguration
 
@@ -92,7 +119,6 @@
         y: value.quantity,
       }
 
-      // console.log(value)
       //@ts-expect-error
       chartData[0].data.push(avg)
       //@ts-expect-error
@@ -103,7 +129,7 @@
       chartData[3].data.push(quantity)
     }
 
-    let myChart: Chart | null = new Chart(canvas, {
+    let chart: Chart | null = new Chart(canvas, {
       type: 'line',
       data: {
         datasets: chartData,
@@ -114,6 +140,9 @@
           title: {
             display: true,
             text: title,
+          },
+          tooltip: {
+            mode: 'index',
           },
           // zoom: {
           //   zoom: {
@@ -155,7 +184,7 @@
           y: {
             title: {
               display: true,
-              text: 'Price',
+              text: 'Gold',
             },
             position: 'left',
             beginAtZero: true,
@@ -174,10 +203,10 @@
 
     return {
       destroy() {
-        myChart = null
+        chart = null
       },
     }
   }
 </script>
 
-<canvas use:newChart={itemData}></canvas>
+<canvas use:myChart={itemData}></canvas>

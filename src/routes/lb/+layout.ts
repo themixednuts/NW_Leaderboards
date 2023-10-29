@@ -8,13 +8,13 @@ export const load = (async ({ route, fetch, params }) => {
     ? params.season || validSeasons.at(-1)
     : validSeasons.at(-1)
 
+    //@ts-expect-error
   if (route.id === '/') throw redirect(301, '/lb')
 
   let filter = 'CharacterLeaderboard' as 'CharacterLeaderboard' | 'CompanyLeaderboard' | 'FactionLeaderboard'
 
   const { lbid } = params
 
-  console.log(lbid)
   if (lbid && !(lbid in LEADERBOARD_ID_MAP)) throw error(404)
 
   if (lbid) {

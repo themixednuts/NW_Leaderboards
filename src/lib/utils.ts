@@ -86,12 +86,12 @@ export function ItemPerkScaling(scalingPerGearscore: string, gearScore: number, 
 
 export function MarketBrowserQuery(server: string, type: number, sort: string) {
   const query = `
+  -- EXPLAIN QUERY PLAN
   SELECT 
     server.itemKey,
     COALESCE (locale.text, master.Name) AS name,
     server.price,
     server.gearScore,
-    server.location,
     master.ItemType AS itemType,
     server.quantity,
     server.contractType,
@@ -99,8 +99,6 @@ export function MarketBrowserQuery(server: string, type: number, sort: string) {
     CAST(master.Tier AS INTEGER) AS tier,
     server.gemPerkCount,
     server.perkCount,
-    server.duration,
-    server.expiration,
     server.expirationSec,
     server.sessionDate,
     COALESCE(weapon.IconPath, instruments.IconPath, armor.IconPath, master.IconPath) AS iconPath,
@@ -123,7 +121,7 @@ export function MarketBrowserQuery(server: string, type: number, sort: string) {
                             WHERE ',' || server.perks || ',' LIKE '%,' || ItemPerks.PerkID || ',%'
     ) AS perks,
     server.queryDate
-  FROM ${server}_latest AS server
+  FROM orders AS server
   LEFT JOIN MasterItemDefinitions AS master ON itemKey = master.ItemID COLLATE NOCASE
   LEFT JOIN ArmorAppearances AS armor ON armor.ItemID = master.ArmorAppearanceM COLLATE NOCASE
   LEFT JOIN WeaponAppearanceDefinitions AS weapon ON weapon.WeaponAppearanceID = master.WeaponAppearanceOverride COLLATE NOCASE
@@ -133,6 +131,7 @@ export function MarketBrowserQuery(server: string, type: number, sort: string) {
   AND (:family = 'all' OR :family = master.TradingFamily COLLATE NOCASE)
   AND (:group = 'all' OR :group = master.TradingGroup COLLATE NOCASE)
   AND server.contractType = ${type}
+  AND server.sessionDate = (SELECT sessionDate FROM server_metadata WHERE server = '${server}')
   ${sort}
   LIMIT 20 OFFSET (:page - 1) * 20;
   `
@@ -152,3 +151,5 @@ export function getLocalizedDate(timeStamp: string) {
   }
   return date.toLocaleString(undefined, options)
 }
+
+export const serverList = ['El Dorado', 'Castle of Steel', 'Nyx', 'Abaton', 'Lilith', 'Isabella', 'Delos', 'Valhalla'].sort()

@@ -2,12 +2,13 @@
     import type { PageData } from './$types';
     
     export let data: PageData;
-    const servers = ['El Dorado', 'Castle of Steel', 'Nyx', 'Abaton', 'Lilith', 'Isabella', 'Delos', 'Valhalla'].sort()
+
+    const marketRoutes = ['browser', 'item', 'stats']
 </script>
 
 <div class="flex flex-col">
-    {#each servers as server }
-        <a href="/market/{server.toLowerCase().replaceAll(' ', '')}/browser/buy/all/1">{server}</a>
+    {#each marketRoutes as route}
+        <a href="/market/{route}" class=" capitalize">{route}</a>
     {/each}
 
 </div>

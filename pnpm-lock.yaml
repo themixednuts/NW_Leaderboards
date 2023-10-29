@@ -47,6 +47,9 @@ dependencies:
   prettier-plugin-tailwindcss:
     specifier: ^0.5.5
     version: 0.5.5(prettier-plugin-svelte@3.0.3)(prettier@3.0.3)
+  simple-statistics:
+    specifier: ^7.8.3
+    version: 7.8.3
 
 devDependencies:
   '@sveltejs/adapter-auto':
@@ -1872,6 +1875,10 @@ packages:
 
   /signal-exit@3.0.7:
     resolution: {integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==}
+    dev: false
+
+  /simple-statistics@7.8.3:
+    resolution: {integrity: sha512-JFvMY00t6SBGtwMuJ+nqgsx9ylkMiJ5JlK9bkj8AdvniIe5615wWQYkKHXe84XtSuc40G/tlrPu0A5/NlJvv8A==}
     dev: false
 
   /sirv@2.0.3:

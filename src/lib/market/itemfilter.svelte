@@ -6,11 +6,10 @@
   const primaryCategoryIconPath = 'https://cdn.nwdb.info/db/images/live/v35/icons/itemtypes/itemtype_%s.png'
   // familyIconPath = "LyShineUI\\Images\\Icons\\Items\\Drawing\\%s.dds",
   // groupIconPath = "LyShineUI\\Images\\contracts\\contracts_tier%s.dds",
-  // itemIconPath = "LyShineUI\\Images\\Icons\\Items_hires\\%s.dds",
 
   export let filters: [string, string]
+
   $: header = $page.params.category
-  $: pageNumber = $page.params.page
   $: server = $page.params.server
   $: type = $page.params.type
   $: family = $page.url.searchParams.get('family')
@@ -21,7 +20,7 @@
   class="grid w-[20rem] border-collapse grid-flow-row-dense auto-rows-[68px] grid-cols-[auto,1fr] gap-x-2 border-[1px] border-stone-200">
   {#each categories as [category, categoryDisplayName] (category)}
     <a
-      href="/market/{$page.params.server}/browser/{$page.params.type}/{category.toLowerCase().replaceAll(' ', '')}/1"
+      href="/market/browser/{$page.params.server}/{$page.params.type}/{category.toLowerCase().replaceAll(' ', '')}/1"
       class="col-start-1 row-span-1 -ml-[1px] -mt-[1px] flex place-content-center place-items-center border-[1px] border-slate-200 bg-contain bg-center bg-no-repeat hover:bg-contract-category"
       class:border-r-0={header.toLowerCase() === category.toLowerCase()}
       class:bg-contract-category={header === category.toLowerCase()}>
@@ -38,10 +37,10 @@
        border-b-[1px] border-stone-300 border-opacity-30 bg-cover bg-center bg-no-repeat hover:bg-contract-subcategory"
       class:bg-contract-subcategory={family === filter || group === filter}
       href={header === 'all'
-        ? `/market/${server}/browser/${type}/${filter.toLowerCase()}/1`
+        ? `/market/browser/${server}/${type}/${filter.toLowerCase()}/1`
         : family
-        ? `/market/${server}/browser/${type}/${header}/1?family=${family}&group=${filter}`
-        : `/market/${server}/browser/${type}/${header}/1?family=${filter}`}>
+        ? `/market/browser/${server}/${type}/${header}/1?family=${family}&group=${filter}`
+        : `/market/browser/${server}/${type}/${header}/1?family=${filter}`}>
       {displayName}
     </a>
   {/each}
