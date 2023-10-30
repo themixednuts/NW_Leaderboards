@@ -2,7 +2,12 @@ import type { LayoutServerLoad } from './$types'
 import filters from '$lib/assets/filter.json'
 import { getCraftingLocale } from '$lib/server/locales'
 import { categoryWeights } from '$lib/utils'
+import type { Config } from '@sveltejs/adapter-vercel'
 
+const config: Config = {
+  runtime: 'edge'
+
+}
 export const load = (async ({ params: { category }, url: { searchParams }}) => {
   const family = searchParams.get('family')
   // const group = searchParams.get('group')
