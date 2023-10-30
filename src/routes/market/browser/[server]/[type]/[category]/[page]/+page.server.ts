@@ -15,11 +15,11 @@ const browserType = {
     buy: 1,
 }
 export const config: Config = {
-    isr: {
-        expiration: 5200,
-        allowQuery: ['family', 'group', 'item', 'sort']
-    },
-    runtime: 'nodejs18.x',
+    // isr: {
+    //     expiration: 5200,
+    //     allowQuery: ['family', 'group', 'item', 'sort']
+    // },
+    runtime: 'edge',
 }
 
 type SortBy = "price_asc" | "price_desc" | "name_asc" | "name_desc" | "tier_asc" | "tier_desc" | "gs_asc" | "gs_desc" | "perks_asc" | "perks_desc" | "avail_asc" | "avail_desc" | "gem_asc" | "gem_desc" | "exp_asc" | "exp_desc"

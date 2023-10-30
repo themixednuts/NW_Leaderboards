@@ -88,19 +88,16 @@ export function MarketBrowserQuery(sort?: string) {
   const query = `
   -- EXPLAIN QUERY PLAN
   SELECT 
-    server.itemKey,
+    itemKey,
     COALESCE (locale.text, master.Name) AS name,
-    server.price,
-    server.gearScore,
+    price,
+    gearScore,
     master.ItemType AS itemType,
-    server.quantity,
-    server.contractType,
-    server.rarity,
+    quantity,
+    contractType,
+    rarity,
     CAST(master.Tier AS INTEGER) AS tier,
-    server.gemPerkCount,
-    server.perkCount,
-    server.expirationSec,
-    server.sessionDate,
+    expirationSec,
     COALESCE(weapon.IconPath, instruments.IconPath, armor.IconPath, master.IconPath) AS iconPath,
     (SELECT json_group_array(
             	json_object(
@@ -118,9 +115,8 @@ export function MarketBrowserQuery(sort?: string) {
                               	)
                                 )
                             FROM ItemPerks
-                            WHERE ',' || server.perks || ',' LIKE '%,' || ItemPerks.PerkID || ',%'
-    ) AS perks,
-    server.queryDate
+                            WHERE ',' || perks || ',' LIKE '%,' || ItemPerks.PerkID || ',%'
+    ) AS perks
   FROM orders AS server
   LEFT JOIN MasterItemDefinitions AS master ON itemKey = master.ItemID COLLATE NOCASE
   LEFT JOIN ArmorAppearances AS armor ON armor.ItemID = master.ArmorAppearanceM COLLATE NOCASE
@@ -131,6 +127,7 @@ export function MarketBrowserQuery(sort?: string) {
   AND (:family = 'all' OR :family = master.TradingFamily COLLATE NOCASE)
   AND (:group = 'all' OR :group = master.TradingGroup COLLATE NOCASE)
   AND server.contractType = :type
+  AND server.server = :server
   AND server.sessionDate = (SELECT sessionDate FROM server_metadata WHERE server = :server)
   ${sort ? sort : ''}
   LIMIT 20 OFFSET (:page - 1) * 20;
