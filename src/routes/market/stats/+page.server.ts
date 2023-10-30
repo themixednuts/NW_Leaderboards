@@ -4,9 +4,6 @@ import type { Config } from '@sveltejs/adapter-vercel';
 import { serverList } from '$lib/utils';
 
 export const config: Config = {
-    isr: {
-        expiration: 180
-    }
 }
 export const load = (async () => {
 
