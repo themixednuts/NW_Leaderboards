@@ -1,11 +1,12 @@
 import type { LayoutServerLoad } from './$types'
 import filters from '$lib/assets/filter.json'
-import { craftingLocales } from '$lib/server/locales'
+import { getCraftingLocale } from '$lib/server/locales'
 import { categoryWeights } from '$lib/utils'
 
 export const load = (async ({ params: { category }, url: { searchParams }}) => {
   const family = searchParams.get('family')
   // const group = searchParams.get('group')
+  const craftingLocales = await getCraftingLocale()
   let filter
   if (category && category.toLowerCase() !== 'all') {
     for (const catKey in filters) {
