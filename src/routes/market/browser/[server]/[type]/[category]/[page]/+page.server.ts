@@ -57,13 +57,13 @@ export const load = (async ({ params: { server, category, page, type }, url: { s
         server,
         type: browserType[type as keyof typeof browserType],
     }
+
     if(sort){
-        //@ts-expect-error
-        args.sort = SORT_MAP[sort as keyof typeof SORT_MAP]
-        query = MarketBrowserQuery('ORDER BY :sort')
-        
+        let sorted = SORT_MAP[sort as keyof typeof SORT_MAP]
+        query = MarketBrowserQuery(`ORDER BY ${sorted}`)
     }
-    console.log(args)
+
+    console.log(args, query)
     const marketdata = await db.execute({
         sql: query,
         args

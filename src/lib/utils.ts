@@ -127,9 +127,9 @@ export function MarketBrowserQuery(sort?: string) {
   WHERE (:category = 'all' OR :category = master.TradingCategory COLLATE NOCASE)
   AND (:family = 'all' OR :family = master.TradingFamily COLLATE NOCASE)
   AND (:group = 'all' OR :group = master.TradingGroup COLLATE NOCASE)
-  AND server.contractType = :type
-  AND server.server = :server
-  AND server.sessionDate = (SELECT sessionDate FROM server_metadata WHERE server = :server)
+  AND contractType = :type
+  AND server = :server
+  AND sessionDate = (SELECT sessionDate FROM server_metadata WHERE server = :server)
   ${sort ? sort : ''}
   LIMIT 20 OFFSET (:page - 1) * 20;
   `
