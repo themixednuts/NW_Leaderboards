@@ -5,7 +5,7 @@ import { categoryWeights } from '$lib/utils'
 import type { Config } from '@sveltejs/adapter-vercel'
 
 const config: Config = {
-  runtime: 'edge'
+  runtime: 'nodejs18.x'
 
 }
 export const load = (async ({ params: { category }, url: { searchParams }}) => {
