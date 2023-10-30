@@ -4,7 +4,7 @@ import { getCraftingLocale } from '$lib/server/locales'
 import { categoryWeights } from '$lib/utils'
 import type { Config } from '@sveltejs/adapter-vercel'
 
-const config: Config = {
+export const config: Config = {
   runtime: 'nodejs18.x'
 
 }
