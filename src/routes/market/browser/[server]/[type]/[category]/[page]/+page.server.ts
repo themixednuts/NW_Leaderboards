@@ -23,23 +23,23 @@ export const config: Config = {
 }
 
 type SortBy = "price_asc" | "price_desc" | "name_asc" | "name_desc" | "tier_asc" | "tier_desc" | "gs_asc" | "gs_desc" | "perks_asc" | "perks_desc" | "avail_asc" | "avail_desc" | "gem_asc" | "gem_desc" | "exp_asc" | "exp_desc"
-const SORT_MAP: { [k in SortBy]: string[] } = {
-    "price_asc": ['price', ''],
-    "price_desc": ['price', 'DESC'],
-    "name_asc": ['name', ''],
-    "name_desc": ['name', 'DESC'],
-    "gs_asc": ['gearScore', ''],
-    "gs_desc": ['gearScore', 'DESC'],
-    "perks_asc": ['perkCount', ''],
-    "perks_desc": ['perkCount', 'DESC'],
-    "avail_asc": ['quantity', ''],
-    "avail_desc": ['quantity', 'DESC'],
-    "tier_asc": ['tier', ''],
-    "tier_desc": ['tier', 'DESC'],
-    "gem_asc": ['gemPerkCount', ''],
-    "gem_desc": ['gemPerkCount', 'DESC'],
-    "exp_asc": ['expirationSec', ''],
-    "exp_desc": ['expirationSec', 'DESC'],
+const SORT_MAP: { [k in SortBy]: string } = {
+    "price_asc": 'price',
+    "price_desc": 'price DESC',
+    "name_asc": 'name',
+    "name_desc": 'name DESC',
+    "gs_asc": 'gearScore',
+    "gs_desc": 'gearScore DESC',
+    "perks_asc": 'perkCount',
+    "perks_desc": 'perkCount DESC',
+    "avail_asc": 'quantity',
+    "avail_desc": 'quantity DESC',
+    "tier_asc": 'tier',
+    "tier_desc": 'tier DESC',
+    "gem_asc": 'gemPerkCount',
+    "gem_desc": 'gemPerkCount DESC',
+    "exp_asc": 'expirationSec',
+    "exp_desc": 'expirationSec DESC',
 }
 
 export const load = (async ({ params: { server, category, page, type }, url: { searchParams } }) => {
@@ -59,10 +59,9 @@ export const load = (async ({ params: { server, category, page, type }, url: { s
     }
     if(sort){
         //@ts-expect-error
-        args.sort_column = SORT_MAP[sort as keyof typeof SORT_MAP][0]
-        //@ts-expect-error
-        args.sort_direction = SORT_MAP[sort as keyof typeof SORT_MAP][1]
-        query = MarketBrowserQuery('ORDER BY :sort_column :sort_direction')
+        args.sort = SORT_MAP[sort as keyof typeof SORT_MAP][0]
+        query = MarketBrowserQuery('ORDER BY :sort')
+        
     }
     const marketdata = await db.execute({
         sql: query,
