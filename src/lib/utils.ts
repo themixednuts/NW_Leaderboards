@@ -96,6 +96,7 @@ export function MarketBrowserQuery(sort?: string) {
     quantity,
     contractType,
     rarity,
+    queryDate,
     CAST(master.Tier AS INTEGER) AS tier,
     expirationSec,
     COALESCE(weapon.IconPath, instruments.IconPath, armor.IconPath, master.IconPath) AS iconPath,
