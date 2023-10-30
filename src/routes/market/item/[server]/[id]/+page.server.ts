@@ -1,5 +1,4 @@
 import type { PageServerLoad } from './$types'
-import { error } from '@sveltejs/kit'
 import { db } from '$lib/server/db'
 import type { MarketData } from '$lib/market.types'
 import type { Config } from '@sveltejs/adapter-vercel'

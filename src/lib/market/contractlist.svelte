@@ -95,6 +95,8 @@
     const intervalId = setInterval(updateExpiration, 1000)
     return () => clearInterval(intervalId)
   })
+
+  console.log($page.url)
 </script>
 
 <div class="h-full w-full overflow-y-auto">
@@ -103,7 +105,7 @@
       <tr class="">
         {#each columns as { key, label, sortKey, isImage, isRotation } (key)}
           <th class="relative h-full" class:w-80={key === 'name'} class:w-full={key !== 'name'}>
-            <a href="?sort={sort === `${sortKey}_asc` ? `${sortKey}_desc` : `${sortKey}_asc`}" class="h-full w-full pl-2 flex place-items-center" data-sveltekit-reload>
+            <a href="/market/browser/{$page.params.server}/{$page.params.type}/{$page.params.category}/1?sort={sort === `${sortKey}_asc` ? `${sortKey}_desc` : `${sortKey}_asc`}" class="h-full w-full pl-2 flex place-items-center" data-sveltekit-reload>
               {#if isImage}
                 <img
                   src={replaceLynshineSrc('/lyshineui/images/icons/misc/icon_gearscore_tan.png')}
