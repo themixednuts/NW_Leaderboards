@@ -17,8 +17,8 @@
     Sell: '/lyshineui/images/icons/contracts/contracts_iconsell.png',
   }
 
-  async function getItem(params: string) {
-    const res = await fetch(`/api/search/${$page.params.server}/${params}`)
+  async function getItem(id: string) {
+    const res = await fetch(`/api/search/${id}`)
     items = await res.json()
   }
 
@@ -27,10 +27,13 @@
 
     return {
       destroy() {},
-      update(parameter) {
-        if (!parameter) return
+      update(id) {
+        if (!id) {
+          items = []
+          return
+        }
         clearTimeout(timer)
-        timer = setTimeout(getItem, 300, parameter)
+        timer = setTimeout(getItem, 300, id)
       },
     }
   }
