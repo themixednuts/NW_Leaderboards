@@ -9,7 +9,7 @@ export const GET: RequestHandler = async ({ params: { server, item } }) => {
     FROM orders   
     LEFT JOIN MasterItemDefinitions AS master ON itemKey = master.ItemID COLLATE NOCASE
     LEFT JOIN locale_en_us AS locale ON SUBSTR(master.Name, 2) = locale.key COLLATE NOCASE
-    WHERE locale.key LIKE '%' || :item || '%' COLLATE NOCASE
+    WHERE locale.text LIKE '%' || :item || '%' COLLATE NOCASE
     AND server = :server
     AND sessionDate = (SELECT sessionDate FROM server_metadata WHERE server = :server);
     `
