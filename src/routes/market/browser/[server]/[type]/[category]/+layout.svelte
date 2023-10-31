@@ -4,6 +4,7 @@
   import { endPage } from '$lib/market/stores'
   import type { Action } from 'svelte/action'
   import type { LayoutData } from './$types'
+  import { controllers } from 'chart.js'
 
   export let data: LayoutData
   $: isPageStart = +$page.params.page <= 1
@@ -11,29 +12,44 @@
 
   let search = ''
   let items: { id: string; name: string; TradingCategory: string; TradingFamily: string; TradingGroup: string }[] = []
+  let searching = false
 
   const tabIcons: { [k: string]: string } = {
     Buy: '/lyshineui/images/icons/contracts/contracts_iconbuy.png',
     Sell: '/lyshineui/images/icons/contracts/contracts_iconsell.png',
   }
 
-  async function getItem(id: string) {
-    const res = await fetch(`/api/search/${id}`)
-    items = await res.json()
+  async function getItem(id: string, controller: AbortController) {
+    searching = true
+    try {
+      const res = await fetch(`/api/search/${id}`, { signal: controller.signal })
+      items = await res.json()
+    } catch (e) {
+      console.log(e)
+    }
+    searching = false
   }
 
   const searchItem: Action<HTMLInputElement, string> = (ele: HTMLInputElement, search: string) => {
     let timer: NodeJS.Timeout
+    let controller = new AbortController()
 
     return {
-      destroy() {},
+      destroy() {
+        clearTimeout(timer)
+        controller.abort()
+      },
       update(id) {
+        clearTimeout(timer)
+        controller.abort()
+        controller = new AbortController()
         if (!id) {
+          searching = false
           items = []
           return
         }
-        clearTimeout(timer)
-        timer = setTimeout(getItem, 300, id)
+        searching = true
+        timer = setTimeout(getItem, 300, id, controller)
       },
     }
   }
@@ -58,11 +74,17 @@
       <div
         class="relative row-start-1 border-2 border-orange-400 border-opacity-30 bg-search bg-cover bg-center bg-no-repeat p-2 hover:bg-search-hover"
       >
-        <img
-          src="/lyshineui/images/socialpane/icon_magnifying_glass.png"
-          alt=""
-          class="pointer-events-none absolute left-2 top-1/2 aspect-square -translate-y-1/2"
-        />
+        {#if !searching}
+          <img
+            src="/lyshineui/images/socialpane/icon_magnifying_glass.png"
+            alt=""
+            class="pointer-events-none absolute left-2 top-1/2 aspect-square -translate-y-1/2"
+          />
+        {:else}
+          <div class="absolute left-2 top-1/2 flex -translate-y-1/2 place-content-center">
+            <div class="loading"></div>
+          </div>
+        {/if}
         <input
           type="search"
           name=""
@@ -74,7 +96,7 @@
         />
         {#if items.length}
           <table
-            class="bg-dropdown table -ml-2 mt-3 w-[105%] table-fixed border-2 border-slate-500 bg-cover bg-no-repeat"
+            class="table -ml-2 mt-3 w-[105%] table-fixed border-2 border-slate-500 bg-dropdown bg-cover bg-no-repeat"
           >
             <tbody class="min-h-96 block max-h-[30rem] overflow-auto">
               {#each items as item}
