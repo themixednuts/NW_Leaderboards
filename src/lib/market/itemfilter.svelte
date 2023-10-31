@@ -17,7 +17,7 @@
 </script>
 
 <div
-  class="grid w-[20rem] border-collapse grid-flow-row-dense auto-rows-[68px] grid-cols-[auto,1fr] gap-x-2 border-[1px] border-stone-200">
+  class="grid border-collapse grid-flow-row-dense auto-rows-[68px] grid-cols-[auto,1fr] gap-x-2 border-[1px] border-stone-200">
   {#each categories as [category, categoryDisplayName] (category)}
     <a
       href="/market/browser/{$page.params.server}/{$page.params.type}/{category.toLowerCase().replaceAll(' ', '')}/1"
@@ -29,7 +29,7 @@
   {/each}
   <div
     class="col-start-2 row-start-1 row-end-2 mr-4 flex place-content-start place-items-center border-b-[1px] border-stone-300 border-opacity-30 text-xl">
-    <div class="header">{categories.find((arr) => arr[0] === header)?.[1]}</div>
+    <div class="header">{categories.find((arr) => arr[0] === header.toLowerCase())?.[1]}</div>
   </div>
   {#each filters as [filter, displayName], i}
     <a

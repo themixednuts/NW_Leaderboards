@@ -4,7 +4,6 @@
   import type { LayoutData } from './$types'
   export let data: LayoutData
   $: routes = $page.url.pathname?.split('/')
-  $: console.log(routes)
 </script>
 
 <svelte:head>

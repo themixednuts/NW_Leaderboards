@@ -124,12 +124,29 @@ export function MarketBrowserQuery(sort?: string) {
   LEFT JOIN WeaponAppearanceDefinitions AS weapon ON weapon.WeaponAppearanceID = master.WeaponAppearanceOverride COLLATE NOCASE
   LEFT JOIN InstrumentsAppearanceDefinitions AS instruments ON instruments.WeaponAppearanceID = master.WeaponAppearanceOverride COLLATE NOCASE
   LEFT JOIN locale_en_us AS locale ON SUBSTR(master.Name, 2) = locale.key COLLATE NOCASE
-  WHERE (:category = 'all' OR :category = master.TradingCategory COLLATE NOCASE)
-  AND (:family = 'all' OR :family = master.TradingFamily COLLATE NOCASE)
-  AND (:group = 'all' OR :group = master.TradingGroup COLLATE NOCASE)
+  WHERE 
+    CASE
+      WHEN :category = 'all' THEN 1
+      ELSE :category = master.TradingCategory COLLATE NOCASE
+    END
+  AND 
+    CASE
+      WHEN :family = 'all' THEN 1
+      ELSE :family = master.TradingFamily COLLATE NOCASE
+    END
+  AND 
+    CASE
+      WHEN :group = 'all' THEN 1
+      ELSE :group = master.TradingGroup COLLATE NOCASE
+    END
   AND contractType = :type
   AND server = :server
   AND sessionDate = (SELECT sessionDate FROM server_metadata WHERE server = :server)
+  AND 
+    CASE 
+      WHEN :item = 'all' THEN 1
+      ELSE :item = itemKey
+    END
   ${sort ? sort : ''}
   LIMIT 20 OFFSET (:page - 1) * 20;
   `

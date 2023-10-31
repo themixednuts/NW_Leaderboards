@@ -43,27 +43,28 @@ const SORT_MAP: { [k in SortBy]: string } = {
 }
 
 export const load = (async ({ params: { server, category, page, type }, url: { searchParams } }) => {
-    const family = searchParams.get('family')?.toLowerCase()
-    const group = searchParams.get('group')?.toLowerCase()
-    const sort = (searchParams.get('sort')?.toLowerCase() || "") as SortBy
+    const family = searchParams.get('family')?.toLowerCase() || 'all'
+    const group = searchParams.get('group')?.toLowerCase() || 'all'
+    const sort = (searchParams.get('sort')?.toLowerCase()) as SortBy
+    const item = searchParams.get('item') || 'all'
 
     let query = MarketBrowserQuery()
     let startTime = performance.now()
     const args = {
         category: category,
-        family: family || 'all',
-        group: group || 'all',
+        family,
+        group,
+        item,
         page,
         server,
         type: browserType[type as keyof typeof browserType],
     }
 
-    if(sort){
+    if (sort) {
         let sorted = SORT_MAP[sort as keyof typeof SORT_MAP]
         query = MarketBrowserQuery(`ORDER BY ${sorted}`)
     }
 
-    console.log(args, query)
     const marketdata = await db.execute({
         sql: query,
         args
@@ -84,17 +85,29 @@ export const load = (async ({ params: { server, category, page, type }, url: { s
     SELECT
     SUM(${type}_count) AS count
     FROM ${server}_trading_count
-    WHERE (:category = 'all' OR TradingCategory = :category COLLATE NOCASE) AND
-         (:family IS NULL OR TradingFamily = :family COLLATE NOCASE) AND
-         (:group IS NULL OR TradingGroup = :group COLLATE NOCASE)
+    WHERE 
+        CASE
+            WHEN :category = 'all' THEN 1
+            ELSE TradingCategory = :category COLLATE NOCASE 
+        END
+    AND
+        CASE 
+            WHEN :family = 'all' THEN 1
+            ELSE TradingFamily = :family COLLATE NOCASE
+        END
+    AND
+        CASE
+            WHEN :group = 'all' THEN 1
+            ELSE TradingGroup = :group COLLATE NOCASE
+        END
     `
     startTime = performance.now()
     const count = await db.execute({
         sql: countQuery,
         args: {
             category,
-            family: family || null,
-            group: group || null
+            family,
+            group
         }
     })
     console.log("db timer - TradingCount: ", performance.now() - startTime, " ms")

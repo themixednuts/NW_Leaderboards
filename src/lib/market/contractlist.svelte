@@ -90,13 +90,18 @@
       isRotation: false,
     },
   ]
+
   onMount(() => {
     updateExpiration()
     const intervalId = setInterval(updateExpiration, 1000)
     return () => clearInterval(intervalId)
   })
 
-  console.log($page.url)
+  let searchParams: string
+  $: {
+    $page.url.searchParams.delete('sort')
+    searchParams = $page.url.searchParams.toString()
+  }
 </script>
 
 <div class="h-full w-full overflow-y-auto">
@@ -105,7 +110,14 @@
       <tr class="">
         {#each columns as { key, label, sortKey, isImage, isRotation } (key)}
           <th class="relative h-full" class:w-80={key === 'name'} class:w-full={key !== 'name'}>
-            <a href="/market/browser/{$page.params.server}/{$page.params.type}/{$page.params.category}/1?sort={sort === `${sortKey}_asc` ? `${sortKey}_desc` : `${sortKey}_asc`}" class="h-full w-full pl-2 flex place-items-center" data-sveltekit-reload>
+            <a
+              href="/market/browser/{$page.params.server}/{$page.params.type}/{$page.params.category}/1?{searchParams}&sort={sort ===
+              `${sortKey}_asc` || (!sort && sortKey === 'price') 
+                ? `${sortKey}_desc`
+                : `${sortKey}_asc`}"
+              class="flex h-full w-full place-items-center pl-2"
+              data-sveltekit-reload
+            >
               {#if isImage}
                 <img
                   src={replaceLynshineSrc('/lyshineui/images/icons/misc/icon_gearscore_tan.png')}
@@ -116,12 +128,12 @@
                 {label}
               {/if}
             </a>
-            {#if sort?.includes(sortKey)}
+            {#if sort?.includes(sortKey) || (!sort && sortKey === 'price')}
               <img
                 src={replaceLynshineSrc('/lyshineui/images/icons/misc/arrow.png')}
                 alt=""
                 class="absolute left-2 top-1/2 w-3 -translate-y-1/2"
-                class:rotate-180={sort === `${sortKey}_asc`}
+                class:rotate-180={sort === `${sortKey}_asc` || (!sort && sortKey === 'price')}
               />
             {/if}
           </th>
@@ -138,20 +150,26 @@
           class="cursor-pointer bg-cover bg-center bg-no-repeat hover:bg-contract-item"
           on:click={(e) => goToItem(e, item)}
         >
-          <td class="flex w-max flex-nowrap place-items-center gap-2 place-self-start whitespace-nowrap py-2">
+          <td
+            class="flex w-max flex-nowrap place-items-center gap-2 place-self-start overflow-hidden whitespace-nowrap py-2"
+          >
             <a
               href="https://nwdb.info/db/item/{item.itemKey.toLowerCase()}?gs={item.gearScore}&perks={perks
                 .map((perk) => perk.id.toLowerCase())
                 .join(',')}"
               class="flex aspect-square w-10 place-content-center place-items-center bg-contain bg-center bg-no-repeat
-              {(type !== 'resource' && type !== 'housingitem')
+              {type !== 'resource' && type !== 'housingitem'
                 ? `bg-item-rarity-square-${item.rarity ?? 0}`
                 : `bg-item-rarity-circle-${item.rarity ?? 0}`}"
               target="_blank"
             >
-              <img src={replaceLynshineSrc(item.iconPath?.replaceAll('\\', '/'))} alt="" class="aspect-square w-[90%]" />
+              <img
+                src={replaceLynshineSrc(item.iconPath?.replaceAll('\\', '/'))}
+                alt=""
+                class="aspect-square w-[90%]"
+              />
             </a>
-              {item.name}
+            {item.name}
           </td>
           <td class="col-start-2 row-start-[{i + 1}] text-right">
             {new Intl.NumberFormat('en-US', {
