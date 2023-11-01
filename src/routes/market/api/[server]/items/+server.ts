@@ -43,7 +43,7 @@ export const GET: RequestHandler = async ({ params: { server } }) => {
     if (!res.rows.length) throw error(400, 'Bad Request')
 
     //@ts-ignore
-    const results = res.rows.map(row => ({ ...row, max_price: parseInt(row.max_price) / 100, min_price: row.min_price / 100, avg_price: row.avg_price })) as unknown as { id: string, name: string, min_price: number, avg_price: number, max_price: number, updatedAt: string }[]
+    const results = res.rows.map(row => ({ ...row, max_price: parseInt(row.max_price) / 100, min_price: row.min_price / 100, avg_price: row.avg_price / 100 })) as unknown as { id: string, name: string, min_price: number, avg_price: number, max_price: number, updatedAt: string }[]
 
     return json({
         server,
