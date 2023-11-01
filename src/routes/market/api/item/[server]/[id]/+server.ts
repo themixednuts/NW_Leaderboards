@@ -6,7 +6,7 @@ export const GET: RequestHandler = async ({ params: { id, server } }) => {
 
     const query = `
     --explain query plan
-    SELECT itemKey as id, locale.text as name, price, sum(quantity) as quantity
+    SELECT itemKey as id, locale.text as name, price, sum(quantity) as quantity, sessionDate as updatedAt
     FROM orders
     INNER JOIN MasterItemDefinitions AS master ON itemKey = master.ItemID COLLATE NOCASE 
     INNER JOIN locale_en_us AS locale ON locale.key = SUBSTR(master.Name, 2) COLLATE NOCASE
@@ -58,13 +58,16 @@ export const GET: RequestHandler = async ({ params: { id, server } }) => {
     const filteredAvgPrice = filteredData.reduce((total, item) => total + item.price, 0) / filteredData.length;
 
     return json({
-        data: convertedData,
+        id: res.rows[0].id,
+        name: res.rows[0].name,
+        updatedAt: res.rows[0].updatedAt,
+        data: convertedData.map(item => ({ price: item.price, quantity: item.quantity })),
+        server,
         minPriceWithinStdDev: Math.min(...filteredData.map(item => item.price)),
         meanPriceWithinStdDev: filteredAvgPrice / 100,
         stdDev: priceStdDev / 100,
         n,
         mean: avgPrice,
         totalQuantity,
-        server
     });
 };
