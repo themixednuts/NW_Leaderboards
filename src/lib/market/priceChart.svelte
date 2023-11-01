@@ -42,7 +42,7 @@
     const resultMap = new Map()
     const labels = []
     const currentDate = new Date()
-    const n = 2
+    const n = 1
 
     for (let i = days; i >= 0; i--) {
       const date = new Date(currentDate)
@@ -62,7 +62,7 @@
           .map((diff) => Math.pow(diff, 2))
 
         return squaredDifferences.reduce((acc, val) => acc + val, 0) + total
-      }, 0) / totalQuantity,
+      }, 0) / (itemData.length - 1),
     )
 
     const priceUpperBound = avgPrice + n * priceStdDev
