@@ -24,7 +24,7 @@ export const GET: RequestHandler = async ({ params: { id, server } }) => {
             sql: query,
             args: {
                 id,
-                server
+                server: server.toLowerCase()
             }
         })
         console.log('db timer - Item Search: ', performance.now() - startTime, ' ms')
@@ -41,7 +41,7 @@ export const GET: RequestHandler = async ({ params: { id, server } }) => {
         ...item,
         price: parseInt(item.price) / 100,
     }));
-    console.log(convertedData)
+    // console.log(convertedData)
 
     const totalPrice = convertedData.reduce((total, item) => total + item.price * item.quantity, 0);
     const totalQuantity = convertedData.reduce((total, item) => total + item.quantity, 0);
