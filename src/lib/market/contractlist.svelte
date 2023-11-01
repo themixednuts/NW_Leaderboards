@@ -151,7 +151,7 @@
           on:click={(e) => goToItem(e, item)}
         >
           <td
-            class="flex w-max flex-nowrap place-items-center gap-2 place-self-start overflow-hidden whitespace-nowrap py-2"
+            class="flex w-max flex-nowrap place-items-center gap-2 place-self-start min-w-0 whitespace-nowrap py-2"
           >
             <a
               href="https://nwdb.info/db/item/{item.itemKey.toLowerCase()}?gs={item.gearScore}&perks={perks
@@ -169,7 +169,10 @@
                 class="aspect-square w-[90%]"
               />
             </a>
-            {item.name}
+            <div class="overflow-hidden min-w-0">
+
+              {item.name}
+            </div>
           </td>
           <td class="col-start-2 row-start-[{i + 1}] text-right">
             {new Intl.NumberFormat('en-US', {
