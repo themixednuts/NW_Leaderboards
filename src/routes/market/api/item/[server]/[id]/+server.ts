@@ -60,9 +60,9 @@ export const GET: RequestHandler = async ({ params: { id, server } }) => {
     return json({
         id: res.rows[0].id,
         name: res.rows[0].name,
+        server,
         updatedAt: res.rows[0].updatedAt,
         data: convertedData.map(item => ({ price: item.price, quantity: item.quantity })),
-        server,
         minPriceWithinStdDev: Math.min(...filteredData.map(item => item.price)),
         meanPriceWithinStdDev: filteredAvgPrice / 100,
         stdDev: priceStdDev / 100,
