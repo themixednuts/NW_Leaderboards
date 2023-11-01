@@ -44,19 +44,17 @@ export const GET: RequestHandler = async ({ params: { id, server } }) => {
     // console.log(res.rows)
     if (!res.rows.length) throw error(400, 'Bad Request')
 
+    console.log(res.rows)
     const n = 1;
-    const convertedData = res.rows.map(item => ({
-        ...item,
-        price: parseInt(item.price) / 100,
-    }));
-    // console.log(convertedData)
+    //@ts-ignore
+    const results = res.rows.map(row => ({...row, price: parseInt(row.price) / 100 })) as unknown as {id: string, name: string, price: number, quantity: number, updatedAt: string}[]
 
-    const totalPrice = convertedData.reduce((total, item) => total + item.price * item.quantity, 0);
-    const totalQuantity = convertedData.reduce((total, item) => total + item.quantity, 0);
+    const totalPrice = results.reduce((total, item) => total + item.price * item.quantity, 0);
+    const totalQuantity = results.reduce((total, item) => total + item.quantity, 0);
     const avgPrice = totalPrice / totalQuantity;
 
     const priceStdDev = Math.sqrt(
-        convertedData.reduce((total, item) => {
+        results.reduce((total, item) => {
             const squaredDifferences = Array(item.quantity)
                 .fill(item.price - avgPrice)
                 .map(diff => Math.pow(diff, 2));
@@ -68,15 +66,15 @@ export const GET: RequestHandler = async ({ params: { id, server } }) => {
     const priceUpperBound = avgPrice + n * priceStdDev;
     const priceLowerBound = avgPrice - n * priceStdDev;
 
-    const filteredData = convertedData.filter(item => item.price >= priceLowerBound && item.price <= priceUpperBound);
+    const filteredData = results.filter(item => item.price >= priceLowerBound && item.price <= priceUpperBound);
     const filteredAvgPrice = filteredData.reduce((total, item) => total + item.price, 0) / filteredData.length;
 
     return json({
-        id: res.rows[0].id,
-        name: res.rows[0].name,
+        id: results[0].id,
+        name: results[0].name,
         server,
-        updatedAt: res.rows[0].updatedAt,
-        data: convertedData.map(item => ({ price: item.price, quantity: item.quantity })),
+        updatedAt: results[0].updatedAt,
+        data: results.map(item => ({ price: item.price, quantity: item.quantity })),
         minPriceWithinStdDev: Math.min(...filteredData.map(item => item.price)),
         meanPriceWithinStdDev: filteredAvgPrice / 100,
         stdDev: priceStdDev / 100,
