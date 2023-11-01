@@ -48,6 +48,6 @@ export const GET: RequestHandler = async ({ params: { server } }) => {
     return json({
         server,
         updatedAt: res.rows[0].updatedAt,
-        data: results.map(row => ({ id: row.id, name: row.name, min_price: row.min_price, avg_price: row.avg_price, })),
+        data: results.map(row => ({ id: row.id, name: row.name, min_price: row.min_price.toFixed(2), avg_price: row.avg_price.toFixed(2), max_price: row.max_price.toFixed(2) })),
     });
 };
