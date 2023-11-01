@@ -1,12 +1,14 @@
 <script lang="ts">
   import type { Action } from 'svelte/action'
-  import { Chart, type ChartConfiguration } from 'chart.js/auto'
+  import { Chart, type ChartDataset } from 'chart.js/auto'
   import type { MarketData } from '$lib/market.types'
   import 'chartjs-adapter-date-fns'
   import * as stats from 'simple-statistics'
   // import zoomPlugin from 'chartjs-plugin-zoom'
   import type { PageData } from '../../routes/market/item/[server]/[id]/$types'
+  import annotationPlugin, { type AnnotationOptions, type AnnotationPluginOptions } from 'chartjs-plugin-annotation'
 
+  Chart.register(annotationPlugin)
   export let itemData: PageData['itemData']
   export let title: string
   export let days: number
@@ -40,6 +42,7 @@
     const resultMap = new Map()
     const labels = []
     const currentDate = new Date()
+    const n = 2
 
     for (let i = days; i >= 0; i--) {
       const date = new Date(currentDate)
@@ -48,59 +51,143 @@
       labels.push(date.getTime())
     }
 
-    itemData.forEach((item) => {
-      const { sessionDate, price, quantity } = item
-      if (!resultMap.has(sessionDate)) {
-        resultMap.set(sessionDate, { min: [], max: [], total: { price: 0, quantity: 0 } })
+    const totalPrice = itemData.reduce((total, item) => total + (item.price / 100) * item.quantity, 0)
+    const totalQuantity = itemData.reduce((total, item) => total + item.quantity, 0)
+    const avgPrice = totalPrice / totalQuantity
+
+    const priceStdDev = Math.sqrt(
+      itemData.reduce((total, item) => {
+        const squaredDifferences = Array(item.quantity)
+          .fill(item.price / 100 - avgPrice)
+          .map((diff) => Math.pow(diff, 2))
+
+        return squaredDifferences.reduce((acc, val) => acc + val, 0) + total
+      }, 0) / totalQuantity,
+    )
+
+    const priceUpperBound = avgPrice + n * priceStdDev
+    const priceLowerBound = avgPrice - n * priceStdDev
+    const avgAnnotation: AnnotationOptions = {
+      type: 'line',
+      borderColor: 'rgba(100,100,100,.50)',
+      borderDash: [5, 5],
+      borderDashOffset: 0,
+      borderWidth: 1,
+      label: {
+        display: false,
+        borderColor: 'rgba(100,100,100,.30)',
+        drawTime: 'afterDatasetsDraw',
+        content: (ctx) => 'Average: ' + avgPrice.toFixed(2),
+        position: 'start',
+      },
+      scaleID: 'y',
+      value: (ctx) => avgPrice,
+    }
+    const lowerAnnotation: AnnotationOptions = {
+      type: 'line',
+      borderColor: 'rgba(100,100,100,.30)',
+      borderDash: [5, 5],
+      borderDashOffset: 0,
+      borderWidth: 1,
+      label: {
+        display: false,
+        backgroundColor: 'rgba(100,100,100,.30)',
+        content: (ctx) => priceLowerBound.toFixed(2) ,
+        position: 'start',
+        rotation: -90,
+      },
+      scaleID: 'y',
+      value: (ctx) => priceLowerBound > 0 ? priceLowerBound.toFixed(2) : 0,
+    }
+    const upperAnnotation: AnnotationOptions = {
+      type: 'line',
+      borderColor: 'rgba(100,100,100,.30)',
+      borderDash: [5, 5],
+      borderDashOffset: 0,
+      borderWidth: 1,
+      label: {
+        display: false,
+        backgroundColor: 'rgba(100,100,100,.30)',
+        content: (ctx) => priceUpperBound.toFixed(2),
+        position: 'start',
+        rotation: -90,
+      },
+      scaleID: 'y',
+      value: (ctx) => priceUpperBound.toFixed(2),
+    }
+    const groupedData: Map<string,MarketData[]> = itemData.reduce((result, item) => {
+      const { sessionDate, price } = item
+
+      if (!result.has(sessionDate)) {
+        result.set(sessionDate, [])
       }
 
-      const normPrice = price / 100
+      const group = result.get(sessionDate)
+      group.push({ ...item, sessionDate, price: price / 100 })
 
-      const entry = resultMap.get(sessionDate)
-      entry.min.push(normPrice)
-      entry.max.push(normPrice)
-      entry.total.price += normPrice * quantity
-      entry.total.quantity += quantity
+      return result
+    }, new Map())
+
+
+
+    groupedData.forEach((item, idx, arr) => {
+      const prices = item.map((item) => item.price)
+      const minPice = Math.min(...prices)
+      const maxPrice = Math.max(...prices)
+      const totalPrice = item.reduce((total, item) => total + item.price * item.quantity, 0)
+      const totalQuantity = item.reduce((total, item) => total + item.quantity, 0)
+      const avgPrice = totalPrice / totalQuantity
+
+      // const priceStdDev = Math.sqrt(
+      //   item.reduce((total, item) => {
+      //     const squaredDifferences = Array(item.quantity)
+      //       .fill(item.price - avgPrice)
+      //       .map((diff) => Math.pow(diff, 2))
+
+      //     return squaredDifferences.reduce((acc, val) => acc + val, 0) + total
+      //   }, 0) / totalQuantity,
+      // )
+
+      // const priceUpperBound = avgPrice + n * priceStdDev
+      // const priceLowerBound = avgPrice - n * priceStdDev
+
+      resultMap.set(item[0].sessionDate, {
+        min: minPice.toFixed(2),
+        max: maxPrice.toFixed(2),
+        average: avgPrice.toFixed(2),
+        quantity: totalQuantity,
+        // priceLowerBound,
+        // priceUpperBound,
+        // priceStdDev,
+      })
     })
 
-    resultMap.forEach((val, key) => {
-      val.min = Math.min(...val.min).toFixed(2)
-      val.max = Math.max(...val.max).toFixed(2)
-      val.average = (val.total.price / val.total.quantity).toFixed(2)
-      val.quantity = val.total.quantity
-    })
-
-    const chartData: [] = []
+    const chartData: ChartDataset[] = []
     for (const [key, value] of resultMap.entries()) {
       const inputDate = new Date(key)
       const formattedDate = inputDate.getTime()
-      //@ts-expect-error
       chartData[0] ??= {
         data: [],
         borderWidth: 2,
         label: 'Avg (Gold)',
-      } as ChartConfiguration
-      //@ts-expect-error
+      }
       chartData[1] ??= {
         data: [],
         borderWidth: 2,
         label: 'Min (Gold)',
-      } as ChartConfiguration
-      //@ts-expect-error
+      }
       chartData[2] ??= {
         data: [],
         borderWidth: 2,
         label: 'Max (Gold)',
-      } as ChartConfiguration
-      //@ts-expect-error
+      }
       chartData[3] ??= {
         data: [],
         borderWidth: 2,
         label: 'Quantity',
         yAxisID: 'y1',
         borderDash: [5, 5],
-        // type: 'bar',
-      } as ChartConfiguration
+      }
 
       const min = {
         x: formattedDate,
@@ -119,13 +206,9 @@
         y: value.quantity,
       }
 
-      //@ts-expect-error
       chartData[0].data.push(avg)
-      //@ts-expect-error
       chartData[1].data.push(min)
-      //@ts-expect-error
       chartData[2].data.push(max)
-      //@ts-expect-error
       chartData[3].data.push(quantity)
     }
 
@@ -143,6 +226,13 @@
           },
           tooltip: {
             mode: 'index',
+          },
+          annotation: {
+            annotations: {
+              avgAnnotation,
+              lowerAnnotation,
+              upperAnnotation
+            },
           },
           // zoom: {
           //   zoom: {

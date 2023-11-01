@@ -20,6 +20,9 @@ dependencies:
   chartjs-adapter-date-fns:
     specifier: ^3.0.0
     version: 3.0.0(chart.js@4.4.0)(date-fns@2.30.0)
+  chartjs-plugin-annotation:
+    specifier: ^3.0.1
+    version: 3.0.1(chart.js@4.4.0)
   chartjs-plugin-zoom:
     specifier: ^2.0.1
     version: 2.0.1(chart.js@4.4.0)
@@ -775,6 +778,14 @@ packages:
     dependencies:
       chart.js: 4.4.0
       date-fns: 2.30.0
+    dev: false
+
+  /chartjs-plugin-annotation@3.0.1(chart.js@4.4.0):
+    resolution: {integrity: sha512-hlIrXXKqSDgb+ZjVYHefmlZUXK8KbkCPiynSVrTb/HjTMkT62cOInaT1NTQCKtxKKOm9oHp958DY3RTAFKtkHg==}
+    peerDependencies:
+      chart.js: '>=4.0.0'
+    dependencies:
+      chart.js: 4.4.0
     dev: false
 
   /chartjs-plugin-zoom@2.0.1(chart.js@4.4.0):

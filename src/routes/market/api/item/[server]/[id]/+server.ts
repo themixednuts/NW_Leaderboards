@@ -1,6 +1,14 @@
 import { db } from '$lib/server/db';
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import type { Config } from '@sveltejs/adapter-vercel';
+
+export const config: Config = {
+    runtime: 'nodejs18.x',
+    isr: {
+        expiration: 14400
+    }
+}
 
 export const GET: RequestHandler = async ({ params: { id, server } }) => {
 
@@ -48,7 +56,13 @@ export const GET: RequestHandler = async ({ params: { id, server } }) => {
     const avgPrice = totalPrice / totalQuantity;
 
     const priceStdDev = Math.sqrt(
-        convertedData.reduce((total, item) => total + Math.pow(item.price * item.quantity - avgPrice, 2), 0) / (totalQuantity)
+        convertedData.reduce((total, item) => {
+            const squaredDifferences = Array(item.quantity)
+                .fill(item.price - avgPrice)
+                .map(diff => Math.pow(diff, 2));
+
+            return squaredDifferences.reduce((acc, val) => acc + val, 0) + total
+        }, 0) / (totalQuantity)
     );
 
     const priceUpperBound = avgPrice + n * priceStdDev;
