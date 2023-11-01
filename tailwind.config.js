@@ -44,7 +44,8 @@ export default {
         'contract-sort-l': "url('/lyshineui/images/tradingpost/sortbuttonbgleft.png')",
         'contract-sort-m': "url('/lyshineui/images/tradingpost/sortbuttonbgmid.png')",
         'contract-sort-r': "url('/lyshineui/images/tradingpost/sortbuttonbgright.png')",
-        'dropdown': "url('/lyshineui/images/slices/frame/frametexture2023.png')"
+        'dropdown': "url('/lyshineui/images/slices/frame/frametexture2023.png')",
+        'frame-2023': "url('/lyshineui/images/slices/framemultibg/framestyles/framebgdefault2023.png')"
       },
     },
   },

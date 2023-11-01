@@ -139,14 +139,28 @@ export function MarketBrowserQuery(sort?: string) {
       WHEN :group = 'all' THEN 1
       ELSE :group = master.TradingGroup COLLATE NOCASE
     END
-  AND contractType = :type
-  AND server = :server
-  AND sessionDate = (SELECT sessionDate FROM server_metadata WHERE server = :server)
   AND 
     CASE 
       WHEN :item = 'all' THEN 1
       ELSE :item = itemKey
     END
+  AND
+    CASE
+      WHEN :price_min = 'all' AND :price_max = 'all' THEN 1
+      WHEN :price_min = 'all' THEN price <= :price_max
+      WHEN :price_max = 'all' THEN price >= :price_min
+      ELSE price BETWEEN :price_min AND :price_max
+    END
+  AND
+    CASE
+      WHEN :gearscore_min = 'all' AND :gearscore_max = 'all' THEN 1
+      WHEN :gearscore_min = 'all' THEN gearScore <= :gearscore_max
+      WHEN :gearscore_max = 'all' THEN gearScore >= :gearscore_min
+      ELSE gearScore BETWEEN :gearscore_min AND :gearscore_max
+    END
+  AND contractType = :type
+  AND server = :server
+  AND sessionDate = (SELECT sessionDate FROM server_metadata WHERE server = :server)
   ${sort ? sort : ''}
   LIMIT 20 OFFSET (:page - 1) * 20;
   `

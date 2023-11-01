@@ -4,7 +4,9 @@
   import { endPage } from '$lib/market/stores'
   import type { Action } from 'svelte/action'
   import type { LayoutData } from './$types'
-  import { controllers } from 'chart.js'
+  import { replaceLynshineSrc } from '$lib/utils'
+  import FilterRowRange from '$lib/market/filterrowrange.svelte'
+  import { enhance } from '$app/forms'
 
   export let data: LayoutData
   $: isPageStart = +$page.params.page <= 1
@@ -13,6 +15,7 @@
   let search = ''
   let items: { id: string; name: string; TradingCategory: string; TradingFamily: string; TradingGroup: string }[] = []
   let searching = false
+  let filterModal: HTMLDialogElement
 
   const tabIcons: { [k: string]: string } = {
     Buy: '/lyshineui/images/icons/contracts/contracts_iconbuy.png',
@@ -72,7 +75,7 @@
   >
     <div class="row-span-full grid grid-cols-1 grid-rows-[subgrid]">
       <div
-        class="relative row-start-1 border-2 border-orange-400 border-opacity-30 bg-search bg-cover bg-center bg-no-repeat p-2 hover:bg-search-hover"
+        class="relative row-start-1 border-2 border-orange-400 border-opacity-30 bg-search bg-cover bg-center bg-no-repeat p-2 focus-within:bg-search-hover hover:bg-search-hover"
       >
         {#if !searching}
           <img
@@ -120,7 +123,48 @@
     </div>
     <div class="row-span-full grid min-h-0 w-full grid-rows-[subgrid]">
       <div class="row-start-1 flex flex-nowrap place-items-center justify-between">
-        <div class="px-2">filter</div>
+        <div class="flex aspect-square h-full place-content-center place-items-center px-2">
+          <!-- Open the modal using ID.showModal() method -->
+          <button class="" on:click={() => filterModal.showModal()}>
+            <img src={replaceLynshineSrc('/lyshineui/images/icons/misc/icon_mapfilter.png')} class="" alt="" />
+          </button>
+          <dialog bind:this={filterModal} class="modal animate-none rounded-none">
+            <form method="GET" use:enhance action={$page.url.href}>
+              <div
+                class="bg-frame-2023 overflow-visible modal-box w-[600px] max-w-[700px] animate-none rounded-none bg-transparent bg-[length:225%] bg-[left_-7px_top_-10px] bg-no-repeat"
+              >
+                <div class="grid grid-cols-1 grid-rows-[auto,1fr] place-content-center place-items-center">
+                  <div class="flex w-full place-content-center uppercase">filters</div>
+                  <div class="flex w-full flex-col place-content-center place-items-center gap-2">
+                    <FilterRowRange id="price" />
+                    <FilterRowRange id="gearscore" />
+                    <div class="flex w-full justify-around gap-2">
+                      <button type="reset">Clear All</button>
+                      <input type="submit" value="Apply" class="cursor-pointer" />
+                    </div>
+                  </div>
+                </div>
+                <div class="absolute -right-5 top-2 rotate-45">
+                  <button
+                    formmethod="dialog"
+                    class=" h-full w-full animate-none"
+                    on:click|preventDefault={() => filterModal.close()}
+                  >
+                    <img src="/lyshineui/images/slices/buttonclosediamond/buttonclosediamond.png" class="" alt="" />
+                  </button>
+                </div>
+              </div>
+              <div class="absolute right-0 top-0 w-full h-full -z-10">
+                <button
+                  formmethod="dialog"
+                  class=" h-full w-full animate-none"
+                  on:click|preventDefault={() => filterModal.close()}
+                >
+                </button>
+              </div>
+            </form>
+          </dialog>
+        </div>
         <div class="flex place-items-center gap-2 px-2">
           <button class={isPageStart ? 'pointer-events-none' : ''} disabled={isPageStart}>
             <a
@@ -163,3 +207,10 @@
     </div>
   </div>
 </div>
+
+<style>
+  /* .bg-frame-2023 {
+    background:
+      url('/lyshineui/images/slices/framemultibg/framecorner.png') bottom 7px left 7px no-repeat;
+  } */
+</style>
