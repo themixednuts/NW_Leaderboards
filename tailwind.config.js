@@ -45,7 +45,12 @@ export default {
         'contract-sort-m': "url('/lyshineui/images/tradingpost/sortbuttonbgmid.png')",
         'contract-sort-r': "url('/lyshineui/images/tradingpost/sortbuttonbgright.png')",
         'dropdown': "url('/lyshineui/images/slices/frame/frametexture2023.png')",
-        'frame-2023': "url('/lyshineui/images/slices/framemultibg/framestyles/framebgdefault2023.png')"
+        'frame-2023': "url('/lyshineui/images/slices/framemultibg/framestyles/framebgdefault2023.png')",
+        "item-rarity-0": "url('/lyshineui/images/slices/itemlayout/itemraritybgsquare0.png'), url('/lyshineui/images/slices/itemlayout/itembgsquare0.png')",
+        "item-rarity-1": "url('/lyshineui/images/slices/itemlayout/itemraritybgsquare1.png'), url('/lyshineui/images/slices/itemlayout/itembgsquare1.png')",
+        "item-rarity-2": "url('/lyshineui/images/slices/itemlayout/itemraritybgsquare2.png'), url('/lyshineui/images/slices/itemlayout/itembgsquare2.png')",
+        "item-rarity-3": "url('/lyshineui/images/slices/itemlayout/itemraritybgsquare3.png'), url('/lyshineui/images/slices/itemlayout/itembgsquare3.png')",
+        "item-rarity-4": "url('/lyshineui/images/slices/itemlayout/itemraritybgsquare4.png'), url('/lyshineui/images/slices/itemlayout/itembgsquare4.png') ",
       },
     },
   },

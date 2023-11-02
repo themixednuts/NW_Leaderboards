@@ -5,7 +5,7 @@
   import 'chartjs-adapter-date-fns'
   import * as stats from 'simple-statistics'
   // import zoomPlugin from 'chartjs-plugin-zoom'
-  import type { PageData } from '../../routes/market/item/[server]/[id]/$types'
+  import type { PageData } from '../../routes/market/items/[server]/[id]/$types'
   import annotationPlugin, { type AnnotationOptions, type AnnotationPluginOptions } from 'chartjs-plugin-annotation'
 
   Chart.register(annotationPlugin)

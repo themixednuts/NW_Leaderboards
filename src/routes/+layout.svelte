@@ -17,10 +17,10 @@
 
     <div class="breadcrumbs place-self-center text-sm">
       <ul>
-        {#each routes as route,i (route)}
+        {#each routes as route, i (i)}
           {#if route}
             <li>
-              <a href="/{routes.slice(1,i + 1).join('/')}" class="capitalize">
+              <a href="/{routes.slice(1, i + 1).join('/')}" class="capitalize">
                 {route}
               </a>
             </li>

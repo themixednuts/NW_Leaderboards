@@ -23,7 +23,7 @@
 
   function goToItem(ev: Event, item: MarketData) {
     const target = ev.target as HTMLElement
-    if (target.tagName !== 'IMG') goto(`/market/item/${$page.params.server}/${item.itemKey}`)
+    if (target.tagName !== 'IMG') goto(`/market/items/${$page.params.server}/${item.itemKey}`)
   }
   const columns = [
     {
@@ -105,11 +105,11 @@
 </script>
 
 <div class="h-full w-full overflow-y-auto">
-  <table class="table table-pin-rows relative table-fixed rounded-none">
+  <table class="table table-xs md:table-md table-pin-rows relative table-fixed w-full rounded-none">
     <thead class="">
       <tr class="">
         {#each columns as { key, label, sortKey, isImage, isRotation } (key)}
-          <th class="relative h-full" class:w-80={key === 'name'} class:w-full={key !== 'name'}>
+          <th class="relative h-full min-w-full overflow-hidden text-clip" class:w-80={key === 'name'} class:w-24={key !== 'name'}>
             <a
               href="/market/browser/{$page.params.server}/{$page.params.type}/{$page.params
                 .category}/1?{searchParams}&sort={sort === `${sortKey}_asc` || (!sort && sortKey === 'price')
@@ -122,7 +122,7 @@
                 <img
                   src={replaceLynshineSrc('/lyshineui/images/icons/misc/icon_gearscore_tan.png')}
                   alt=""
-                  class="w-5"
+                  class="w-5 shrink-0"
                 />
               {:else}
                 {label}
@@ -140,9 +140,8 @@
         {/each}
       </tr>
     </thead>
-    <tbody class="overflow-clip min-w-0">
+    <tbody class="min-w-0 overflow-clip">
       {#each items as item, i}
-        <!-- {@const sortedPerks = item.perks?.sort((a, b) => b.type - a.type)} -->
         {@const type = item.itemType?.toLowerCase()}
         {@const perks = item.perks}
         {@const tier = GetRomanFromNumber(item.tier)}
@@ -150,12 +149,15 @@
           class="cursor-pointer bg-cover bg-center bg-no-repeat hover:bg-contract-item"
           on:click={(e) => goToItem(e, item)}
         >
-          <td class="flex w-max min-w-0 flex-nowrap flex-initial place-items-center gap-2 place-self-start whitespace-nowrap  py-2">
+          <td
+            class=""
+          >
+          <div class="flex w-max min-w-0 max-w-full flex-nowrap place-items-center gap-2 place-self-start whitespace-nowrap">
             <a
               href="https://nwdb.info/db/item/{item.itemKey.toLowerCase()}?gs={item.gearScore}&perks={perks
                 .map((perk) => perk.id.toLowerCase())
                 .join(',')}"
-              class="flex aspect-square w-10 place-content-center place-items-center bg-contain bg-center bg-no-repeat
+              class="flex aspect-square w-10 shrink-0 place-content-center place-items-center bg-contain bg-center bg-no-repeat
               {type !== 'resource' && type !== 'housingitem'
                 ? `bg-item-rarity-square-${item.rarity ?? 0}`
                 : `bg-item-rarity-circle-${item.rarity ?? 0}`}"
@@ -167,22 +169,23 @@
                 class="aspect-square w-[90%]"
               />
             </a>
-            <div class="min-w-0 overflow-hidden">
+            <div class="min-w-0 overflow-clip">
               {item.name}
             </div>
+          </div>
           </td>
-          <td class="col-start-2 row-start-[{i + 1}] text-right">
+          <td class="text-right">
             {new Intl.NumberFormat('en-US', {
               minimumFractionDigits: 2,
             }).format(item.price / 100)}
           </td>
-          <td class="col-start-3 row-start-[{i + 1}] text-center">
+          <td class="text-center">
             {tier}
           </td>
-          <td class="col-start-4 row-start-[{i + 1}] text-center">
+          <td class="text-center">
             {item.gearScore}
           </td>
-          <td class="col-start-5 whitespace-nowrap row-start-[{i + 1}]">
+          <td class="whitespace-nowrap">
             {perks
               .filter((perk) => perk.type === 'Inherent')
               .map((perk) => {
@@ -220,7 +223,7 @@
           <td class="text-right">
             {item.quantity}
           </td>
-          <td class=" whitespace-nowrap">
+          <td class="whitespace-nowrap">
             {item.currentExpiration?.replace('about', '~').replace('less than', '<') || ''}
           </td>
         </tr>

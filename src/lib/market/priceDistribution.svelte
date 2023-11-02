@@ -3,7 +3,7 @@
   import { Chart, type ChartDataset } from 'chart.js/auto'
   import type { MarketData } from '$lib/market.types'
   import 'chartjs-adapter-date-fns'
-  import type { PageData } from '../../routes/market/item/[server]/[id]/$types'
+  import type { PageData } from '../../routes/market/items/[server]/[id]/$types'
 
   export let itemData: PageData['itemData']
   export let title: string
@@ -21,7 +21,7 @@
     .slice(0, -5)
   console.log(maxDate, itemData.at(-1)?.sessionDate)
   const myChart: Action<HTMLCanvasElement, MarketData[]> = (canvas: HTMLCanvasElement, itemData: MarketData[]) => {
-    const num_of_bins = 100
+    const num_of_bins = 10
 
     const prices = itemData.reduce((acc, item) => {
       const totalPrices = Array(item.quantity).fill(item.price)
@@ -110,13 +110,16 @@
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-            x: {
-              type: 'category',
-              title: {
-                display: true,
-                text: 'Price Brackets',
-              },
+          x: {
+            type: 'category',
+            title: {
+              display: true,
+              text: 'Price Brackets',
             },
+            ticks: {
+                align: 'center'
+            },
+          },
           y: {
             title: {
               display: true,
