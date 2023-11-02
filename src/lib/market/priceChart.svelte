@@ -42,7 +42,7 @@
     const resultMap = new Map()
     const labels = []
     const currentDate = new Date()
-    const n = 1
+    const n = 2
 
     for (let i = days; i >= 0; i--) {
       const date = new Date(currentDate)
@@ -56,17 +56,12 @@
     const avgPrice = totalPrice / totalQuantity
 
     const priceStdDev = Math.sqrt(
-      itemData.reduce((total, item) => {
-        const squaredDifferences = Array(item.quantity)
-          .fill(item.price / 100 - avgPrice)
-          .map((diff) => Math.pow(diff, 2))
-
-        return squaredDifferences.reduce((acc, val) => acc + val, 0) + total
-      }, 0) / (itemData.length - 1),
+      itemData.reduce((total, item) => total + item.quantity * Math.pow(item.price / 100 - avgPrice, 2), 0) / totalQuantity,
     )
-
+    
     const priceUpperBound = avgPrice + n * priceStdDev
     const priceLowerBound = avgPrice - n * priceStdDev
+    console.log(priceStdDev, priceLowerBound, priceUpperBound)
     const avgAnnotation: AnnotationOptions = {
       type: 'line',
       borderColor: 'rgba(100,100,100,.50)',
@@ -74,11 +69,14 @@
       borderDashOffset: 0,
       borderWidth: 1,
       label: {
-        display: false,
-        borderColor: 'rgba(100,100,100,.30)',
+        display: true,
+        borderColor: 'rgba(100,100,100,.80)',
+        backgroundColor: 'rgba(100,100,100,.10)',
+        textStrokeColor: 'rgba(5,0,0,.10)',
         drawTime: 'afterDatasetsDraw',
-        content: (ctx) => 'Average: ' + avgPrice.toFixed(2),
+        content: (ctx) => avgPrice.toFixed(2),
         position: 'start',
+        rotation: -90,
       },
       scaleID: 'y',
       value: (ctx) => avgPrice,
@@ -260,6 +258,7 @@
           // },
         },
         responsive: true,
+        maintainAspectRatio: false,
         scales: {
           x: {
             type: 'time',

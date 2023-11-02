@@ -1,14 +1,7 @@
 import type { PageServerLoad } from './$types'
 import { db } from '$lib/server/db'
 import type { MarketData } from '$lib/market.types'
-import type { Config } from '@sveltejs/adapter-vercel'
 
-export const config: Config = {
-  runtime: 'nodejs18.x',
-  isr: {
-    expiration: 14400
-  }
-}
 export const load = (async ({ params: { server, id }, url: {searchParams} }) => {
   const days = +(searchParams.get('days') || 7)
   const query = `

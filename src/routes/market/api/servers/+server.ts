@@ -1,25 +1,22 @@
 import type { RequestHandler } from './$types';
 import { db } from '$lib/server/db';
-import type { Config } from '@sveltejs/adapter-vercel';
 import { error, json } from '@sveltejs/kit';
 
-export const config: Config = {
-    isr: {
-        expiration: 14400
-    },
-    runtime: 'nodejs18.x'
-}
 export const GET: RequestHandler = async () => {
     let result
+    let startTime = performance.now()
     try {
     result = await db.execute(`
-    SELECT DISTINCT server
-    FROM orders
+    -- EXPLAIN QUERY PLAN
+    SELECT server
+    FROM server_metadata
     `)
     } catch(e){
         console.log(e)
         throw error(500, "Incorrect Request")
     }
+    console.log('db timer - Servers: ', performance.now() - startTime, ' ms')
+    // console.log(result.rows)
 
     return json({ servers: result.rows.map(row => row.server) })
 };

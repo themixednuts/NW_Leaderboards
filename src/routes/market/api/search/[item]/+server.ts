@@ -3,12 +3,6 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import type { Config } from '@sveltejs/adapter-vercel';
 
-export const config: Config = {
-    isr: {
-        expiration: 14400
-    },
-    runtime: 'nodejs18.x'
-}
 export const GET: RequestHandler = async ({ params: { item } }) => {
 
     const query = `

@@ -1,13 +1,17 @@
 import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
 import type { Config } from '@sveltejs/adapter-vercel';
-import { serverList } from '$lib/utils';
 
 export const config: Config = {
 }
-export const load = (async () => {
+export const load = (async ({fetch}) => {
 
+    
+    const serverReq = await fetch('/market/api/servers')
+    const servers = await serverReq.json()
+    
     const query = `
+    -- EXPLAIN QUERY PLAN
     SELECT s.server, SUM(o.price / 100 * o.quantity) AS market_cap, SUM(o.quantity) AS quantity
     FROM server_metadata s
     INNER JOIN orders o ON s.server = o.server AND s.sessionDate = o.sessionDate
@@ -16,10 +20,11 @@ export const load = (async () => {
     `
     let startTime = performance.now()
     const result = await db.execute(query)
+    
     console.log('db timer - Market Cap Per Server: ', performance.now() - startTime, 'ms')
 
     const categoryPerServer_query: string[] = []
-    const normalizedServerList = serverList.map(server => server.replaceAll(' ', '').toLowerCase())
+    const normalizedServerList = servers.servers.sort()
     for (const server of normalizedServerList){
         const query = `
         SELECT
@@ -35,8 +40,10 @@ export const load = (async () => {
     startTime = performance.now()
     const res = await db.execute(combined_query)
     console.log('db timer - TradingCount Per Server: ', performance.now() - startTime, 'ms')
+
     return {
         marketcaps: result.rows,
-        catergoryVolume: res.rows
+        catergoryVolume: res.rows,
+        servers: servers.servers
     };
 }) satisfies PageServerLoad;

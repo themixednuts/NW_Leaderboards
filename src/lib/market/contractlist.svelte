@@ -105,14 +105,14 @@
 </script>
 
 <div class="h-full w-full overflow-y-auto">
-  <table class="table table-pin-rows relative max-h-full table-fixed rounded-none">
+  <table class="table table-pin-rows relative table-fixed rounded-none">
     <thead class="">
       <tr class="">
         {#each columns as { key, label, sortKey, isImage, isRotation } (key)}
           <th class="relative h-full" class:w-80={key === 'name'} class:w-full={key !== 'name'}>
             <a
-              href="/market/browser/{$page.params.server}/{$page.params.type}/{$page.params.category}/1?{searchParams}&sort={sort ===
-              `${sortKey}_asc` || (!sort && sortKey === 'price') 
+              href="/market/browser/{$page.params.server}/{$page.params.type}/{$page.params
+                .category}/1?{searchParams}&sort={sort === `${sortKey}_asc` || (!sort && sortKey === 'price')
                 ? `${sortKey}_desc`
                 : `${sortKey}_asc`}"
               class="flex h-full w-full place-items-center pl-2"
@@ -140,7 +140,7 @@
         {/each}
       </tr>
     </thead>
-    <tbody class="">
+    <tbody class="overflow-clip min-w-0">
       {#each items as item, i}
         <!-- {@const sortedPerks = item.perks?.sort((a, b) => b.type - a.type)} -->
         {@const type = item.itemType?.toLowerCase()}
@@ -150,9 +150,7 @@
           class="cursor-pointer bg-cover bg-center bg-no-repeat hover:bg-contract-item"
           on:click={(e) => goToItem(e, item)}
         >
-          <td
-            class="flex w-max flex-nowrap place-items-center gap-2 place-self-start min-w-0 whitespace-nowrap py-2"
-          >
+          <td class="flex w-max min-w-0 flex-nowrap flex-initial place-items-center gap-2 place-self-start whitespace-nowrap  py-2">
             <a
               href="https://nwdb.info/db/item/{item.itemKey.toLowerCase()}?gs={item.gearScore}&perks={perks
                 .map((perk) => perk.id.toLowerCase())
@@ -169,8 +167,7 @@
                 class="aspect-square w-[90%]"
               />
             </a>
-            <div class="overflow-hidden min-w-0">
-
+            <div class="min-w-0 overflow-hidden">
               {item.name}
             </div>
           </td>
@@ -185,7 +182,7 @@
           <td class="col-start-4 row-start-[{i + 1}] text-center">
             {item.gearScore}
           </td>
-          <td class="col-start-5 row-start-[{i + 1}]">
+          <td class="col-start-5 whitespace-nowrap row-start-[{i + 1}]">
             {perks
               .filter((perk) => perk.type === 'Inherent')
               .map((perk) => {

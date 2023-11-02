@@ -180,5 +180,3 @@ export function getLocalizedDate(timeStamp: string) {
   }
   return date.toLocaleString(undefined, options)
 }
-
-export const serverList = ['El Dorado', 'Barri', 'Castle of Steel', 'Nyx', 'Abaton', 'Lilith', 'Isabella', 'Delos', 'Valhalla'].sort()

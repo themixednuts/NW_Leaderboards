@@ -3,6 +3,7 @@
   import PriceChart from '$lib/market/priceChart.svelte'
   import type { MarketData } from '$lib/market.types'
   import { onMount } from 'svelte'
+  import PriceDistribution from '$lib/market/priceDistribution.svelte'
 
   export let data: PageData
 
@@ -49,25 +50,11 @@
   })
 </script>
 
-<div class="grid max-h-full grid-cols-2 grid-rows-[auto,minmax(100px,.75fr),1fr] gap-y-4 place-content-center">
+<div class="grid max-h-full grid-cols-2 auto-rows-max overflow-auto place-content-center place-self-start gap-y-4">
   <div class="col-span-full row-start-1 flex place-content-center">
     {data.name}
   </div>
-  <div class="row-start-2 flex place-content-center place-items-center w-full">
-    {#if sellOrders.length}
-      <PriceChart itemData={sellOrders} title="Sell Orders" days={data.days}></PriceChart>
-    {:else}
-      No Sell Orders Info
-    {/if}
-  </div>
-  <div class="row-start-2 flex place-content-center place-items-center w-full">
-    {#if buyOrders.length}
-      <PriceChart itemData={buyOrders} title="Buy Orders" days={data.days}></PriceChart>
-    {:else}
-      No Buy Orders Info
-    {/if}
-  </div>
-  <div class="row-start-3 col-span-full">
+  <div class="col-span-full">
     <table class="table table-fixed">
       <thead>
         <tr>
@@ -147,5 +134,34 @@
         </tr>
       </tbody>
     </table>
+  </div>
+  <div class="col-span-full w-full flex place-content-center place-items-center h-[300px]">
+    {#if sellOrders.length}
+      {@const maxDate = new Date(
+        sellOrders.reduce((acc, item) => {
+          const date = new Date(item.sessionDate + 'Z')
+          date.setUTCHours(date.getUTCHours())
+          return Math.max(acc, +date)
+        }, 0),
+      )
+        .toISOString()
+        .slice(0, -5)}
+      <PriceDistribution itemData={sellOrders.filter((item) => item.sessionDate === maxDate)} title="Price Histogram"
+      ></PriceDistribution>
+    {/if}
+  </div>
+  <div class="col-span-full flex w-full place-content-center place-items-center min-h-[300px] max-h-[500px]">
+    {#if sellOrders.length}
+      <PriceChart itemData={sellOrders} title="Sell Orders" days={data.days}></PriceChart>
+    {:else}
+      No Sell Orders Info
+    {/if}
+  </div>
+  <div class="col-span-full flex w-full place-content-center place-items-center min-h-[300px] max-h-[500px]">
+    {#if buyOrders.length}
+      <PriceChart itemData={buyOrders} title="Buy Orders" days={data.days}></PriceChart>
+    {:else}
+      No Buy Orders Info
+    {/if}
   </div>
 </div>

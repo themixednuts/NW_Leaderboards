@@ -1,6 +1,5 @@
 <script lang="ts">
   import DonutChart from '$lib/market/donutChart.svelte'
-  import { serverList } from '$lib/utils'
   import type { PageData } from './$types'
   import BarChart from '$lib/market/barchart.svelte'
 
@@ -11,7 +10,7 @@
   <div class="col-span-full">
     <BarChart marketcaps={data.marketcaps}></BarChart>
   </div>
-  {#each serverList as server}
+  {#each data.servers as server}
     <table class="table col-span-full table-fixed">
         <caption class="caption-top text-center">
             <a href="/market/browser/{server.toLowerCase().replaceAll(' ', '')}/buy/all/1">{server}</a>
