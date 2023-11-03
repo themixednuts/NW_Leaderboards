@@ -7,7 +7,12 @@
   <meta content="Leaderboards & MarketData" property="og:description" />
 </svelte:head>
 
-<div class="grid grid-cols-1 auto-rows-auto">
-  <a href="/lb" class="btn btn-ghost">Leaderboards</a>
-  <!-- <a href="/market" class="btn">Market</a> -->
+<div
+  class="grid auto-rows-auto grid-cols-1 place-items-center border-2 border-stone-500 font-mono text-3xl font-extrabold"
+>
+  <a href="/lb" class="">Leaderboards</a>
+  <div>
+    <a href="/market" class="">Market</a>
+    <div class="text-xs">work in progress</div>
+  </div>
 </div>

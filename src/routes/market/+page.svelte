@@ -12,10 +12,13 @@
   <meta content="Market Home Page" property="og:description" />
 </svelte:head>
 
-<div class="relative grid grid-cols-3 place-content-center place-items-center border-2">
+<div class="relative grid grid-cols-1 auto-rows-auto place-items-center border-2 border-stone-500">
   {#each marketRoutes as route}
     <div class="flex place-content-center font-mono text-4xl font-extrabold">
       <a href="/market/{route}" class="h-full w-full text-center capitalize">{route}</a>
+      {#if route == 'market'}
+        Work in Progress
+      {/if}
     </div>
   {/each}
 </div>

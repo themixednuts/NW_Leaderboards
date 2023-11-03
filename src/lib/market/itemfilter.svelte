@@ -17,11 +17,11 @@
 </script>
 
 <div
-  class="grid border-collapse grid-flow-row-dense auto-rows-[68px] grid-cols-[auto,1fr] gap-x-2 border-[1px] border-stone-200">
+  class="grid border-collapse grid-flow-row-dense auto-rows-[68px] grid-cols-[auto,1fr] gap-x-2 border-[1px] border-stone-500">
   {#each categories as [category, categoryDisplayName] (category)}
     <a
       href="/market/browser/{$page.params.server}/{$page.params.type}/{category.toLowerCase().replaceAll(' ', '')}/1"
-      class="col-start-1 row-span-1 -ml-[1px] -mt-[1px] flex place-content-center place-items-center border-[1px] border-slate-200 bg-contain bg-center bg-no-repeat hover:bg-contract-category"
+      class="col-start-1 row-span-1 -ml-[1px] -mt-[1px] flex place-content-center place-items-center border-[1px] border-stone-500 bg-contain bg-center bg-no-repeat hover:bg-contract-category"
       class:border-r-0={header.toLowerCase() === category.toLowerCase()}
       class:bg-contract-category={header === category.toLowerCase()}>
       <img src="https://cdn.nwdb.info/db/images/live/v35/icons/itemtypes/itemtype_{category}.png" alt="" />
