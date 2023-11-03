@@ -158,6 +158,11 @@ export function MarketBrowserQuery(sort?: string) {
       WHEN :gearscore_max = 'all' THEN gearScore >= :gearscore_min
       ELSE gearScore BETWEEN :gearscore_min AND :gearscore_max
     END
+  AND
+    CASE
+      WHEN :perks IS NOT NULL THEN ',' || perks || ',' LIKE '%,' || :perks || ',%'
+      ELSE 1
+    END
   AND contractType = :type
   AND server = :server
   AND sessionDate = (SELECT sessionDate FROM server_metadata WHERE server = :server)

@@ -6,4 +6,4 @@
 
 </script>
 
-<ServerList servers={data.servers} />
+<ServerList servers={data.servers} link="/market/browser/$server/buy/all/1" />

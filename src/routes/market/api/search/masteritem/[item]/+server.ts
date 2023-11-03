@@ -1,7 +1,6 @@
 import { db } from '$lib/server/db';
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import type { Config } from '@sveltejs/adapter-vercel';
 
 export const GET: RequestHandler = async ({ params: { item } }) => {
 

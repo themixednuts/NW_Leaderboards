@@ -13,8 +13,8 @@ export const load = (async ({fetch}) => {
     const query = `
     -- EXPLAIN QUERY PLAN
     SELECT s.server, SUM(o.price / 100 * o.quantity) AS market_cap, SUM(o.quantity) AS quantity
-    FROM server_metadata s
-    INNER JOIN orders o ON s.server = o.server AND s.sessionDate = o.sessionDate
+    FROM orders as o
+    INNER JOIN server_metadata as s ON s.sessionDate = o.sessionDate
     WHERE o.contractType = 1
     GROUP BY s.server;
     `

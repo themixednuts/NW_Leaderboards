@@ -8,8 +8,6 @@
   export let itemData: PageData['itemData']
   export let title: string
 
-  console.log(itemData)
-
   const maxDate = new Date(
     itemData.reduce((acc, item) => {
       const date = new Date(item.sessionDate + 'Z')
@@ -19,7 +17,6 @@
   )
     .toISOString()
     .slice(0, -5)
-  console.log(maxDate, itemData.at(-1)?.sessionDate)
   const myChart: Action<HTMLCanvasElement, MarketData[]> = (canvas: HTMLCanvasElement, itemData: MarketData[]) => {
     const num_of_bins = 10
 
@@ -51,14 +48,12 @@
       binWidth,
       binBoundaries,
     }
-    console.log(log)
 
     const binFrequencies = Array(num_of_bins).fill(0)
     prices.forEach((price) => {
       const binIdx = binBoundaries.findIndex((boundary) => price >= boundary.lower && price < boundary.upper)
       if (binIdx !== -1) binFrequencies[binIdx]++
     })
-    console.log(binFrequencies)
 
     let chart: Chart | null = new Chart(canvas, {
       type: 'bar',

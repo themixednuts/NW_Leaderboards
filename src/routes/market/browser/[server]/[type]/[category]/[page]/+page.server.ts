@@ -56,6 +56,7 @@ export const load = (async ({ params: { server, category, page, type }, url: { s
         : 'all'
     const gearscore_min = searchParams.get('gearscore_min') || 'all'
     const gearscore_max = searchParams.get('gearscore_max') || 'all'
+    const perks = searchParams.get('perks') || ''
 
     let query = MarketBrowserQuery()
     let startTime = performance.now()
@@ -70,7 +71,8 @@ export const load = (async ({ params: { server, category, page, type }, url: { s
         price_max,
         price_min,
         gearscore_max,
-        gearscore_min
+        gearscore_min,
+        perks
     }
 
     if (sort) {

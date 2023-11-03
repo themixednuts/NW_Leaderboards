@@ -11,4 +11,4 @@
   <meta content="Market Items - Servers" property="og:description" />
 </svelte:head>
 
-<ServerList servers={data.servers} />
+<ServerList servers={data.servers} link="/market/items/$server" />

@@ -36,7 +36,6 @@ export const GET: RequestHandler = async ({ params: { id, server } }) => {
     // console.log(res.rows)
     if (!res.rows.length) throw error(400, 'Bad Request')
 
-    console.log(res.rows)
     const n = 1;
     //@ts-ignore
     const results = res.rows.map(row => ({ ...row, price: parseInt(row.price) / 100 })) as unknown as { id: string, name: string, price: number, quantity: number, updatedAt: string }[]
@@ -51,8 +50,6 @@ export const GET: RequestHandler = async ({ params: { id, server } }) => {
 
     const priceUpperBound = avgPrice + n * priceStdDev;
     const priceLowerBound = avgPrice - n * priceStdDev;
-
-    console.log(priceLowerBound)
 
     const filteredData = results.filter(item => item.price >= priceLowerBound && item.price <= priceUpperBound);
     const filteredAvgPrice = filteredData.reduce((total, item) => total + item.price, 0) / filteredData.length;

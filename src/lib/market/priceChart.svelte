@@ -61,7 +61,6 @@
     
     const priceUpperBound = avgPrice + n * priceStdDev
     const priceLowerBound = avgPrice - n * priceStdDev
-    console.log(priceStdDev, priceLowerBound, priceUpperBound)
     const avgAnnotation: AnnotationOptions = {
       type: 'line',
       borderColor: 'rgba(100,100,100,.50)',

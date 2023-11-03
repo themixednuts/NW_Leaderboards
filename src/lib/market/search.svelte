@@ -3,6 +3,7 @@
   import type { Action } from 'svelte/action'
 
   export let link: string
+  export let type: string
 
   let search = ''
   let items: { id: string; name: string; TradingCategory: string; TradingFamily: string; TradingGroup: string }[] = []
@@ -11,7 +12,7 @@
   async function getItem(id: string, controller: AbortController) {
     searching = true
     try {
-      const res = await fetch(`/market/api/search/${id}`, { signal: controller.signal })
+      const res = await fetch(`/market/api/search/${type}/${id}`, { signal: controller.signal })
       items = await res.json()
     } catch (e) {
       console.log(e)

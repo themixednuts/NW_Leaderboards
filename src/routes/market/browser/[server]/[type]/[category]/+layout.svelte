@@ -6,6 +6,7 @@
   import { replaceLynshineSrc } from '$lib/utils'
   import FilterRowRange from '$lib/market/filterrowrange.svelte'
   import Search from '$lib/market/search.svelte'
+  import PerkSearch from '$lib/market/perksearch.svelte'
 
   export let data: LayoutData
   $: isPageStart = +$page.params.page <= 1
@@ -38,12 +39,15 @@
       <Search
         link="/market/browser/{$page.params.server}/{$page.params
           .type}/$category/1?family=$family&group=$group&item=$id"
+        type="masteritem"
       />
       <Itemfilter filters={data.filter}></Itemfilter>
     </div>
     <div class="row-span-full flex h-full w-full grid-rows-[subgrid] flex-col sm:grid">
       <div class="row-start-1 flex flex-nowrap place-items-center justify-between">
-        <div class="flex aspect-square h-full place-content-center place-items-center px-2">
+        <div
+          class="bg-filter flex aspect-square h-full place-content-center place-items-center bg-contain bg-center bg-no-repeat px-2"
+        >
           <!-- Open the modal using ID.showModal() method -->
           <button class="" on:click={() => filterModal.showModal()}>
             <img src={replaceLynshineSrc('/lyshineui/images/icons/misc/icon_mapfilter.png')} class="" alt="" />
@@ -54,13 +58,24 @@
                 class="modal-box w-[600px] max-w-[700px] animate-none overflow-visible rounded-none bg-transparent bg-frame-2023 bg-[length:225%] bg-[left_-7px_top_-10px] bg-no-repeat"
               >
                 <div class="grid grid-cols-1 grid-rows-[auto,1fr] place-content-center place-items-center">
-                  <div class="flex w-full place-content-center uppercase">filters</div>
-                  <div class="flex w-full flex-col place-content-center place-items-center gap-2">
+                  <div class="flex w-full place-content-center text-xl uppercase">filters</div>
+                  <div class="flex w-full flex-col place-content-center place-items-center gap-4">
                     <FilterRowRange id="price" />
                     <FilterRowRange id="gearscore" />
+                    <PerkSearch gems="" />
                     <div class="flex w-full justify-around gap-2">
-                      <button type="reset">Clear All</button>
-                      <input type="submit" value="Apply" class="cursor-pointer" />
+                      <button
+                        type="reset"
+                        class="bg-primary-button hover:bg-primary-button-focus h-14 w-64 bg-contain bg-center bg-no-repeat"
+                      >
+                        Clear All
+                      </button>
+                      <button
+                        type="submit"
+                        class="bg-primary-button hover:bg-primary-button-focus h-14 w-64 bg-contain bg-center bg-no-repeat"
+                      >
+                        Apply
+                      </button>
                     </div>
                   </div>
                 </div>
