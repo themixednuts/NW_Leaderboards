@@ -17,7 +17,7 @@ const browserType = {
 export const config: Config = {
     isr: {
         expiration: 1800,
-        allowQuery: ['family', 'group', 'item', 'sort', 'price_min', 'price_max', 'gearscore_min', 'gearscore_max']
+        allowQuery: ['family', 'group', 'item', 'sort', 'price_min', 'price_max', 'gearscore_min', 'gearscore_max', 'perks']
     },
 }
 
