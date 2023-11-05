@@ -4,6 +4,7 @@ import type { MarketData } from '$lib/market.types'
 import type { Config } from '@sveltejs/adapter-vercel'
 
 export const config: Config = {
+  isr: null,
   runtime: 'edge'
 }
 
