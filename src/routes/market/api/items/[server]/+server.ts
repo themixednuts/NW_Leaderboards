@@ -18,7 +18,7 @@ export const GET: RequestHandler = async ({ params: { server } }) => {
 
     UNION ALL
 
-    SELECT 'Most Quantity' AS category, itemKey AS id, text AS item, SUM(quantity) AS value, perks, gearScore, COALESCE (weapon.IconPath, armor.IconPath, instruments.IconPath, master.IconPath) AS iconPath, rarity   
+    SELECT 'Most Quantity' AS category, itemKey AS id, text AS name, SUM(quantity) AS value, perks, gearScore, COALESCE (weapon.IconPath, armor.IconPath, instruments.IconPath, master.IconPath) AS iconPath, rarity   
     FROM orders
     LEFT JOIN MasterItemDefinitions AS master ON master.ItemID = itemKey COLLATE NOCASE
     LEFT JOIN ArmorAppearances AS armor ON armor.ItemID = master.ArmorAppearanceM COLLATE NOCASE
@@ -32,7 +32,7 @@ export const GET: RequestHandler = async ({ params: { server } }) => {
 
     SELECT 'Most Uniquely Listed Item' AS category, 
            itemKey AS id, 
-           text AS item,
+           text AS name,
            MAX(item_count) AS value,
            perks,
            gearScore,
@@ -53,7 +53,7 @@ export const GET: RequestHandler = async ({ params: { server } }) => {
 
     UNION ALL
 
-    SELECT 'Trading Post With Most Listings' AS category, NULL AS id, location AS item, COUNT(*) AS value, NULL AS perks, NULL AS gearScore, NULL AS iconPath, NULL rarity
+    SELECT 'Trading Post With Most Listings' AS category, NULL AS id, location AS name, COUNT(*) AS value, NULL AS perks, NULL AS gearScore, NULL AS iconPath, NULL rarity
     FROM orders
     WHERE sessionDate = (SELECT sessionDate FROM server_metadata WHERE server = :server)
     AND contractType = 1;

@@ -2,8 +2,11 @@ import type { PageServerLoad } from './$types'
 import { db } from '$lib/server/db'
 import type { MarketData } from '$lib/market.types'
 
-export const load = (async ({ params: { server, id }, url: {searchParams} }) => {
+export const load = (async ({ params: { server, id }, url: { searchParams } }) => {
   const days = +(searchParams.get('days') || 7)
+  const end_date = new Date()
+  const start_date = new Date(end_date)
+  start_date.setDate(start_date.getDate() - days)
   const query = `
   -- EXPLAIN QUERY PLAN
   SELECT
@@ -30,13 +33,13 @@ export const load = (async ({ params: { server, id }, url: {searchParams} }) => 
     },
   })
   console.log('db timer - Items: ', performance.now() - startTime, ' ms')
-  // console.log(itemData)
+  console.log(itemData)
 
   const nameQuery = `
   SELECT 
   locale.text AS name 
   FROM MasterItemDefinitions
-  LEFT JOIN locale_en_us AS locale ON locale.key = SUBSTR(Name,2)
+  LEFT JOIN locale_en_us AS locale ON locale.key = SUBSTR(Name,2) COLLATE NOCASE
   WHERE ItemID = ? COLLATE NOCASE
   `
   startTime = performance.now()
