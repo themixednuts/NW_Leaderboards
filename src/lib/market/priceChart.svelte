@@ -56,9 +56,10 @@
     const avgPrice = totalPrice / totalQuantity
 
     const priceStdDev = Math.sqrt(
-      itemData.reduce((total, item) => total + item.quantity * Math.pow(item.price / 100 - avgPrice, 2), 0) / totalQuantity,
+      itemData.reduce((total, item) => total + item.quantity * Math.pow(item.price / 100 - avgPrice, 2), 0) /
+        totalQuantity,
     )
-    
+
     const priceUpperBound = avgPrice + n * priceStdDev
     const priceLowerBound = avgPrice - n * priceStdDev
     const avgAnnotation: AnnotationOptions = {
@@ -89,12 +90,12 @@
       label: {
         display: false,
         backgroundColor: 'rgba(100,100,100,.30)',
-        content: (ctx) => priceLowerBound.toFixed(2) ,
+        content: (ctx) => priceLowerBound.toFixed(2),
         position: 'start',
         rotation: -90,
       },
       scaleID: 'y',
-      value: (ctx) => priceLowerBound > 0 ? priceLowerBound.toFixed(2) : 0,
+      value: (ctx) => (priceLowerBound > 0 ? priceLowerBound.toFixed(2) : 0),
     }
     const upperAnnotation: AnnotationOptions = {
       type: 'line',
@@ -112,7 +113,7 @@
       scaleID: 'y',
       value: (ctx) => priceUpperBound.toFixed(2),
     }
-    const groupedData: Map<string,MarketData[]> = itemData.reduce((result, item) => {
+    const groupedData: Map<string, MarketData[]> = itemData.reduce((result, item) => {
       const { sessionDate, price } = item
 
       if (!result.has(sessionDate)) {
@@ -124,8 +125,6 @@
 
       return result
     }, new Map())
-
-
 
     groupedData.forEach((item, idx, arr) => {
       const prices = item.map((item) => item.price)
@@ -161,7 +160,10 @@
 
     const chartData: ChartDataset[] = []
     for (const [key, value] of resultMap.entries()) {
-      const inputDate = new Date(key)
+      let inputDate: Date
+      const unixTimeStampPattern = /^[0-9]+$/
+      if (unixTimeStampPattern.test(key)) inputDate = new Date(+key * 1000)
+      else inputDate = new Date(key)
       const formattedDate = inputDate.getTime()
       chartData[0] ??= {
         data: [],
@@ -228,7 +230,7 @@
             annotations: {
               avgAnnotation,
               lowerAnnotation,
-              upperAnnotation
+              upperAnnotation,
             },
           },
           // zoom: {

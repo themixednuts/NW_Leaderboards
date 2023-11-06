@@ -8,15 +8,6 @@
   export let itemData: PageData['itemData']
   export let title: string
 
-  const maxDate = new Date(
-    itemData.reduce((acc, item) => {
-      const date = new Date(item.sessionDate + 'Z')
-      date.setUTCHours(date.getUTCHours())
-      return Math.max(acc, +date)
-    }, 0),
-  )
-    .toISOString()
-    .slice(0, -5)
   const myChart: Action<HTMLCanvasElement, MarketData[]> = (canvas: HTMLCanvasElement, itemData: MarketData[]) => {
     const num_of_bins = 10
 

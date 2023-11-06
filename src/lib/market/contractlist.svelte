@@ -13,7 +13,12 @@
     for (const item of items) {
       const currentDate = new Date()
       const { queryDate, expirationSec } = item
-      const qDate = new Date(queryDate)
+
+      let qDate: Date
+      const unixTimeStampPattern = /^[0-9]+$/
+      if (unixTimeStampPattern.test(queryDate)) qDate = new Date(+queryDate * 1000)
+      else qDate = new Date(queryDate)
+
       const expirationDate = addSeconds(qDate, expirationSec)
       if (isPast(expirationDate)) item.currentExpiration = 'Expired'
       else item.currentExpiration = formatDistance(expirationDate, currentDate, { includeSeconds: true })
@@ -105,11 +110,15 @@
 </script>
 
 <div class="h-full w-full overflow-y-auto">
-  <table class="table table-xs md:table-md table-pin-rows relative table-fixed w-full rounded-none">
+  <table class="table table-pin-rows table-xs relative w-full table-fixed rounded-none md:table-md">
     <thead class="">
       <tr class="">
         {#each columns as { key, label, sortKey, isImage, isRotation } (key)}
-          <th class="relative h-full min-w-full overflow-hidden text-clip" class:w-80={key === 'name'} class:w-24={key !== 'name'}>
+          <th
+            class="relative h-full min-w-full overflow-hidden text-clip"
+            class:w-80={key === 'name'}
+            class:w-24={key !== 'name'}
+          >
             <a
               href="/market/browser/{$page.params.server}/{$page.params.type}/{$page.params
                 .category}/1?{searchParams}&sort={sort === `${sortKey}_asc` || (!sort && sortKey === 'price')
@@ -149,30 +158,30 @@
           class="cursor-pointer bg-cover bg-center bg-no-repeat hover:bg-contract-item"
           on:click={(e) => goToItem(e, item)}
         >
-          <td
-            class=""
-          >
-          <div class="flex w-max min-w-0 max-w-full flex-nowrap place-items-center gap-2 place-self-start whitespace-nowrap">
-            <a
-              href="https://nwdb.info/db/item/{item.itemKey.toLowerCase()}?gs={item.gearScore}&perks={perks
-                .map((perk) => perk.id.toLowerCase())
-                .join(',')}"
-              class="flex aspect-square w-10 shrink-0 place-content-center place-items-center bg-contain bg-center bg-no-repeat
-              {type !== 'resource' && type !== 'housingitem'
-                ? `bg-item-rarity-square-${item.rarity ?? 0}`
-                : `bg-item-rarity-circle-${item.rarity ?? 0}`}"
-              target="_blank"
+          <td class="">
+            <div
+              class="flex w-max min-w-0 max-w-full flex-nowrap place-items-center gap-2 place-self-start whitespace-nowrap"
             >
-              <img
-                src={replaceLynshineSrc(item.iconPath?.replaceAll('\\', '/'))}
-                alt=""
-                class="aspect-square w-[90%]"
-              />
-            </a>
-            <div class="min-w-0 overflow-clip">
-              {item.name}
+              <a
+                href="https://nwdb.info/db/item/{item.itemKey.toLowerCase()}?gs={item.gearScore}&perks={perks
+                  .map((perk) => perk.id.toLowerCase())
+                  .join(',')}"
+                class="flex aspect-square w-10 shrink-0 place-content-center place-items-center bg-contain bg-center bg-no-repeat
+              {type !== 'resource' && type !== 'housingitem'
+                  ? `bg-item-rarity-square-${item.rarity ?? 0}`
+                  : `bg-item-rarity-circle-${item.rarity ?? 0}`}"
+                target="_blank"
+              >
+                <img
+                  src={replaceLynshineSrc(item.iconPath?.replaceAll('\\', '/'))}
+                  alt=""
+                  class="aspect-square w-[90%]"
+                />
+              </a>
+              <div class="min-w-0 overflow-clip">
+                {item.name}
+              </div>
             </div>
-          </div>
           </td>
           <td class="text-right">
             {new Intl.NumberFormat('en-US', {

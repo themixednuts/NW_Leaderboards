@@ -21,6 +21,7 @@ export const load = (async ({fetch}) => {
     let startTime = performance.now()
     const result = await db.execute(query)
     
+    // console.log(result.rows)
     console.log('db timer - Market Cap Per Server: ', performance.now() - startTime, 'ms')
 
     const categoryPerServer_query: string[] = []

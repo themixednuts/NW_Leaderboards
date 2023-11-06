@@ -72,7 +72,10 @@
   }
 
   function getDateAndTime(date: string) {
-    const dateObject = new Date(date)
+    let dateObject: Date
+    const unixTimeStampPattern = /^[0-9]+$/
+    if (unixTimeStampPattern.test(date)) dateObject = new Date(+date * 1000)
+    else dateObject = new Date(date)
     const dateOptions = {
       year: '2-digit',
       month: 'numeric',
@@ -93,7 +96,8 @@
 <div class="grid grid-cols-1 grid-rows-[auto,1fr,auto]">
   {#if data}
     <div
-      class="relative flex w-full place-items-center justify-center bg-base-300 py-4 text-2xl capitalize lg:text-4xl">
+      class="relative flex w-full place-items-center justify-center bg-base-300 py-4 text-2xl capitalize lg:text-4xl"
+    >
       {@html replaceLynshineSrc(data.Category)}
       - {!isNaN(Number(data.DisplayName)) ? `${Category}, ${data.DisplayName}` : data.DisplayName}
       {#if data.CategoryAdditionalHeader}
@@ -106,7 +110,8 @@
     </div>
     <div class="flex flex-col overflow-y-auto overflow-x-hidden">
       <table
-        class=" table table-zebra table-pin-rows table-sm relative table-fixed select-none sm:table-md md:table-lg">
+        class=" table table-zebra table-pin-rows table-sm relative table-fixed select-none sm:table-md md:table-lg"
+      >
         <thead class="">
           <tr>
             <th scope="col">Rank</th>
@@ -139,7 +144,8 @@
         <button
           class="btn join-item btn-sm rounded-none"
           class:btn-active={currentPage === pageSizeArray[0]}
-          on:pointerup={(e) => handleClickEvent(e)}>
+          on:pointerup={(e) => handleClickEvent(e)}
+        >
           {pageSizeArray[0]}
         </button>
         <!-- Page 2 or currentPage - 1 -->
@@ -147,21 +153,24 @@
           <button
             class="btn join-item btn-sm rounded-none"
             class:btn-active={currentPage === currentPage - 1}
-            on:pointerup={(e) => handleClickEvent(e)}>
+            on:pointerup={(e) => handleClickEvent(e)}
+          >
             {currentPage - 1}
           </button>
         {:else if currentPage - 1 >= pageSize - 3}
           <button
             class="btn join-item btn-sm rounded-none"
             class:btn-active={currentPage === pageSize - 3}
-            on:pointerup={(e) => handleClickEvent(e)}>
+            on:pointerup={(e) => handleClickEvent(e)}
+          >
             {pageSize - 3}
           </button>
         {:else}
           <button
             class="btn join-item btn-sm rounded-none"
             class:btn-active={currentPage === pageSizeArray[1]}
-            on:pointerup={(e) => handleClickEvent(e)}>
+            on:pointerup={(e) => handleClickEvent(e)}
+          >
             {pageSizeArray[1]}
           </button>
         {/if}
@@ -170,21 +179,24 @@
           <button
             class="btn join-item btn-sm rounded-none"
             class:btn-active={currentPage === currentPage}
-            on:pointerup={(e) => handleClickEvent(e)}>
+            on:pointerup={(e) => handleClickEvent(e)}
+          >
             {currentPage}
           </button>
         {:else if currentPage >= 1 && currentPage < 4}
           <button
             class="btn join-item btn-sm rounded-none"
             class:btn-active={currentPage === pageSizeArray[2]}
-            on:pointerup={(e) => handleClickEvent(e)}>
+            on:pointerup={(e) => handleClickEvent(e)}
+          >
             {pageSizeArray[2]}
           </button>
         {:else}
           <button
             class="btn join-item btn-sm rounded-none"
             class:btn-active={currentPage === pageSize - 2}
-            on:pointerup={(e) => handleClickEvent(e)}>
+            on:pointerup={(e) => handleClickEvent(e)}
+          >
             {pageSize - 2}
           </button>
         {/if}
@@ -193,21 +205,24 @@
           <button
             class="btn join-item btn-sm rounded-none"
             class:btn-active={currentPage === currentPage + 1}
-            on:pointerup={(e) => handleClickEvent(e)}>
+            on:pointerup={(e) => handleClickEvent(e)}
+          >
             {currentPage + 1}
           </button>
         {:else if currentPage + 1 <= pageSizeArray[2]}
           <button
             class="btn join-item btn-sm rounded-none"
             class:btn-active={currentPage === pageSizeArray[3]}
-            on:pointerup={(e) => handleClickEvent(e)}>
+            on:pointerup={(e) => handleClickEvent(e)}
+          >
             {pageSizeArray[3]}
           </button>
         {:else}
           <button
             class="btn join-item btn-sm rounded-none"
             class:btn-active={currentPage === pageSize - 1}
-            on:pointerup={(e) => handleClickEvent(e)}>
+            on:pointerup={(e) => handleClickEvent(e)}
+          >
             {pageSize - 1}
           </button>
         {/if}
@@ -215,7 +230,8 @@
         <button
           class="btn join-item btn-sm rounded-none"
           class:btn-active={currentPage === pageSize}
-          on:pointerup={(e) => handleClickEvent(e)}>
+          on:pointerup={(e) => handleClickEvent(e)}
+        >
           {pageSize}
         </button>
       {:else}
@@ -223,7 +239,8 @@
           <button
             class="btn join-item btn-sm rounded-none"
             class:btn-active={currentPage === i}
-            on:pointerup={(e) => handleClickEvent(e)}>
+            on:pointerup={(e) => handleClickEvent(e)}
+          >
             {i}
           </button>
         {/each}

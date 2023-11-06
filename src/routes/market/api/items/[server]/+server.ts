@@ -5,28 +5,26 @@ import type { RequestHandler } from './$types';
 export const GET: RequestHandler = async ({ params: { server } }) => {
 
     const query = `
-    --EXPLAIN QUERY PLAN
-    SELECT 'Highest Price' AS category, itemKey AS id, text AS name, MAX(price) / 100 AS value, perks, gearScore, COALESCE (weapon.IconPath, armor.IconPath, instruments.IconPath, master.IconPath) AS iconPath, rarity   
-    FROM orders
-    LEFT JOIN MasterItemDefinitions AS master ON master.ItemID = itemKey COLLATE NOCASE
-    LEFT JOIN ArmorAppearances AS armor ON armor.ItemID = master.ArmorAppearanceM COLLATE NOCASE
-    LEFT JOIN WeaponAppearanceDefinitions AS weapon ON weapon.WeaponAppearanceID = master.WeaponAppearanceOverride COLLATE NOCASE
-    LEFT JOIN InstrumentsAppearanceDefinitions AS instruments ON instruments.WeaponAppearanceID = master.WeaponAppearanceOverride COLLATE NOCASE
-    LEFT JOIN locale_en_us as locale ON locale.key = SUBSTR(master.Name, 2) COLLATE NOCASE
-    WHERE sessionDate = (SELECT sessionDate FROM server_metadata WHERE server = :server)
-    AND contractType = 1
+    -- EXPLAIN QUERY PLAN
+    WITH CTE AS (
+      SELECT o.*, COALESCE (weapon.IconPath, armor.IconPath, instruments.IconPath, master.IconPath) AS iconPath, locale.text
+      FROM orders o
+      LEFT JOIN MasterItemDefinitions AS master ON master.ItemID = o.itemKey COLLATE NOCASE
+      LEFT JOIN ArmorAppearances AS armor ON armor.ItemID = master.ArmorAppearanceM COLLATE NOCASE
+      LEFT JOIN WeaponAppearanceDefinitions AS weapon ON weapon.WeaponAppearanceID = master.WeaponAppearanceOverride COLLATE NOCASE
+      LEFT JOIN InstrumentsAppearanceDefinitions AS instruments ON instruments.WeaponAppearanceID = master.WeaponAppearanceOverride COLLATE NOCASE
+      LEFT JOIN locale_en_us as locale ON locale.key = SUBSTR(master.Name, 2) COLLATE NOCASE
+      WHERE o.sessionDate = (SELECT sessionDate FROM server_metadata WHERE server = :server)
+      AND contractType = 1
+    )
+   
+    SELECT 'Highest Price' AS category, itemKey AS id, text AS name, MAX(price) / 100 AS value, perks, gearScore, iconPath, rarity   
+    FROM CTE
 
     UNION ALL
 
-    SELECT 'Most Quantity' AS category, itemKey AS id, text AS name, SUM(quantity) AS value, perks, gearScore, COALESCE (weapon.IconPath, armor.IconPath, instruments.IconPath, master.IconPath) AS iconPath, rarity   
-    FROM orders
-    LEFT JOIN MasterItemDefinitions AS master ON master.ItemID = itemKey COLLATE NOCASE
-    LEFT JOIN ArmorAppearances AS armor ON armor.ItemID = master.ArmorAppearanceM COLLATE NOCASE
-    LEFT JOIN WeaponAppearanceDefinitions AS weapon ON weapon.WeaponAppearanceID = master.WeaponAppearanceOverride COLLATE NOCASE
-    LEFT JOIN InstrumentsAppearanceDefinitions AS instruments ON instruments.WeaponAppearanceID = master.WeaponAppearanceOverride COLLATE NOCASE
-    LEFT JOIN locale_en_us as locale ON locale.key = SUBSTR(master.Name, 2)
-    WHERE sessionDate = (SELECT sessionDate FROM server_metadata WHERE server = :server)
-    AND contractType = 1
+    SELECT 'Most Quantity' AS category, itemKey AS id, text AS name, SUM(quantity) AS value, perks, gearScore, iconPath, rarity   
+    FROM CTE
 
     UNION ALL
 
@@ -39,24 +37,15 @@ export const GET: RequestHandler = async ({ params: { server } }) => {
            iconPath,
            rarity
     FROM (
-        SELECT itemKey, text, COUNT(*) AS item_count, perks, gearScore, COALESCE (weapon.IconPath, armor.IconPath, instruments.IconPath, master.IconPath) AS iconPath, rarity
-        FROM orders
-        LEFT JOIN MasterItemDefinitions AS master ON master.ItemID = itemKey COLLATE NOCASE
-        LEFT JOIN ArmorAppearances AS armor ON armor.ItemID = master.ArmorAppearanceM COLLATE NOCASE
-        LEFT JOIN WeaponAppearanceDefinitions AS weapon ON weapon.WeaponAppearanceID = master.WeaponAppearanceOverride COLLATE NOCASE
-        LEFT JOIN InstrumentsAppearanceDefinitions AS instruments ON instruments.WeaponAppearanceID = master.WeaponAppearanceOverride COLLATE NOCASE
-        LEFT JOIN locale_en_us AS locale ON locale.key = SUBSTR(master.Name, 2)
-        WHERE sessionDate = (SELECT sessionDate FROM server_metadata WHERE server = :server)
-        AND contractType = 1
+        SELECT itemKey, text, COUNT(*) AS item_count, perks, gearScore, iconPath , rarity
+        FROM CTE
         GROUP BY itemKey
     ) AS item_counts
 
     UNION ALL
 
     SELECT 'Trading Post With Most Listings' AS category, NULL AS id, location AS name, COUNT(*) AS value, NULL AS perks, NULL AS gearScore, NULL AS iconPath, NULL rarity
-    FROM orders
-    WHERE sessionDate = (SELECT sessionDate FROM server_metadata WHERE server = :server)
-    AND contractType = 1;
+    FROM CTE
     `
     let startTime = performance.now()
     const items = await db.execute({
@@ -66,5 +55,6 @@ export const GET: RequestHandler = async ({ params: { server } }) => {
         }
     })
     console.log('db timer - Items: ', performance.now() - startTime, ' ms')
+    // console.log(items.rows)
     return json(items.rows);
 };

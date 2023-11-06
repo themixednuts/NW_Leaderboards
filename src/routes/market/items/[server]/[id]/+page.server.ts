@@ -4,6 +4,7 @@ import type { MarketData } from '$lib/market.types'
 import type { Config } from '@sveltejs/adapter-vercel'
 
 export const config: Config = {
+  //@ts-ignore
   isr: null,
   runtime: 'edge'
 }
@@ -26,8 +27,9 @@ export const load = (async ({ params: { server, id }, url: { searchParams } }) =
   FROM orders 
   WHERE server = :server
   AND itemKey = :id COLLATE NOCASE
-  AND sessionDate >= strftime('%Y-%m-%dT%H:%M:%S', 'now', - :days || ' days', 'start of day') 
-  AND sessionDate <= strftime('%Y-%m-%dT%H:%M:%S', 'now')  
+  AND sessionDate >= :start_date 
+  AND sessionDate <= :end_date
+  -- GROUP BY sessionDate, contractType, price
   `
   let startTime = performance.now()
   const itemData = await db.execute({
@@ -35,7 +37,8 @@ export const load = (async ({ params: { server, id }, url: { searchParams } }) =
     args: {
       id,
       server,
-      days
+      end_date: Math.floor(end_date.getTime() / 1000),
+      start_date: Math.floor(start_date.getTime() / 1000)
     },
   })
   console.log('db timer - Items: ', performance.now() - startTime, ' ms')

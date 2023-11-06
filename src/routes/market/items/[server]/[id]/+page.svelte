@@ -50,7 +50,7 @@
   })
 </script>
 
-<div class="grid max-h-full grid-cols-2 auto-rows-max overflow-auto place-content-center place-self-start gap-y-4">
+<div class="grid max-h-full auto-rows-max grid-cols-2 place-content-center gap-y-4 place-self-start overflow-auto">
   <div class="col-span-full row-start-1 flex place-content-center">
     {data.name}
   </div>
@@ -135,29 +135,21 @@
       </tbody>
     </table>
   </div>
-  <div class="col-span-full w-full flex place-content-center place-items-center h-[300px]">
+  <div class="col-span-full flex h-[300px] w-full place-content-center place-items-center">
     {#if sellOrders.length}
-      {@const maxDate = new Date(
-        sellOrders.reduce((acc, item) => {
-          const date = new Date(item.sessionDate + 'Z')
-          date.setUTCHours(date.getUTCHours())
-          return Math.max(acc, +date)
-        }, 0),
-      )
-        .toISOString()
-        .slice(0, -5)}
-      <PriceDistribution itemData={sellOrders.filter((item) => item.sessionDate === maxDate)} title="Price Histogram"
+      {@const maxDate = sellOrders.reduce((acc, item) => Math.max(acc, +item.sessionDate), 0)}
+      <PriceDistribution itemData={sellOrders.filter((item) => item.sessionDate == maxDate)} title="Price Histogram"
       ></PriceDistribution>
     {/if}
   </div>
-  <div class="col-span-full flex w-full place-content-center place-items-center min-h-[300px] max-h-[500px]">
+  <div class="col-span-full flex max-h-[500px] min-h-[300px] w-full place-content-center place-items-center">
     {#if sellOrders.length}
       <PriceChart itemData={sellOrders} title="Sell Orders" days={data.days}></PriceChart>
     {:else}
       No Sell Orders Info
     {/if}
   </div>
-  <div class="col-span-full flex w-full place-content-center place-items-center min-h-[300px] max-h-[500px]">
+  <div class="col-span-full flex max-h-[500px] min-h-[300px] w-full place-content-center place-items-center">
     {#if buyOrders.length}
       <PriceChart itemData={buyOrders} title="Buy Orders" days={data.days}></PriceChart>
     {:else}

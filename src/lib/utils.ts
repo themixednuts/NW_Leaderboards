@@ -86,7 +86,7 @@ export function ItemPerkScaling(scalingPerGearscore: string, gearScore: number, 
 
 export function MarketBrowserQuery(sort?: string) {
   const query = `
-  -- EXPLAIN QUERY PLAN
+   -- EXPLAIN QUERY PLAN
   SELECT 
     itemKey,
     COALESCE (locale.text, master.Name) AS name,
@@ -164,7 +164,7 @@ export function MarketBrowserQuery(sort?: string) {
       ELSE 1
     END
   AND contractType = :type
-  AND server = :server
+  -- AND server = :server
   AND sessionDate = (SELECT sessionDate FROM server_metadata WHERE server = :server)
   ${sort ? sort : ''}
   LIMIT 20 OFFSET (:page - 1) * 20;
@@ -173,7 +173,10 @@ export function MarketBrowserQuery(sort?: string) {
 }
 
 export function getLocalizedDate(timeStamp: string) {
-  const date = new Date(timeStamp)
+  let date: Date
+  const unixTimeStampPattern = /^[0-9]+$/
+  if (unixTimeStampPattern.test(timeStamp)) date = new Date(+timeStamp * 1000)
+  else date = new Date(timeStamp)
   const options: Intl.DateTimeFormatOptions = {
     year: '2-digit',
     month: 'numeric',
