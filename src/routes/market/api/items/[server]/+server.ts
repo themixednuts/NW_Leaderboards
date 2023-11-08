@@ -26,21 +26,21 @@ export const GET: RequestHandler = async ({ params: { server } }) => {
     SELECT 'Most Quantity' AS category, itemKey AS id, text AS name, SUM(quantity) AS value, perks, gearScore, iconPath, rarity   
     FROM CTE
 
-    UNION ALL
+    -- UNION ALL
 
-    SELECT 'Most Uniquely Listed Item' AS category, 
-           itemKey AS id, 
-           text AS name,
-           MAX(item_count) AS value,
-           perks,
-           gearScore,
-           iconPath,
-           rarity
-    FROM (
-        SELECT itemKey, text, COUNT(*) AS item_count, perks, gearScore, iconPath , rarity
-        FROM CTE
-        GROUP BY itemKey
-    ) AS item_counts
+    -- SELECT 'Most Uniquely Listed Item' AS category, 
+    --        itemKey AS id, 
+    --        text AS name,
+    --        MAX(item_count) AS value,
+    --        perks,
+    --        gearScore,
+    --        iconPath,
+    --        rarity
+    -- FROM (
+    --     SELECT itemKey, text, COUNT(*) AS item_count, perks, gearScore, iconPath , rarity
+    --     FROM CTE
+    --     GROUP BY itemKey
+    -- ) AS item_counts
 
     UNION ALL
 
