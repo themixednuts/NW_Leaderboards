@@ -11,7 +11,7 @@
   </script>
 </svelte:head>
 
-<div class="container relative mx-auto grid h-screen grid-cols-1 grid-rows-[auto,1fr] place-content-center gap-2">
+<div class="container relative mx-auto grid h-screen grid-cols-1 grid-rows-[auto,1fr] place-content-center gap-2 pb-2">
   <div class="navbar sticky z-50 col-span-full row-span-1 row-start-1 h-full justify-between bg-base-100">
     <a href="/" class="font-sans text-2xl font-bold antialiased hover:link">NW STATS</a>
 

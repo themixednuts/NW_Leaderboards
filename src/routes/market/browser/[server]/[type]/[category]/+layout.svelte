@@ -26,15 +26,17 @@
       <a
         class="flex h-14 w-56 place-content-center place-items-center bg-cover bg-left bg-no-repeat border-2 border-stone-500 uppercase bg-crafting-tab border-b-0 hover:bg-crafting-tab-highlight {tab === 'sell' ? '-ml-[2px]' : '-mr-[2px]'}"
         class:bg-crafting-tab-highlight={$page.params.type.toLowerCase() === tab.toLowerCase()}
+        class:border-b-2={$page.params.type.toLowerCase() !== tab.toLowerCase()}
         href="/market/browser/{$page.params.server}/{tab.toLowerCase()}/{$page.params.category}/1{$page.url.search}"
       >
         <img src={tabIcons[tab]} alt="" />
         {tab}
       </a>
     {/each}
+    <div class="grow border-b-2 border-stone-500"></div>
   </div>
   <div
-    class="flex border-2 border-stone-500 pt-6 pl-4 grid-cols-[minmax(300px,350px),1fr] grid-rows-[3rem,1fr] flex-col gap-6 overflow-y-auto bg-cover bg-center bg-no-repeat sm:grid"
+    class="flex border-2 border-t-0 border-stone-500 pt-6 pl-4 grid-cols-[minmax(300px,350px),1fr] grid-rows-[3rem,1fr] flex-col gap-6 overflow-y-auto bg-cover bg-center bg-no-repeat sm:grid"
   >
     <div class="row-span-full grid grid-cols-1 grid-rows-[subgrid]">
       <Search

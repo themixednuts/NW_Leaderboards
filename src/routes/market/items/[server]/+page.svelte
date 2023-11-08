@@ -15,7 +15,10 @@
 </svelte:head>
 
 <div class="flex flex-col gap-4 h-full overflow-auto">
-  <Search link="/market/items/{$page.params.server}/$id" type="masteritem"></Search>
+  <div class=" w-64">
+
+    <Search link="/market/items/{$page.params.server}/$id" type="masteritem"></Search>
+  </div>
   {#if browser}
     {#await fetch(`/market/api/items/${$page.params.server}`).then((res) => res.json())}
       <div class="flex place-content-center">
