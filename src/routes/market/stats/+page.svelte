@@ -4,7 +4,6 @@
   import BarChart from '$lib/market/barchart.svelte'
   import { browser } from '$app/environment'
   import { replaceLynshineSrc } from '$lib/utils'
-  import { page } from '$app/stores'
 
   export let data: PageData
 
@@ -42,7 +41,7 @@
               ></DonutChart>
             </div>
           </td>
-          <!-- {#if browser}
+          {#if browser}
             {#await fetch(`/market/api/items/${server.toLowerCase()}`).then((res) => res.json())}
               <td class="h-full text-center">
                 <div class="loading"></div>
@@ -82,7 +81,7 @@
                 </td>
               {/each}
             {/await}
-          {/if} -->
+          {/if}
         </tr>
       </tbody>
     </table>
