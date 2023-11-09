@@ -1,8 +1,32 @@
 <script lang="ts">
   import { page } from '$app/stores'
   import '../app.css'
-  import type { LayoutData } from './$types'
-  export let data: LayoutData
+  // import type { LayoutData } from './$types'
+  import { navigating } from '$app/stores'
+  import { tweened } from 'svelte/motion'
+  import { cubicOut } from 'svelte/easing'
+  import type { Action } from 'svelte/action'
+  import { browser } from '$app/environment'
+
+  // export let data: LayoutData
+
+  const progress = tweened(0, { easing: cubicOut })
+  let progress_div: HTMLDivElement
+  $: if ($progress === 0.95) progress.set(0.99, { duration: 10000 })
+  $: {
+    if (progress_div) progress_div.style.width = `${$progress * 100}%`
+  }
+
+  const navigationProgress: Action<HTMLDivElement> = (ele: HTMLDivElement) => {
+    progress.set(0.95, { duration: 1000 })
+    console.log('here')
+    return {
+      destroy() {
+        progress.set(1, { duration: 0 })
+        progress.set(0, { duration: 0 })
+      },
+    }
+  }
   $: routes = $page.url.pathname?.split('/')
 </script>
 
@@ -11,6 +35,9 @@
   </script>
 </svelte:head>
 
+{#if !!$navigating}
+  <div class="absolute left-0 top-0 z-[9999] h-1 bg-red-500" bind:this={progress_div} use:navigationProgress></div>
+{/if}
 <div class="container relative mx-auto grid h-screen grid-cols-1 grid-rows-[auto,1fr] place-content-center gap-2 pb-2">
   <div class="navbar sticky z-50 col-span-full row-span-1 row-start-1 h-full justify-between bg-base-100">
     <a href="/" class="font-sans text-2xl font-bold antialiased hover:link">NW STATS</a>

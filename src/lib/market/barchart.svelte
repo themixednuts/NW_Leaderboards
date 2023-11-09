@@ -34,13 +34,13 @@
           },
           {
             label: 'Volume',
-            data: marketcaps.map(server => server.quantity),
+            data: marketcaps.map((server) => server.quantity),
             type: 'line',
             yAxisID: 'y1',
             borderWidth: 2,
             backgroundColor: 'gray',
-            borderColor: 'gray'
-          }
+            borderColor: 'gray',
+          },
         ],
       },
       options: {
@@ -50,32 +50,50 @@
             display: true,
             beginAtZero: true,
             title: {
-                display: true,
-                text: 'Gold'
-            }
+              display: true,
+              text: 'Value',
+            },
+            ticks: {
+              callback(tickValue, index, ticks) {
+                const formatter = new Intl.NumberFormat(undefined, {
+                  notation: 'compact',
+                  compactDisplay: 'short'
+                })
+                return formatter.format(+tickValue)
+              },
+            },
           },
           y1: {
             display: true,
             position: 'right',
             title: {
-                display: true,
-                text: 'Volume'
-            }
-          }
+              display: true,
+              text: 'Volume',
+            },
+            ticks: {
+              callback(tickValue, index, ticks) {
+                const formatter = new Intl.NumberFormat(undefined, {
+                  notation: 'compact',
+                  compactDisplay: 'short'
+                })
+                return formatter.format(+tickValue)
+              },
+            },
+          },
         },
-        
+
         plugins: {
-            legend: {
-                display: false
-            },
-            title: {
-                display: true,
-                text: 'Market Supply Per Server'
-            },
-            tooltip: {
-                mode: 'index'
-            },
-        }
+          legend: {
+            display: false,
+          },
+          title: {
+            display: true,
+            text: 'Market Supply Per Server',
+          },
+          tooltip: {
+            mode: 'index',
+          },
+        },
       },
     })
 

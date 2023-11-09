@@ -110,9 +110,9 @@
 </script>
 
 <div class="h-full w-full overflow-y-auto">
-  <table class="table table-pin-rows table-xs relative w-full table-fixed rounded-none md:table-md">
+  <table class="table table-zebra table-pin-rows table-xs relative w-full table-fixed rounded-none md:table-md">
     <thead class="">
-      <tr class="">
+      <tr class="border-b-2 border-stone-500">
         {#each columns as { key, label, sortKey, isImage, isRotation } (key)}
           <th
             class="relative h-full min-w-full overflow-hidden text-clip"
@@ -155,7 +155,7 @@
         {@const perks = item.perks}
         {@const tier = GetRomanFromNumber(item.tier)}
         <tr
-          class="cursor-pointer bg-cover bg-center bg-no-repeat hover:bg-contract-item"
+          class="cursor-pointer border-y-2 border-stone-500 border-opacity-30 bg-cover bg-center bg-no-repeat hover:bg-contract-item"
           on:click={(e) => goToItem(e, item)}
         >
           <td class="">

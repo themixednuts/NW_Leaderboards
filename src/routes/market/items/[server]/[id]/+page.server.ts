@@ -31,19 +31,6 @@ export const load = (async ({ params: { server, id }, url: { searchParams } }) =
   AND sessionDate <= :end_date
   -- GROUP BY sessionDate, contractType, price
   `
-  let startTime = performance.now()
-  const itemData = await db.execute({
-    sql: query,
-    args: {
-      id,
-      server,
-      end_date: Math.floor(end_date.getTime() / 1000),
-      start_date: Math.floor(start_date.getTime() / 1000)
-    },
-  })
-  console.log('db timer - Items: ', performance.now() - startTime, ' ms')
-  // console.log(itemData)
-
   const nameQuery = `
   SELECT 
   locale.text AS name 
@@ -51,27 +38,35 @@ export const load = (async ({ params: { server, id }, url: { searchParams } }) =
   LEFT JOIN locale_en_us AS locale ON locale.key = SUBSTR(Name,2) COLLATE NOCASE
   WHERE ItemID = ? COLLATE NOCASE
   `
-  startTime = performance.now()
-  const name = await db.execute({
-    sql: nameQuery,
-    args: [id]
-  })
-  console.log('db timer - Name: ', performance.now() - startTime, ' ms')
-
   const sessionQuery = `
     SELECT
     sessionDate
     FROM server_metadata
     WHERE server = :server`
 
-  startTime = performance.now()
-  const sessionDate = await db.execute({
-    sql: sessionQuery,
-    args: {
-      server
+  const startTime = performance.now()
+  const [itemData, name, sessionDate] = await db.batch([
+    {
+      sql: query,
+      args: {
+        id,
+        server,
+        end_date: Math.floor(end_date.getTime() / 1000),
+        start_date: Math.floor(start_date.getTime() / 1000)
+      }
+    },
+    {
+      sql: nameQuery,
+      args: [id]
+    },
+    {
+      sql: sessionQuery,
+      args: {
+        server
+      }
     }
-  })
-  console.log('db timer - SessionDate: ', performance.now() - startTime, ' ms')
+  ], 'read')
+  console.log('db timer: ', performance.now() - startTime, ' ms')
   return {
     itemData: itemData.rows as unknown as MarketData[],
     name: name.rows[0].name,

@@ -86,7 +86,7 @@ export function ItemPerkScaling(scalingPerGearscore: string, gearScore: number, 
 
 export function MarketBrowserQuery(sort?: string) {
   const query = `
-   -- EXPLAIN QUERY PLAN
+  -- EXPLAIN QUERY PLAN
   SELECT 
     itemKey,
     COALESCE (locale.text, master.Name) AS name,

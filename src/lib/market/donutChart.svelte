@@ -24,11 +24,11 @@
             display: false,
           },
           title: {
-            display: true,
+            display: false,
             text: 'Market Volume',
           },
           subtitle: {
-            display: true,
+            display: false,
             text: 'Quantity Per Category',
             padding: {
               bottom: 10,

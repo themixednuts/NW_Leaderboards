@@ -8,6 +8,11 @@
   export let itemData: PageData['itemData']
   export let title: string
 
+  const formatter = new Intl.NumberFormat(undefined, {
+    notation: 'compact',
+    compactDisplay: 'short',
+  })
+
   const myChart: Action<HTMLCanvasElement, MarketData[]> = (canvas: HTMLCanvasElement, itemData: MarketData[]) => {
     const num_of_bins = 10
 
@@ -57,7 +62,7 @@
             borderWidth: 1,
           },
         ],
-        labels: binBoundaries.map((boundary) => `${boundary.lower} - ${boundary.upper}`),
+        labels: binBoundaries.map((boundary) => `${formatter.format(boundary.lower)} - ${formatter.format(boundary.upper)}`),
       },
       options: {
         plugins: {
@@ -103,7 +108,7 @@
               text: 'Price Brackets',
             },
             ticks: {
-                align: 'center'
+              align: 'center',
             },
           },
           y: {
@@ -113,6 +118,11 @@
             },
             position: 'left',
             beginAtZero: true,
+            ticks: {
+              callback(tickValue, index, ticks) {
+                return formatter.format(+tickValue)
+              },
+            },
           },
         },
       },

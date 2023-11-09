@@ -54,7 +54,7 @@ export const GET: RequestHandler = async ({ params: { server } }) => {
             server,
         }
     })
-    console.log('db timer - Items: ', performance.now() - startTime, ' ms')
+    console.log('db timer - Items: ', performance.now() - startTime, ' ms', server)
     // console.log(items.rows)
     return json(items.rows);
 };

@@ -16,9 +16,6 @@
   {#each marketRoutes as route}
     <div class="flex place-content-center font-mono text-4xl font-extrabold">
       <a href="/market/{route}" class="h-full w-full text-center capitalize">{route}</a>
-      {#if route == 'market'}
-        Work in Progress
-      {/if}
     </div>
   {/each}
 </div>

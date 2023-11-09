@@ -138,7 +138,7 @@
   <div class="col-span-full flex h-[300px] w-full place-content-center place-items-center">
     {#if sellOrders.length}
       {@const maxDate = sellOrders.reduce((acc, item) => Math.max(acc, +item.sessionDate), 0)}
-      <PriceDistribution itemData={sellOrders.filter((item) => item.sessionDate == maxDate)} title="Price Histogram"
+      <PriceDistribution itemData={sellOrders.filter((item) => +item.sessionDate === maxDate)} title="Price Histogram"
       ></PriceDistribution>
     {/if}
   </div>

@@ -16,7 +16,7 @@ const browserType = {
 }
 export const config: Config = {
     isr: {
-        expiration: 1800,
+        expiration: 3600,
         allowQuery: ['family', 'group', 'item', 'sort', 'price_min', 'price_max', 'gearscore_min', 'gearscore_max', 'perks']
     },
 }
@@ -59,7 +59,6 @@ export const load = (async ({ params: { server, category, page, type }, url: { s
     const perks = searchParams.get('perks') || ''
 
     let query = MarketBrowserQuery()
-    let startTime = performance.now()
     const args = {
         category: category,
         family,
@@ -80,26 +79,10 @@ export const load = (async ({ params: { server, category, page, type }, url: { s
         query = MarketBrowserQuery(`ORDER BY ${sorted}`)
     }
 
-    const marketdata = await db.execute({
-        sql: query,
-        args
-    })
-    console.log("db timer - MarketData: ", performance.now() - startTime, " ms")
-
-    // console.log(marketdata.rows)
-    const marketdata_copy: MarketData[] = []
-    marketdata.rows.forEach((row) => {
-        const obj = structuredClone(row) as unknown as MarketData
-        //@ts-expect-error
-        const arr = JSON.parse(obj.perks)
-        obj.perks = arr
-        marketdata_copy.push(obj)
-    })
-
+    console.log(args, SORT_MAP[sort as keyof typeof SORT_MAP])
+    
     let countQuery
-    const countArgs: { category?: string, family?: string, item?: string, server?: string, group?: string, type?: number, price_min?: string, price_max?: string, gearscore_min?: string, gearscore_max?: string } = {
-
-    }
+    const countArgs: { category?: string, family?: string, item?: string, server?: string, group?: string, type?: number, price_min?: string, price_max?: string, gearscore_min?: string, gearscore_max?: string } = {}
 
     if (item !== 'all') {
         countQuery = `
@@ -143,29 +126,40 @@ export const load = (async ({ params: { server, category, page, type }, url: { s
         countArgs.family = family
         countArgs.group = group
     }
-    startTime = performance.now()
-    const count = await db.execute({
-        sql: countQuery,
-        args: countArgs
-    })
-    // console.log(count.rows)
-    console.log("db timer - TradingCount: ", performance.now() - startTime, " ms")
-
-    startTime = performance.now()
     const sessionDateQuery = `
     SELECT
     sessionDate
     FROM server_metadata
     WHERE server = :server
     `
-    const sessionDate = await db.execute({
-        sql: sessionDateQuery,
-        args: {
-            server
-        }
-    })
-    console.log("db timer - SessionData: ", performance.now() - startTime, " ms")
 
+    const startTime = performance.now()
+    const [marketdata, count, sessionDate] = await db.batch([
+        {
+            sql: query,
+            args
+        },
+        {
+            sql: countQuery,
+            args: countArgs
+        },
+        {
+            sql: sessionDateQuery,
+            args: {
+                server
+            }
+        }
+    ], 'read')
+    console.log("db timer: ", performance.now() - startTime, " ms")
+
+    const marketdata_copy: MarketData[] = []
+    marketdata.rows.forEach((row) => {
+        const obj = structuredClone(row) as unknown as MarketData
+        //@ts-expect-error
+        const arr = JSON.parse(obj.perks)
+        obj.perks = arr
+        marketdata_copy.push(obj)
+    })
     const paginated: Paginated = {
         data: marketdata_copy as unknown as MarketData[],
         //@ts-expect-error

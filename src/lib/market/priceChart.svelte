@@ -13,6 +13,11 @@
   export let title: string
   export let days: number
 
+  const formatter = new Intl.NumberFormat(undefined, {
+    notation: 'compact',
+    compactDisplay: 'short',
+  })
+
   // const processedData = itemData.map((item) => {
   //   // Split perks and trim spaces
   //   const perks = item.perks.split(',').map((perk) => perk.trim())
@@ -74,7 +79,7 @@
         backgroundColor: 'rgba(100,100,100,.10)',
         textStrokeColor: 'rgba(5,0,0,.10)',
         drawTime: 'afterDatasetsDraw',
-        content: (ctx) => avgPrice.toFixed(2),
+        content: (ctx) => formatter.format(avgPrice),
         position: 'start',
         rotation: -90,
       },
@@ -278,6 +283,11 @@
             },
             position: 'left',
             beginAtZero: true,
+            ticks: {
+              callback(tickValue, index, ticks) {
+                return formatter.format(+tickValue)
+              },
+            },
           },
           y1: {
             title: {
@@ -286,6 +296,15 @@
             },
             position: 'right',
             beginAtZero: true,
+            ticks: {
+              callback(tickValue, index, ticks) {
+                const formatter = new Intl.NumberFormat(undefined, {
+                  notation: 'compact',
+                  compactDisplay: 'short',
+                })
+                return formatter.format(+tickValue)
+              },
+            },
           },
         },
       },
