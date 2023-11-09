@@ -6,7 +6,6 @@
   import { tweened } from 'svelte/motion'
   import { cubicOut } from 'svelte/easing'
   import type { Action } from 'svelte/action'
-  import { browser } from '$app/environment'
 
   // export let data: LayoutData
 
@@ -19,7 +18,6 @@
 
   const navigationProgress: Action<HTMLDivElement> = (ele: HTMLDivElement) => {
     progress.set(0.95, { duration: 1000 })
-    console.log('here')
     return {
       destroy() {
         progress.set(1, { duration: 0 })
