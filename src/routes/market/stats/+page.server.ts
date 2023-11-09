@@ -1,14 +1,21 @@
 import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
 import type { Config } from '@sveltejs/adapter-vercel';
+import { error } from '@sveltejs/kit';
 
 export const config: Config = {
 }
-export const load = (async ({fetch}) => {
-   
-    const serverReq = await fetch('/market/api/servers')
-    const servers = await serverReq.json() as {servers: string[]}
-    
+export const load = (async ({ fetch }) => {
+
+    let serverReq
+    try {
+        serverReq = await fetch('/market/api/servers')
+    } catch (e) {
+        console.log(e)
+        throw error(500)
+    }
+    const servers = await serverReq.json() as { servers: string[] }
+
     const marketcap_query = `
     -- EXPLAIN QUERY PLAN
     SELECT s.server, SUM(o.price / 100 * o.quantity) AS market_cap, SUM(o.quantity) AS quantity
@@ -20,7 +27,7 @@ export const load = (async ({fetch}) => {
 
     const categoryPerServer_query: string[] = []
     const normalizedServerList = servers.servers.sort()
-    for (const server of normalizedServerList){
+    for (const server of normalizedServerList) {
         const query = `
         SELECT
         '${server}' AS server,
