@@ -89,8 +89,8 @@ export const load = (async ({ fetch }) => {
 
     let startTime = performance.now()
     const results = db.batch([marketcap_query, combined_category_query], 'read')
-    const items = await db.execute(test)
-    console.log(items.rows)
+    // const items = await db.execute(test)
+    // console.log(items.rows)
     console.log('db timer - Market Cap Per Server: ', performance.now() - startTime, 'ms')
 
     startTime = performance.now()
