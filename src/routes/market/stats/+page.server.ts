@@ -99,7 +99,7 @@ export const load = (async ({ fetch }) => {
 
     return {
         marketcaps: marketcap_result.rows,
-        catergoryVolume: category_per_server_result.rows,
+        catergoryVolume: category_per_server_result.rows as unknown as {TradingCategory: string, count: number, server: string}[],
         servers: servers.servers,
         // categories: server_promise
     };

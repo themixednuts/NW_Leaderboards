@@ -1,12 +1,12 @@
 <script lang="ts">
   import type { Action } from 'svelte/action'
-  import { Chart, type ChartConfiguration, type ChartDataset } from 'chart.js/auto'
+  import { Chart } from 'chart.js/auto'
 
-  export let categories
+  export let categories: { TradingCategory: string; count: number, server: string }[]
 
   const totalCount = categories.filter((row) => row.TradingCategory).reduce((acc, row) => acc + row.count, 0)
   const myChart: Action<HTMLCanvasElement> = (canvas: HTMLCanvasElement) => {
-    let chart: Chart | null = new Chart(canvas, {
+    let chart: Chart<'doughnut'> | null = new Chart(canvas, {
       type: 'doughnut',
       data: {
         labels: categories.filter((row) => row.TradingCategory).map((row) => row.TradingCategory),
@@ -46,11 +46,16 @@
         },
         responsive: true,
         animation: {
-            animateRotate: true
+          animateRotate: true,
         },
       },
     })
+    return {
+      destroy() {
+        chart = null
+      },
+    }
   }
 </script>
 
-  <canvas use:myChart></canvas>
+<canvas use:myChart></canvas>

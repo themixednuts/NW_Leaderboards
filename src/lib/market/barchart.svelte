@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Action } from 'svelte/action'
-  import { Chart, type ChartConfiguration, type ChartDataset } from 'chart.js/auto'
+  import { Chart } from 'chart.js/auto'
   export let marketcaps: any[]
 
   const myChart: Action<HTMLCanvasElement> = (canvas: HTMLCanvasElement) => {
@@ -57,7 +57,7 @@
               callback(tickValue, index, ticks) {
                 const formatter = new Intl.NumberFormat(undefined, {
                   notation: 'compact',
-                  compactDisplay: 'short'
+                  compactDisplay: 'short',
                 })
                 return formatter.format(+tickValue)
               },
@@ -74,7 +74,7 @@
               callback(tickValue, index, ticks) {
                 const formatter = new Intl.NumberFormat(undefined, {
                   notation: 'compact',
-                  compactDisplay: 'short'
+                  compactDisplay: 'short',
                 })
                 return formatter.format(+tickValue)
               },
