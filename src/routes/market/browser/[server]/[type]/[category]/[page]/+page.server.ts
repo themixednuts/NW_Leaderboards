@@ -80,7 +80,7 @@ export const load = (async ({ params: { server, category, page, type }, url: { s
     }
 
     console.log(args, SORT_MAP[sort as keyof typeof SORT_MAP])
-    
+
     let countQuery
     const countArgs: { category?: string, family?: string, item?: string, server?: string, group?: string, type?: number, price_min?: string, price_max?: string, gearscore_min?: string, gearscore_max?: string } = {}
 
@@ -134,7 +134,7 @@ export const load = (async ({ params: { server, category, page, type }, url: { s
     `
 
     const startTime = performance.now()
-    const [marketdata, count, sessionDate] = await db.batch([
+    const result = db.batch([
         {
             sql: query,
             args
@@ -152,23 +152,30 @@ export const load = (async ({ params: { server, category, page, type }, url: { s
     ], 'read')
     console.log("db timer: ", performance.now() - startTime, " ms")
 
-    const marketdata_copy: MarketData[] = []
-    marketdata.rows.forEach((row) => {
-        const obj = structuredClone(row) as unknown as MarketData
-        //@ts-expect-error
-        const arr = JSON.parse(obj.perks)
-        obj.perks = arr
-        marketdata_copy.push(obj)
-    })
-    const paginated: Paginated = {
-        data: marketdata_copy as unknown as MarketData[],
-        //@ts-expect-error
-        end: Math.ceil(+count.rows[0].count / 20) || 1,
-        sessionDate: sessionDate.rows[0].sessionDate as unknown as string
-    }
+    // const marketdata_copy: MarketData[] = []
+    // marketdata.rows.forEach((row) => {
+    //     const obj = structuredClone(row) as unknown as MarketData
+    //     //@ts-expect-error
+    //     const arr = JSON.parse(obj.perks)
+    //     obj.perks = arr
+    //     marketdata_copy.push(obj)
+    // })
+    // const paginated: Paginated = {
+    //     data: marketdata_copy as unknown as MarketData[],
+    //     //@ts-expect-error
+    //     end: Math.ceil(+count.rows[0].count / 20) || 1,
+    //     sessionDate: sessionDate.rows[0].sessionDate as unknown as string
+    // }
 
     return {
-        marketdata: paginated
+        streamed: {
+            marketdata: result.then(res => ({
+                data: res[0].rows.map(marketdata => ({ ...marketdata, perks: JSON.parse(marketdata.perks as string) } as unknown as MarketData)),
+                end: Math.ceil((res[1].rows[0].count as number) / 20) || 1,
+                sessionDate: res[2].rows[0].sessionDate as unknown as string
+            }))
+
+        }
     };
 
 }) satisfies PageServerLoad;

@@ -20,9 +20,9 @@
     <Search link="/market/items/{$page.params.server}/$id" type="masteritem"></Search>
   </div>
   {#if browser}
-    {#await fetch(`/market/api/items/${$page.params.server}`).then((res) => res.json())}
+    {#await data.streamed.items}
       <div class="flex place-content-center">
-        <div class="loading"></div>
+        <div class="loading loading-bars"></div>
       </div>
     {:then items}
       <table class="table table-pin-rows max-h-full table-fixed overflow-auto">

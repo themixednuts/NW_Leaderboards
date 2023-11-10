@@ -1,13 +1,6 @@
 import type { PageServerLoad } from './$types'
 import { db } from '$lib/server/db'
 import type { MarketData } from '$lib/market.types'
-import type { Config } from '@sveltejs/adapter-vercel'
-
-export const config: Config = {
-  //@ts-ignore
-  isr: null,
-  runtime: 'edge'
-}
 
 export const load = (async ({ params: { server, id }, url: { searchParams } }) => {
   const days = +(searchParams.get('days') || 7)
@@ -45,7 +38,7 @@ export const load = (async ({ params: { server, id }, url: { searchParams } }) =
     WHERE server = :server`
 
   const startTime = performance.now()
-  const [itemData, name, sessionDate] = await db.batch([
+  const results = db.batch([
     {
       sql: query,
       args: {
@@ -66,12 +59,16 @@ export const load = (async ({ params: { server, id }, url: { searchParams } }) =
       }
     }
   ], 'read')
-  console.log('db timer: ', performance.now() - startTime, ' ms')
+  console.log('db timer: Item ', performance.now() - startTime, ' ms')
   return {
-    itemData: itemData.rows as unknown as MarketData[],
-    name: name.rows[0].name,
-    lastSession: sessionDate.rows[0].sessionDate,
-    days
+    streamed: {
+      item: results.then(res => ({
+        itemData: res[0].rows as unknown as MarketData[],
+        name: res[1].rows[0].name,
+        lastSession: res[2].rows[0].sessionDate,
+        days
+      }))
+    }
   }
 }) satisfies PageServerLoad
 

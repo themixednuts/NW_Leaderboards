@@ -2,28 +2,45 @@
   import { page } from '$app/stores'
   import type { MarketData } from '$lib/market.types'
   import { GetRomanFromNumber, ItemPerkScaling, getLocalizedDate, replaceLynshineSrc } from '$lib/utils'
-  import { onMount } from 'svelte'
   import { formatDistance, addSeconds, isPast } from 'date-fns'
   import { goto } from '$app/navigation'
+  import type { Action } from 'svelte/action'
+  import { tr } from 'date-fns/locale'
 
-  export let items: (MarketData & { currentExpiration?: string })[]
+  export let items: Promise<(MarketData & { currentExpiration?: string })[]>
   $: sort = $page.url.searchParams.get('sort')
 
-  function updateExpiration() {
-    for (const item of items) {
-      const currentDate = new Date()
-      const { queryDate, expirationSec } = item
+  type Expiration = {
+    queryDate: string
+    expirationSec: number
+  }
 
-      let qDate: Date
-      const unixTimeStampPattern = /^[0-9]+$/
-      if (unixTimeStampPattern.test(queryDate)) qDate = new Date(+queryDate * 1000)
-      else qDate = new Date(queryDate)
+  function updateExpiration(ele: HTMLDivElement, item: Expiration) {
+    const currentDate = new Date()
+    const { queryDate, expirationSec } = item
 
-      const expirationDate = addSeconds(qDate, expirationSec)
-      if (isPast(expirationDate)) item.currentExpiration = 'Expired'
-      else item.currentExpiration = formatDistance(expirationDate, currentDate, { includeSeconds: true })
+    let qDate: Date
+    const unixTimeStampPattern = /^[0-9]+$/
+    if (unixTimeStampPattern.test(queryDate)) qDate = new Date(+queryDate * 1000)
+    else qDate = new Date(queryDate)
+
+    const expirationDate = addSeconds(qDate, expirationSec)
+    if (isPast(expirationDate)) ele.textContent = 'Expired'
+    else
+      ele.textContent = formatDistance(expirationDate, currentDate, { includeSeconds: true })
+        .replace('about', '~')
+        .replace('less than', '<')
+  }
+
+  const handleExpiration: Action<HTMLDivElement, Expiration> = (ele: HTMLDivElement, item: Expiration) => {
+    updateExpiration(ele, item)
+    const intervalId = setInterval(updateExpiration, 5000, ele, item)
+
+    return {
+      destroy() {
+        clearInterval(intervalId)
+      },
     }
-    items = items
   }
 
   function goToItem(ev: Event, item: MarketData) {
@@ -96,12 +113,6 @@
     },
   ]
 
-  onMount(() => {
-    updateExpiration()
-    const intervalId = setInterval(updateExpiration, 1000)
-    return () => clearInterval(intervalId)
-  })
-
   let searchParams: string
   $: {
     $page.url.searchParams.delete('sort')
@@ -150,93 +161,101 @@
       </tr>
     </thead>
     <tbody class="min-w-0 overflow-clip">
-      {#each items as item, i}
-        {@const type = item.itemType?.toLowerCase()}
-        {@const perks = item.perks}
-        {@const tier = GetRomanFromNumber(item.tier)}
-        <tr
-          class="cursor-pointer border-y-2 border-stone-500 border-opacity-30 bg-cover bg-center bg-no-repeat hover:bg-contract-item"
-          on:click={(e) => goToItem(e, item)}
-        >
-          <td class="">
-            <div
-              class="flex w-max min-w-0 max-w-full flex-nowrap place-items-center gap-2 place-self-start whitespace-nowrap"
-            >
-              <a
-                href="https://nwdb.info/db/item/{item.itemKey.toLowerCase()}?gs={item.gearScore}&perks={perks
-                  .map((perk) => perk.id.toLowerCase())
-                  .join(',')}"
-                class="flex aspect-square w-10 shrink-0 place-content-center place-items-center bg-contain bg-center bg-no-repeat
-              {type !== 'resource' && type !== 'housingitem'
-                  ? `bg-item-rarity-square-${item.rarity ?? 0}`
-                  : `bg-item-rarity-circle-${item.rarity ?? 0}`}"
-                target="_blank"
-              >
-                <img
-                  src={replaceLynshineSrc(item.iconPath?.replaceAll('\\', '/'))}
-                  alt=""
-                  class="aspect-square w-[90%]"
-                />
-              </a>
-              <div class="min-w-0 overflow-clip">
-                {item.name}
-              </div>
-            </div>
-          </td>
-          <td class="text-right">
-            {new Intl.NumberFormat('en-US', {
-              minimumFractionDigits: 2,
-            }).format(item.price / 100)}
-          </td>
-          <td class="text-center">
-            {tier}
-          </td>
-          <td class="text-center">
-            {item.gearScore}
-          </td>
-          <td class="whitespace-nowrap">
-            {perks
-              .filter((perk) => perk.type === 'Inherent')
-              .map((perk) => {
-                const perkMulti = ItemPerkScaling(perk.scaling, item.gearScore)
-                let str = ''
-                if (perk.affixes)
-                  for (const [att, val] of Object.entries(perk.affixes)) {
-                    if (val) str = `${str ? `${str} ,` : ''} ${att.toUpperCase()} ${Math.floor(val * perkMulti)}`
-                  }
-                return str
-              })}
-          </td>
-          <td class="w-full max-w-[8rem]">
-            <div class="flex w-full flex-nowrap place-items-center gap-1">
-              {#each perks as perk}
-                {#if perk.type !== 'Gem'}
-                  <a href="https://nwdb.info/db/perk/{perk.id.toLowerCase()}?gs={item.gearScore}" class="w-6">
-                    <img src={replaceLynshineSrc(perk.iconPath)} alt="" class="" />
-                  </a>
-                {/if}
-              {/each}
-            </div>
-          </td>
-          <td class="">
-            <div class="flex w-7 place-content-center place-items-center">
-              {#each perks as perk}
-                {#if perk.type === 'Gem'}
-                  <a href="https://nwdb.info/db/perk/{perk.id.toLowerCase()}">
-                    <img src={replaceLynshineSrc(perk.iconPath)} alt="" class="" />
-                  </a>
-                {/if}
-              {/each}
-            </div>
-          </td>
-          <td class="text-right">
-            {item.quantity}
-          </td>
-          <td class="whitespace-nowrap">
-            {item.currentExpiration?.replace('about', '~').replace('less than', '<') || ''}
+      {#await items}
+        <tr>
+          <td colspan="9" class="text-left">
+            <div class="loading loading-bars"></div>
           </td>
         </tr>
-      {/each}
+      {:then items}
+        {#each items as item, i}
+          {@const type = item.itemType?.toLowerCase()}
+          {@const perks = item.perks}
+          {@const tier = GetRomanFromNumber(item.tier)}
+          <tr
+            class="cursor-pointer border-y-2 border-stone-500 border-opacity-30 bg-cover bg-center bg-no-repeat hover:bg-contract-item"
+            on:click={(e) => goToItem(e, item)}
+          >
+            <td class="">
+              <div
+                class="flex w-max min-w-0 max-w-full flex-nowrap place-items-center gap-2 place-self-start whitespace-nowrap"
+              >
+                <a
+                  href="https://nwdb.info/db/item/{item.itemKey.toLowerCase()}?gs={item.gearScore}&perks={perks
+                    .map((perk) => perk.id.toLowerCase())
+                    .join(',')}"
+                  class="flex aspect-square w-10 shrink-0 place-content-center place-items-center bg-contain bg-center bg-no-repeat
+              {type !== 'resource' && type !== 'housingitem'
+                    ? `bg-item-rarity-square-${item.rarity ?? 0}`
+                    : `bg-item-rarity-circle-${item.rarity ?? 0}`}"
+                  target="_blank"
+                >
+                  <img
+                    src={replaceLynshineSrc(item.iconPath?.replaceAll('\\', '/'))}
+                    alt=""
+                    class="aspect-square w-[90%]"
+                  />
+                </a>
+                <div class="min-w-0 overflow-clip">
+                  {item.name}
+                </div>
+              </div>
+            </td>
+            <td class="text-right">
+              {new Intl.NumberFormat('en-US', {
+                minimumFractionDigits: 2,
+              }).format(item.price / 100)}
+            </td>
+            <td class="text-center">
+              {tier}
+            </td>
+            <td class="text-center">
+              {item.gearScore}
+            </td>
+            <td class="whitespace-nowrap">
+              {perks
+                .filter((perk) => perk.type === 'Inherent')
+                .map((perk) => {
+                  const perkMulti = ItemPerkScaling(perk.scaling, item.gearScore)
+                  let str = ''
+                  if (perk.affixes)
+                    for (const [att, val] of Object.entries(perk.affixes)) {
+                      if (val) str = `${str ? `${str} ,` : ''} ${att.toUpperCase()} ${Math.floor(val * perkMulti)}`
+                    }
+                  return str
+                })}
+            </td>
+            <td class="w-full max-w-[8rem]">
+              <div class="flex w-full flex-nowrap place-items-center gap-1">
+                {#each perks as perk}
+                  {#if perk.type !== 'Gem'}
+                    <a href="https://nwdb.info/db/perk/{perk.id.toLowerCase()}?gs={item.gearScore}" class="w-6">
+                      <img src={replaceLynshineSrc(perk.iconPath)} alt="" class="" />
+                    </a>
+                  {/if}
+                {/each}
+              </div>
+            </td>
+            <td class="">
+              <div class="flex w-7 place-content-center place-items-center">
+                {#each perks as perk}
+                  {#if perk.type === 'Gem'}
+                    <a href="https://nwdb.info/db/perk/{perk.id.toLowerCase()}">
+                      <img src={replaceLynshineSrc(perk.iconPath)} alt="" class="" />
+                    </a>
+                  {/if}
+                {/each}
+              </div>
+            </td>
+            <td class="text-right">
+              {item.quantity}
+            </td>
+            <td class="whitespace-nowrap">
+              <div use:handleExpiration={{ queryDate: item.queryDate, expirationSec: item.expirationSec }}></div>
+            </td>
+          </tr>
+        {/each}
+      {/await}
     </tbody>
   </table>
 </div>

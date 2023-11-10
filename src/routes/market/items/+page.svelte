@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { PageData } from './$types'
-  import ServerList from '$lib/market/serverlist.svelte';
+  import ServerList from '$lib/market/serverlist.svelte'
 
   export let data: PageData
 </script>
@@ -11,4 +11,8 @@
   <meta content="Market Items - Servers" property="og:description" />
 </svelte:head>
 
-<ServerList servers={data.servers} link="/market/items/$server" />
+{#await data.streamed.servers}
+  <div class="loading loading-bars"></div>
+{:then servers}
+  <ServerList {servers} link="/market/items/$server" />
+{/await}

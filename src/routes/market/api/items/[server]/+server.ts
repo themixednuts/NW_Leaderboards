@@ -2,7 +2,15 @@ import { db } from '$lib/server/db';
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = async ({ params: { server } }) => {
+export const config = {
+    isr: null,
+    runtime: 'edge'
+}
+
+export const GET: RequestHandler = async ({ params: { server }, setHeaders }) => {
+    setHeaders({
+        'cache-control': 'public,max-age=3600'
+    })
 
     const query = `
     -- EXPLAIN QUERY PLAN

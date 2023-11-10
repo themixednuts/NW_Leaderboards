@@ -5,11 +5,10 @@
   import 'chartjs-adapter-date-fns'
   import * as stats from 'simple-statistics'
   // import zoomPlugin from 'chartjs-plugin-zoom'
-  import type { PageData } from '../../routes/market/items/[server]/[id]/$types'
-  import annotationPlugin, { type AnnotationOptions, type AnnotationPluginOptions } from 'chartjs-plugin-annotation'
+  import annotationPlugin, { type AnnotationOptions } from 'chartjs-plugin-annotation'
 
   Chart.register(annotationPlugin)
-  export let itemData: PageData['itemData']
+  export let itemData: MarketData[]
   export let title: string
   export let days: number
 
@@ -52,7 +51,6 @@
     for (let i = days; i >= 0; i--) {
       const date = new Date(currentDate)
       date.setDate(date.getDate() - i)
-      date.setHours(0, 0, 0, 0)
       labels.push(date.getTime())
     }
 

@@ -1,16 +1,10 @@
-import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 
-export const load = (async ({ fetch}) => {
-    try {
-        const req = await fetch('/market/api/servers')
-        const servers = await req.json()
-        return {
-            servers: servers.servers
-        };
-
-    }catch(e){
-        console.log(e)
-        throw error(500)
-    }
+export const load = (async ({ fetch }) => {
+    const results = fetch('/market/api/servers')
+    return {
+        streamed: {
+            servers: results.then(res => res.json().then(res => res.servers))
+        }
+    };
 }) satisfies PageLoad;
