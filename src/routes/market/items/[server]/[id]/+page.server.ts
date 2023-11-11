@@ -2,7 +2,12 @@ import type { PageServerLoad } from './$types'
 import { db } from '$lib/server/db'
 import type { MarketData } from '$lib/market.types'
 
-export const load = (async ({ params: { server, id }, url: { searchParams } }) => {
+export const load = (async ({ params: { server, id }, url: { searchParams }, setHeaders }) => {
+
+  setHeaders({
+    'cache-control': "public,max-age=9000"
+  })
+
   const days = +(searchParams.get('days') || 7)
   const end_date = new Date()
   const start_date = new Date(end_date)

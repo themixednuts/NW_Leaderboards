@@ -2,8 +2,13 @@ import { db } from '$lib/server/db';
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = async ({ params: { id, server } }) => {
+export const GET: RequestHandler = async ({ params: { id, server }, setHeaders }) => {
 
+
+    setHeaders({
+        'cache-control': "public,max-age=9000"
+    })
+    
     const query = `
     --explain query plan
     SELECT itemKey as id, locale.text as name, price, sum(quantity) as quantity, sessionDate as updatedAt

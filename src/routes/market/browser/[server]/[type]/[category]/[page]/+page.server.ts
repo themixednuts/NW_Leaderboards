@@ -42,7 +42,11 @@ const SORT_MAP: { [k in SortBy]: string } = {
     "exp_desc": 'expirationSec DESC',
 }
 
-export const load = (async ({ params: { server, category, page, type }, url: { searchParams } }) => {
+export const load = (async ({ params: { server, category, page, type }, url: { searchParams }, setHeaders }) => {
+
+    setHeaders({
+        'cache-control': "public,max-age=9000"
+    })
 
     const family = searchParams.get('family')?.toLowerCase() || 'all'
     const group = searchParams.get('group')?.toLowerCase() || 'all'
