@@ -136,7 +136,6 @@
                 ? `${sortKey}_desc`
                 : `${sortKey}_asc`}"
               class="flex h-full w-full place-items-center pl-2"
-              data-sveltekit-reload
             >
               {#if isImage}
                 <img

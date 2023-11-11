@@ -160,7 +160,7 @@ export function MarketBrowserQuery(sort?: string) {
     END
   AND
     CASE
-      WHEN :perks IS NOT NULL THEN ',' || perks || ',' LIKE '%,' || :perks || ',%'
+      WHEN :perks != '' THEN ',' || perks || ',' LIKE '%,' || :perks || ',%'
       ELSE 1
     END
   AND contractType = :type

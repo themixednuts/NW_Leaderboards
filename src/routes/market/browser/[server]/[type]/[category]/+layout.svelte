@@ -7,10 +7,13 @@
   import FilterRowRange from '$lib/market/filterrowrange.svelte'
   import Search from '$lib/market/search.svelte'
   import PerkSearch from '$lib/market/perksearch.svelte'
+  import { applyAction, deserialize } from '$app/forms'
+  import { goto, invalidateAll } from '$app/navigation'
 
   export let data: LayoutData
   $: isPageStart = +$page.params.page <= 1
   $: isPageEnd = +$page.params.page >= $endPage
+  $: search = $page.url.search
 
   let filterModal: HTMLDialogElement
 
@@ -18,13 +21,44 @@
     Buy: '/lyshineui/images/icons/contracts/contracts_iconbuy.png',
     Sell: '/lyshineui/images/icons/contracts/contracts_iconsell.png',
   }
+
+  // Type guard to ensure the type of inputs[i]
+  function isInputElement(element: Element): element is HTMLInputElement {
+    return element.tagName === 'INPUT'
+  }
+
+  async function handleSubmit(event: Event & { currentTarget: EventTarget & HTMLFormElement }) {
+    // Get form data
+    const form = event.currentTarget
+
+    // Access form elements
+    const inputs = form.elements
+
+    // Iterate through the form inputs
+    for (let i = 0; i < inputs.length; i++) {
+      const currentInput = inputs[i]
+      if (isInputElement(currentInput)) {
+        if (currentInput.value === '') {
+          currentInput.removeAttribute('name')
+        }
+      }
+    }
+
+    // filterModal.close()
+    form.submit()
+  }
 </script>
 
-<div class="grid grid-cols-1 grid-rows-[auto,1fr] overflow-y-auto bg-cover bg-center bg-no-repeat pb-2 border-stone-500">
+<div
+  class="grid grid-cols-1 grid-rows-[auto,1fr] overflow-y-auto border-stone-500 bg-cover bg-center bg-no-repeat pb-2"
+>
   <div class="flex">
     {#each ['Buy', 'Sell'] as tab}
       <a
-        class="flex h-14 w-56 place-content-center place-items-center bg-cover bg-left bg-no-repeat border-2 border-stone-500 uppercase bg-crafting-tab border-b-0 hover:bg-crafting-tab-highlight {tab === 'sell' ? '-ml-[2px]' : '-mr-[2px]'}"
+        class="flex h-14 w-56 place-content-center place-items-center border-2 border-b-0 border-stone-500 bg-crafting-tab bg-cover bg-left bg-no-repeat uppercase hover:bg-crafting-tab-highlight {tab ===
+        'sell'
+          ? '-ml-[2px]'
+          : '-mr-[2px]'}"
         class:bg-crafting-tab-highlight={$page.params.type.toLowerCase() === tab.toLowerCase()}
         class:border-b-2={$page.params.type.toLowerCase() !== tab.toLowerCase()}
         href="/market/browser/{$page.params.server}/{tab.toLowerCase()}/{$page.params.category}/1{$page.url.search}"
@@ -36,7 +70,7 @@
     <div class="grow border-b-2 border-stone-500"></div>
   </div>
   <div
-    class="flex border-2 border-t-0 border-stone-500 pt-6 pl-4 grid-cols-[minmax(300px,350px),1fr] grid-rows-[3rem,1fr] flex-col gap-6 overflow-y-auto bg-cover bg-center bg-no-repeat sm:grid"
+    class="flex grid-cols-[minmax(300px,350px),1fr] grid-rows-[3rem,1fr] flex-col gap-6 overflow-y-auto border-2 border-t-0 border-stone-500 bg-cover bg-center bg-no-repeat pl-4 pt-6 sm:grid"
   >
     <div class="row-span-full grid grid-cols-1 grid-rows-[subgrid]">
       <Search
@@ -49,14 +83,14 @@
     <div class="row-span-full flex h-full w-full grid-rows-[subgrid] flex-col sm:grid">
       <div class="row-start-1 flex flex-nowrap place-items-center justify-between">
         <div
-          class="bg-filter flex aspect-square h-full place-content-center place-items-center bg-contain bg-center bg-no-repeat px-2"
+          class="flex aspect-square h-full place-content-center place-items-center bg-filter bg-contain bg-center bg-no-repeat px-2"
         >
           <!-- Open the modal using ID.showModal() method -->
           <button class="" on:click={() => filterModal.showModal()}>
             <img src={replaceLynshineSrc('/lyshineui/images/icons/misc/icon_mapfilter.png')} class="" alt="" />
           </button>
           <dialog bind:this={filterModal} class="modal animate-none rounded-none">
-            <form method="GET" on:submit={() => filterModal.close()} action={$page.url.href}>
+            <form method="GET" on:submit|preventDefault={handleSubmit} action={$page.url.href}>
               <div
                 class="modal-box w-[600px] max-w-[700px] animate-none overflow-visible rounded-none bg-transparent bg-frame-2023 bg-[length:225%] bg-[left_-7px_top_-10px] bg-no-repeat"
               >
@@ -69,13 +103,13 @@
                     <div class="flex w-full justify-around gap-2">
                       <button
                         type="reset"
-                        class="bg-primary-button hover:bg-primary-button-focus h-14 w-64 bg-contain bg-center bg-no-repeat"
+                        class="h-14 w-64 bg-primary-button bg-contain bg-center bg-no-repeat hover:bg-primary-button-focus"
                       >
                         Clear All
                       </button>
                       <button
                         type="submit"
-                        class="bg-primary-button hover:bg-primary-button-focus h-14 w-64 bg-contain bg-center bg-no-repeat"
+                        class="h-14 w-64 bg-primary-button bg-contain bg-center bg-no-repeat hover:bg-primary-button-focus"
                       >
                         Apply
                       </button>
@@ -109,7 +143,7 @@
                 ?.replace('[server]', $page.params.server)
                 .replace('[category]', $page.params.category)
                 .replace('[page]', (+$page.params.page - 1).toString())
-                .replace('[type]', $page.params.type) + $page.url.search}
+                .replace('[type]', $page.params.type) + search}
               class="flex h-full w-full place-items-center"
             >
               <img
@@ -127,7 +161,7 @@
                 ?.replace('[server]', $page.params.server)
                 .replace('[category]', $page.params.category)
                 .replace('[page]', (+$page.params.page + 1).toString())
-                .replace('[type]', $page.params.type) + $page.url.search}
+                .replace('[type]', $page.params.type) + search}
               class="flex h-full w-full place-items-center"
             >
               <img

@@ -6,7 +6,7 @@ inject({ mode: dev ? 'development' : 'production' });
 
 export const load = (async ({ setHeaders }) => {
     setHeaders({
-        'cache-control': "max-age=9000"
+        'cache-control': "public,max-age=9000"
     })
     return {};
 }) satisfies LayoutLoad;

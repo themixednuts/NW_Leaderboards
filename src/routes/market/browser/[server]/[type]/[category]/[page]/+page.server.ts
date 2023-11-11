@@ -78,7 +78,9 @@ export const load = (async ({ params: { server, category, page, type }, url: { s
 
     if (sort) {
         let sorted = SORT_MAP[sort as keyof typeof SORT_MAP]
-        query = MarketBrowserQuery(`ORDER BY ${sorted}`)
+        console.log("sorted", sorted)
+        if (sorted)
+            query = MarketBrowserQuery(`ORDER BY ${sorted}`)
     }
 
     console.log(args, SORT_MAP[sort as keyof typeof SORT_MAP])
