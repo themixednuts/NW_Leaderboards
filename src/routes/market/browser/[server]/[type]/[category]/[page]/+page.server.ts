@@ -14,12 +14,13 @@ const browserType = {
     sell: 0,
     buy: 1,
 }
-// export const config: Config = {
-//     isr: {
-//         expiration: 3600,
-//         allowQuery: ['family', 'group', 'item', 'sort', 'price_min', 'price_max', 'gearscore_min', 'gearscore_max', 'perks']
-//     },
-// }
+export const config: Config = {
+    runtime: 'edge'
+    // isr: {
+    //     expiration: 3600,
+    //     allowQuery: ['family', 'group', 'item', 'sort', 'price_min', 'price_max', 'gearscore_min', 'gearscore_max', 'perks']
+    // },
+}
 
 type SortBy = "price_asc" | "price_desc" | "name_asc" | "name_desc" | "tier_asc" | "tier_desc" | "gs_asc" | "gs_desc" | "perks_asc" | "perks_desc" | "avail_asc" | "avail_desc" | "gem_asc" | "gem_desc" | "exp_asc" | "exp_desc"
 const SORT_MAP: { [k in SortBy]: string } = {
@@ -41,7 +42,11 @@ const SORT_MAP: { [k in SortBy]: string } = {
     "exp_desc": 'expirationSec DESC',
 }
 
-export const load = (async ({ params: { server, category, page, type }, url: { searchParams } }) => {
+export const load = (async ({ params: { server, category, page, type }, url: { searchParams }, setHeaders }) => {
+
+    setHeaders({
+        'cache-controle': "max-age=60"
+    })
     const family = searchParams.get('family')?.toLowerCase() || 'all'
     const group = searchParams.get('group')?.toLowerCase() || 'all'
     const sort = (searchParams.get('sort')?.toLowerCase()) as SortBy
