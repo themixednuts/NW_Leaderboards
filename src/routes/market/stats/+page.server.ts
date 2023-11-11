@@ -2,7 +2,11 @@ import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
 import { error } from '@sveltejs/kit';
 
-export const load = (async ({ fetch }) => {
+export const load = (async ({ fetch, setHeaders }) => {
+
+    // setHeaders({
+    //     'cache-control': "max-age=9000"
+    // })
 
     let serverReq
     try {
@@ -107,7 +111,7 @@ export const load = (async ({ fetch }) => {
                 marketcaps: res[0].rows,
                 catergoryVolume: res[1].rows as unknown as { TradingCategory: string, count: number, server: string }[],
             })),
-            stats: stats.then(res => res.rows as unknown as {id: string, price: number, iconPath: string, server: string, perks: string, category: 'price' | 'quantity' | 'unique' | 'tradingpost', name: string, gearScore: number, rarity: number, value: number, fallback: number | null}[])
+            stats: stats.then(res => res.rows as unknown as { id: string, price: number, iconPath: string, server: string, perks: string, category: 'price' | 'quantity' | 'unique' | 'tradingpost', name: string, gearScore: number, rarity: number, value: number, fallback: number | null }[])
         },
         servers: servers.servers,
     };

@@ -2,7 +2,11 @@ import { db } from '$lib/server/db';
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = async ({ params: { id, server } }) => {
+export const GET: RequestHandler = async ({ params: { id, server }, setHeaders }) => {
+
+    setHeaders({
+        'cache-control': "max-age=9000"
+    })
 
     const query = `
     --explain query plan
@@ -45,7 +49,7 @@ export const GET: RequestHandler = async ({ params: { id, server } }) => {
     const avgPrice = totalPrice / totalQuantity;
 
     const priceStdDev = Math.sqrt(
-        results.reduce((total, item) => item.quantity * Math.pow(item.price - avgPrice,2) + total, 0) / totalQuantity
+        results.reduce((total, item) => item.quantity * Math.pow(item.price - avgPrice, 2) + total, 0) / totalQuantity
     );
 
     const priceUpperBound = avgPrice + n * priceStdDev;

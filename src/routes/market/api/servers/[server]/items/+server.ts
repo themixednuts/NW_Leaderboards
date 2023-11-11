@@ -2,7 +2,11 @@ import { db } from '$lib/server/db';
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = async ({ params: { server } }) => {
+export const GET: RequestHandler = async ({ params: { server }, setHeaders }) => {
+
+    setHeaders({
+        'cache-control': "max-age=9000"
+    })
 
     const query = `
     --explain query plan

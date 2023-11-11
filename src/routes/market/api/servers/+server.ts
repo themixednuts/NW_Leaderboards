@@ -2,16 +2,21 @@ import type { RequestHandler } from './$types';
 import { db } from '$lib/server/db';
 import { error, json } from '@sveltejs/kit';
 
-export const GET: RequestHandler = async () => {
+export const GET: RequestHandler = async ({ setHeaders }) => {
+
+    setHeaders({
+        'cache-control': "max-age=9000"
+    })
+
     let result
     let startTime = performance.now()
     try {
-    result = await db.execute(`
+        result = await db.execute(`
     -- EXPLAIN QUERY PLAN
     SELECT server
     FROM server_metadata
     `)
-    } catch(e){
+    } catch (e) {
         console.log(e)
         throw error(500, "Incorrect Request")
     }

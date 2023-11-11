@@ -2,13 +2,18 @@ import { LEADERBOARD_ID_MAP, LEADERBOARD_DATA, type LeaderboardDefinition } from
 import { error, redirect } from '@sveltejs/kit'
 import type { LayoutLoad } from './$types'
 
-export const load = (async ({ route, fetch, params }) => {
+export const load = (async ({ route, setHeaders, params }) => {
+
+  setHeaders({
+    'cache-control': "max-age=9000"
+  })
+
   const validSeasons = ['q1', 's1', 's2', 's3']
   const currentSeason = validSeasons.includes(params.season || '')
     ? params.season || validSeasons.at(-1)
     : validSeasons.at(-1)
 
-    //@ts-expect-error
+  //@ts-expect-error
   if (route.id === '/') throw redirect(301, '/lb')
 
   let filter = 'CharacterLeaderboard' as 'CharacterLeaderboard' | 'CompanyLeaderboard' | 'FactionLeaderboard'
