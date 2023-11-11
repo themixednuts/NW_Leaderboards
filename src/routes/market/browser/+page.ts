@@ -3,7 +3,7 @@ import type { PageLoad } from './$types';
 export const load = (async ({ fetch, setHeaders }) => {
 
     setHeaders({
-        'cache-control': "public,max-age=9000"
+        'cache-control': "public,s-maxage=9000"
     })
 
     const results = fetch('/market/api/servers')

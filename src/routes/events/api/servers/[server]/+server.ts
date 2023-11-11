@@ -5,7 +5,7 @@ import { json } from '@sveltejs/kit';
 export const GET: RequestHandler = async ({ params: { server }, setHeaders }) => {
 
     setHeaders({
-        'cache-control': "public,max-age=9000"
+        'cache-control': "public,s-maxage=9000"
     })
 
     const query = 'SELECT * FROM events WHERE server = :server'

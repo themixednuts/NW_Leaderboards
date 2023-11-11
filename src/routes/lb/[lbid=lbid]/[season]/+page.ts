@@ -5,7 +5,7 @@ import type { LEADERBOARD_ID_MAP } from '$lib/leaderboard/leaderboardmap'
 export const load = (async ({ fetch, params: { lbid, season }, setHeaders }) => {
 
   setHeaders({
-    'cache-control': "public,max-age=9000"
+    'cache-control': "public,s-maxage=9000"
   })
 
   const validSeasons = ['q1', 's1', 's2', 's3']

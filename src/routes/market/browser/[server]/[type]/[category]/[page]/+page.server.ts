@@ -45,7 +45,7 @@ const SORT_MAP: { [k in SortBy]: string } = {
 export const load = (async ({ params: { server, category, page, type }, url: { searchParams }, setHeaders }) => {
 
     setHeaders({
-        'cache-control': "public,max-age=9000"
+        'cache-control': "public,s-maxage=9000"
     })
 
     const family = searchParams.get('family')?.toLowerCase() || 'all'
