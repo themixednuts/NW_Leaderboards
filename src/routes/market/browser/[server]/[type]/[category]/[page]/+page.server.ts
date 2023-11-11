@@ -14,12 +14,12 @@ const browserType = {
     sell: 0,
     buy: 1,
 }
-export const config: Config = {
-    isr: {
-        expiration: 3600,
-        allowQuery: ['family', 'group', 'item', 'sort', 'price_min', 'price_max', 'gearscore_min', 'gearscore_max', 'perks']
-    },
-}
+// export const config: Config = {
+//     isr: {
+//         expiration: 3600,
+//         allowQuery: ['family', 'group', 'item', 'sort', 'price_min', 'price_max', 'gearscore_min', 'gearscore_max', 'perks']
+//     },
+// }
 
 type SortBy = "price_asc" | "price_desc" | "name_asc" | "name_desc" | "tier_asc" | "tier_desc" | "gs_asc" | "gs_desc" | "perks_asc" | "perks_desc" | "avail_asc" | "avail_desc" | "gem_asc" | "gem_desc" | "exp_asc" | "exp_desc"
 const SORT_MAP: { [k in SortBy]: string } = {
