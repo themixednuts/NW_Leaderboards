@@ -2,12 +2,8 @@ import { db } from '$lib/server/db';
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = async ({ params: { item }, setHeaders }) => {
+export const GET: RequestHandler = async ({ params: { item } }) => {
 
-    setHeaders({
-        'cache-control': "max-age=9000"
-    })
-    
     const query = `
     --explain query plan
     SELECT ItemID as id, locale.text as name, TradingCategory, TradingFamily, TradingGroup

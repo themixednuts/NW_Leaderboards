@@ -2,11 +2,7 @@ import { LEADERBOARD_ID_MAP, LEADERBOARD_DATA, type LeaderboardDefinition } from
 import { error, redirect } from '@sveltejs/kit'
 import type { LayoutLoad } from './$types'
 
-export const load = (async ({ route, setHeaders, params }) => {
-
-  setHeaders({
-    'cache-control': "max-age=9000"
-  })
+export const load = (async ({ route, params }) => {
 
   const validSeasons = ['q1', 's1', 's2', 's3']
   const currentSeason = validSeasons.includes(params.season || '')

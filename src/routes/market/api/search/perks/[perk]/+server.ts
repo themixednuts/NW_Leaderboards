@@ -2,11 +2,7 @@ import { db } from '$lib/server/db';
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = async ({ params: { perk }, url: { searchParams }, setHeaders }) => {
-
-    setHeaders({
-        'cache-control': "max-age=9000"
-    })
+export const GET: RequestHandler = async ({ params: { perk }, url: { searchParams } }) => {
 
     const isGem = searchParams.get('gem') || ''
 

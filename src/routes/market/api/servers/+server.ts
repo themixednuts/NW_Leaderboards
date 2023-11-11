@@ -2,11 +2,7 @@ import type { RequestHandler } from './$types';
 import { db } from '$lib/server/db';
 import { error, json } from '@sveltejs/kit';
 
-export const GET: RequestHandler = async ({ setHeaders }) => {
-
-    setHeaders({
-        'cache-control': "max-age=9000"
-    })
+export const GET: RequestHandler = async ({ }) => {
 
     let result
     let startTime = performance.now()

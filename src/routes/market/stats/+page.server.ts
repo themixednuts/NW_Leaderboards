@@ -2,11 +2,7 @@ import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
 import { error } from '@sveltejs/kit';
 
-export const load = (async ({ fetch, setHeaders }) => {
-
-    // setHeaders({
-    //     'cache-control': "max-age=9000"
-    // })
+export const load = (async ({ fetch }) => {
 
     let serverReq
     try {
