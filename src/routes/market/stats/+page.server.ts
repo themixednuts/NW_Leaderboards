@@ -4,53 +4,6 @@ import { error } from '@sveltejs/kit';
 
 export const load = (async ({ fetch }) => {
 
-    const test = `
-    EXPLAIN QUERY PLAN
-    WITH CTE AS (
-      SELECT o.*, COALESCE (weapon.IconPath, armor.IconPath, instruments.IconPath, master.IconPath) AS iconPath, locale.text
-      FROM orders o
-      LEFT JOIN MasterItemDefinitions AS master ON master.ItemID = o.itemKey COLLATE NOCASE
-      LEFT JOIN ArmorAppearances AS armor ON armor.ItemID = master.ArmorAppearanceM COLLATE NOCASE
-      LEFT JOIN WeaponAppearanceDefinitions AS weapon ON weapon.WeaponAppearanceID = master.WeaponAppearanceOverride COLLATE NOCASE
-      LEFT JOIN InstrumentsAppearanceDefinitions AS instruments ON instruments.WeaponAppearanceID = master.WeaponAppearanceOverride COLLATE NOCASE
-      LEFT JOIN locale_en_us as locale ON locale.key = SUBSTR(master.Name, 2) COLLATE NOCASE
-      WHERE o.sessionDate IN (SELECT sessionDate FROM server_metadata)
-      AND contractType = 1
-    )
-
-   
-    SELECT 'Highest Price' AS category, itemKey AS id, text AS name, MAX(price) / 100 AS value, perks, gearScore, iconPath, rarity, server   
-    FROM CTE
-    GROUP BY server
-
-    UNION ALL
-
-    SELECT 'Most Quantity' AS category, itemKey AS id, text AS name, SUM(quantity) AS value, perks, gearScore, iconPath, rarity, server
-    FROM CTE
-    GROUP BY server
-
-    -- UNION ALL
-
-    -- SELECT 'Most Uniquely Listed Item' AS category, 
-    --        itemKey AS id, 
-    --        text AS name,
-    --        MAX(item_count) AS value,
-    --        perks,
-    --        gearScore,
-    --        iconPath,
-    --        rarity
-    -- FROM (
-    --     SELECT itemKey, text, COUNT(*) AS item_count, perks, gearScore, iconPath , rarity
-    --     FROM CTE
-    --     GROUP BY itemKey
-    -- ) AS item_counts
-
-    --UNION ALL
-
-    --SELECT 'Trading Post With Most Listings' AS category, NULL AS id, location AS name, COUNT(*) AS value, NULL AS perks, NULL AS gearScore, NULL AS iconPath, NULL rarity, server
-    --FROM CTE
-    --GROUP BY server
-    `
     let serverReq
     try {
         serverReq = await fetch('/market/api/servers')
@@ -69,11 +22,10 @@ export const load = (async ({ fetch }) => {
     GROUP BY s.server;
     `
 
-    const itemResults = []
     const categoryPerServer_query: string[] = []
     const normalizedServerList = servers.servers.sort()
     for (const server of normalizedServerList) {
-        const query = `
+        let query = `
         SELECT
         '${server}' AS server,
         TradingCategory,
@@ -82,33 +34,80 @@ export const load = (async ({ fetch }) => {
         GROUP BY TradingCategory
         `
         categoryPerServer_query.push(query)
-        // itemResults.push({sql: test, args: {server}})
+
     }
+    const query = `
+    SELECT
+        CASE
+            WHEN o.id = metadata.maxprice_id THEN 'price'
+            WHEN o.id = metadata.maxquantity_id THEN 'quantity'
+            WHEN o.id = metadata.mostlisted_id THEN 'unique'
+            WHEN o.id = metadata.mostusedtp_id THEN 'tradingpost'
+            ELSE NULL
+        END AS category,
+        CASE
+            WHEN o.id = metadata.mostusedtp_id THEN null
+            ELSE o.itemkey
+        END AS id,
+        CASE
+            WHEN o.id = metadata.mostusedtp_id THEN o.location
+            ELSE locale.text
+        END AS name,
+        CASE
+            WHEN o.id = metadata.maxprice_id THEN metadata.maxprice_value / 100
+            WHEN o.id = metadata.maxquantity_id THEN metadata.maxquantity_value
+            WHEN o.id = metadata.mostusedtp_id THEN metadata.mostusedtp_value
+            WHEN o.id = metadata.mostlisted_id THEN metadata.mostlisted_value
+            ELSE NULL
+        END AS value,
+        CASE
+            WHEN o.id = metadata.mostusedtp_id THEN null
+            ELSE o.rarity
+        END AS rarity,
+        CASE
+            WHEN o.id = metadata.mostusedtp_id THEN null
+            ELSE o.gearScore
+        END AS gearScore,
+        CASE
+            WHEN o.id = metadata.mostusedtp_id THEN null
+            ELSE o.perks
+        END AS perks,
+        CASE
+            WHEN o.id = metadata.mostusedtp_id THEN null
+            ELSE COALESCE (weapon.IconPath, armor.IconPath, instruments.IconPath, master.IconPath)
+        END AS iconPath,
+        CASE
+            WHEN o.id = metadata.maxquantity_id or o.id = metadata.mostlisted_id THEN
+                CASE
+                    WHEN metadata.maxquantity_id = metadata.mostlisted_id THEN metadata.mostlisted_value
+                    ELSE NULL
+                END
+            ELSE NULL
+        END as fallback,
+        o.server
+    FROM orders o
+    INNER JOIN server_metadata as metadata ON metadata.sessionDate = o.sessionDate
+    LEFT JOIN MasterItemDefinitions AS master ON master.ItemID = o.itemKey COLLATE NOCASE
+    LEFT JOIN ArmorAppearances AS armor ON armor.ItemID = master.ArmorAppearanceM COLLATE NOCASE
+    LEFT JOIN WeaponAppearanceDefinitions AS weapon ON weapon.WeaponAppearanceID = master.WeaponAppearanceOverride COLLATE NOCASE
+    LEFT JOIN InstrumentsAppearanceDefinitions AS instruments ON instruments.WeaponAppearanceID = master.WeaponAppearanceOverride COLLATE NOCASE
+    LEFT JOIN locale_en_us as locale ON locale.key = SUBSTR(master.Name, 2) COLLATE NOCASE
+    WHERE o.id IN (metadata.maxprice_id, metadata.maxquantity_id, metadata.mostusedtp_id, metadata.mostlisted_id)
+`
+
     const combined_category_query = categoryPerServer_query.join(' UNION ALL ')
-
-
     let startTime = performance.now()
+    const stats = db.execute(query)
     const results = db.batch([marketcap_query, combined_category_query], 'read')
-    // const items = await db.execute(test)
-    // console.log(items.rows)
     console.log('db timer - Market Cap Per Server: ', performance.now() - startTime, 'ms')
-
-    startTime = performance.now()
-    // const test_result = await db.execute(test)
-    console.log(performance.now() - startTime)
     // console.log(test_result.rows)
-
-    // const server_promise = Promise.all(servers.servers.map(server => fetch(`/market/api/items/${server.toLowerCase()}`).then((res) => res.json())))
-
     return {
         streamed: {
             items: results.then(res => ({
                 marketcaps: res[0].rows,
                 catergoryVolume: res[1].rows as unknown as { TradingCategory: string, count: number, server: string }[],
-                // categories: server_promise
-
             })),
-            // stats: items.then(res => res.map(row => row.rows) as any[])
+            stats: stats.then(res => res.rows as unknown as {id: string, price: number, iconPath: string, server: string, perks: string, category: 'price' | 'quantity' | 'unique' | 'tradingpost', name: string, gearScore: number, rarity: number, value: number, fallback: number | null}[])
         },
         servers: servers.servers,
     };

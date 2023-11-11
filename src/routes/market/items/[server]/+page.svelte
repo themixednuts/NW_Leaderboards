@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { browser } from '$app/environment'
   import { page } from '$app/stores'
   import Search from '$lib/market/search.svelte'
   import { replaceLynshineSrc } from '$lib/utils'
@@ -19,7 +18,7 @@
 
     <Search link="/market/items/{$page.params.server}/$id" type="masteritem"></Search>
   </div>
-  {#if browser}
+  <!-- {#if browser}
     {#await data.streamed.items}
       <div class="flex place-content-center">
         <div class="loading loading-bars"></div>
@@ -77,5 +76,5 @@
     {:catch e}
       {e}
     {/await}
-  {/if}
+  {/if} -->
 </div>

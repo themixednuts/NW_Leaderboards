@@ -3,9 +3,8 @@
   import { Chart, type ChartDataset } from 'chart.js/auto'
   import type { MarketData } from '$lib/market.types'
   import 'chartjs-adapter-date-fns'
-  import type { PageData } from '../../routes/market/items/[server]/[id]/$types'
 
-  export let itemData: PageData['itemData']
+  export let itemData: MarketData[]
   export let title: string
 
   const formatter = new Intl.NumberFormat(undefined, {
