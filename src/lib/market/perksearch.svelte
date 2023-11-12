@@ -85,7 +85,7 @@
   {#if !searching}
     <img
       src="/lyshineui/images/socialpane/icon_magnifying_glass.png"
-      alt=""
+      alt="magnifying glass"
       class="pointer-events-none absolute left-2 top-1/2 aspect-square -translate-y-1/2"
     />
   {:else}

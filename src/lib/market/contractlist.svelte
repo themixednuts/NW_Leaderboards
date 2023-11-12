@@ -4,8 +4,7 @@
   import { GetRomanFromNumber, ItemPerkScaling, getLocalizedDate, replaceLynshineSrc } from '$lib/utils'
   import { formatDistance, addSeconds, isPast } from 'date-fns'
   import { goto } from '$app/navigation'
-  import type { Action } from 'svelte/action'
-  import { tr } from 'date-fns/locale'
+  import type { Action } from 'svelte/action' 
 
   export let items: Promise<(MarketData & { currentExpiration?: string })[]>
   $: sort = $page.url.searchParams.get('sort')

@@ -15,5 +15,17 @@ export const GET: RequestHandler = async ({ params: { server }, setHeaders }) =>
             server
         }
     })
-    return json(eventdata.rows)
+
+    const updatedRows = eventdata.rows.map((row) => {
+        // Assuming row.defenderCrestData is a string
+        const defCrestData = row.defenderCrestData as string;
+        const attkCrestData = row.attackerCrestData as string;
+        return {
+            ...row,
+            defenderCrestData: defCrestData ? JSON.parse(defCrestData) : defCrestData,
+            attackerCrestData: attkCrestData ? JSON.parse(attkCrestData) : attkCrestData
+        };
+    });
+    // console.log(updatedRows)
+    return json(updatedRows)
 };

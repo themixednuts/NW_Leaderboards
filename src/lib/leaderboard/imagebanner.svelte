@@ -40,7 +40,7 @@
     : 'lg:hidden'}  rounded-box p-2">
   <div class="rounded-box relative max-h-fit overflow-clip border-2 border-base-100 bg-black">
     <a href="/lb" data-sveltekit-reload>
-      <img
+      <enhanced:img
         src={`${assets}${bannerMap[$categories.firstlevelcategory || 'Mutated Expeditions']}`}
         alt=""
         class="max-h-full w-full object-cover object-top" />
