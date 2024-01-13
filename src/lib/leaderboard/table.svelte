@@ -6,9 +6,10 @@
   export let id: keyof typeof LEADERBOARD_ID_MAP
   export let season: string
 
+  console.log(table)
   const { FirstLevelCategory, SecondLevelCategory, Category } = LEADERBOARD_ID_MAP[id]
 
-  const pullDate = table[0].date
+  const pullDate = table?.[0].date
 
   let data: LeaderboardDefinition
   //@ts-expect-error

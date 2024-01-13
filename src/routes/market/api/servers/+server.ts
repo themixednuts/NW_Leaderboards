@@ -20,7 +20,7 @@ export const GET: RequestHandler = async ({ setHeaders }) => {
     `)
     } catch (e) {
         console.log(e)
-        throw error(500, "Incorrect Request")
+        error(500, "Incorrect Request");
     }
     console.log('db timer - Servers: ', performance.now() - startTime, ' ms')
     // console.log(result.rows)

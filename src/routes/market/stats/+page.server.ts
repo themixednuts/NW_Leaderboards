@@ -13,7 +13,7 @@ export const load = (async ({ fetch, setHeaders }) => {
         serverReq = await fetch('/market/api/servers')
     } catch (e) {
         console.log(e)
-        throw error(500)
+        error(500);
     }
     const servers = await serverReq.json() as { servers: string[] }
 

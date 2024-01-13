@@ -4,19 +4,19 @@ import type { LayoutLoad } from './$types'
 
 export const load = (async ({ route, params }) => {
 
-  const validSeasons = ['q1', 's1', 's2', 's3']
+  const validSeasons = ['q1', 's1', 's2', 's3', 's4']
   const currentSeason = validSeasons.includes(params.season || '')
     ? params.season || validSeasons.at(-1)
     : validSeasons.at(-1)
 
   //@ts-expect-error
-  if (route.id === '/') throw redirect(301, '/lb')
+  if (route.id === '/') redirect(301, '/lb');
 
   let filter = 'CharacterLeaderboard' as 'CharacterLeaderboard' | 'CompanyLeaderboard' | 'FactionLeaderboard'
 
   const { lbid } = params
 
-  if (lbid && !(lbid in LEADERBOARD_ID_MAP)) throw error(404)
+  if (lbid && !(lbid in LEADERBOARD_ID_MAP)) error(404);
 
   if (lbid) {
     const { FirstLevelCategory, Category, SecondLevelCategory } =

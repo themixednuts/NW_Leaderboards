@@ -237,7 +237,8 @@
     {#await data.streamed.json}
       <span class="loading loading-bars loading-lg place-self-center"></span>
     {:then table}
-      <Table table={table.data} {id} season={$page.params.season} />
+      <!-- {@debug table} -->
+      <Table {table} {id} season={$page.params.season} />
     {:catch e}
       <div class="col-span-full row-span-2 h-full w-full text-center lg:col-span-3 lg:row-span-3">
         <h1 class="h-full w-full text-3xl">No data available</h1>

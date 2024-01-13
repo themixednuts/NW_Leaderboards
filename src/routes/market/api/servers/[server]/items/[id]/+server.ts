@@ -36,10 +36,10 @@ export const GET: RequestHandler = async ({ params: { id, server }, setHeaders }
 
     } catch (e) {
         console.log(e)
-        throw error(500)
+        error(500);
     }
     // console.log(res.rows)
-    if (!res.rows.length) throw error(400, 'Bad Request')
+    if (!res.rows.length) error(400, 'Bad Request');
 
     const n = 1;
     //@ts-ignore
