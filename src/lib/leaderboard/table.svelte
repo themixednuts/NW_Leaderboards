@@ -6,10 +6,9 @@
   export let id: keyof typeof LEADERBOARD_ID_MAP
   export let season: string
 
-  console.log(table)
   const { FirstLevelCategory, SecondLevelCategory, Category } = LEADERBOARD_ID_MAP[id]
 
-  const pullDate = table?.[0].date
+  // const pullDate = table?.[0].date
 
   let data: LeaderboardDefinition
   //@ts-expect-error
@@ -247,10 +246,10 @@
         {/each}
       {/if}
     </div>
-    <div class="flex justify-center text-sm md:text-base">
+    <!-- <div class="flex justify-center text-sm md:text-base">
       {season.replace('s', 'Season: ').replace('q', 'Quarter: ')} - Date Pulled:
       {getDateAndTime(pullDate)}
-    </div>
+    </div> -->
   {:else}
     <div>No Table</div>
   {/if}

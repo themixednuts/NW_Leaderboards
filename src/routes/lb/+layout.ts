@@ -1,14 +1,13 @@
 import { LEADERBOARD_ID_MAP, LEADERBOARD_DATA, type LeaderboardDefinition } from '$lib/leaderboard/leaderboardmap'
 import { error, redirect } from '@sveltejs/kit'
 import type { LayoutLoad } from './$types'
+import { validSeasons } from './utils'
 
 export const load = (async ({ route, params }) => {
 
-  const validSeasons = ['q1', 's1', 's2', 's3', 's4']
-  const currentSeason = validSeasons.includes(params.season || '')
+  const currentSeason = validSeasons.includes(params.season!)
     ? params.season || validSeasons.at(-1)
     : validSeasons.at(-1)
-
   //@ts-expect-error
   if (route.id === '/') redirect(301, '/lb');
 

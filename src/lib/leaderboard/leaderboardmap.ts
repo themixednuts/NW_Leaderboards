@@ -720,152 +720,152 @@ export const LEADERBOARD_DATA = {
   },
   'Vs. Players': {
     'Outpost Rush <img src="/lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan.png" scale="1.0" xPadding="2" yOffset="2"></img>':
-      {
-        Score: [
-          {
-            LeaderboardDefinitionId: 'top_outpost_rush_score',
-            DisplayName: 'Regional',
-            Value: 'Score',
-            CharacterLeaderboard: true,
-            GroupLeaderboard: false,
-            CompanyLeaderboard: false,
-            FactionLeaderboard: false,
-            FirstLevelCategory: 'Vs. Players',
-            Category:
-              'Outpost Rush <img src="/lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan.png" scale="1.0" xPadding="2" yOffset="2"></img>',
-            SecondLevelCategory: 'Score',
-            CategoryDescription:
-              '<img src="lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan" scale="2.0" xPadding="2" yOffset="5"></img> <font color="#ffffff"><font face="lyshineui/fonts/Nimbus_Regular.font">Regional Leaderboard</font></font>\\n\\nYour Outpost Rush Score is the top score you\'ve received in a match.',
-            Rotation: ['Month', 'Season', 'Month', 'Season'],
-          },
-        ],
-        Heals: [
-          {
-            LeaderboardDefinitionId: 'top_outpost_rush_heals',
-            DisplayName: 'Regional',
-            Value: 'Heals',
-            CharacterLeaderboard: true,
-            GroupLeaderboard: false,
-            CompanyLeaderboard: false,
-            FactionLeaderboard: false,
-            FirstLevelCategory: 'Vs. Players',
-            Category:
-              'Outpost Rush <img src="/lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan.png" scale="1.0" xPadding="2" yOffset="2"></img>',
-            SecondLevelCategory: 'Heals',
-            CategoryDescription:
-              '<img src="lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan" scale="2.0" xPadding="2" yOffset="5"></img> <font color="#ffffff"><font face="lyshineui/fonts/Nimbus_Regular.font">Regional Leaderboard</font></font>',
-            Rotation: ['Month', 'Season', 'Month', 'Season'],
-          },
-        ],
-        'Player Kills': [
-          {
-            LeaderboardDefinitionId: 'top_outpost_rush_kills',
-            DisplayName: 'Regional',
-            Value: 'Kills',
-            CharacterLeaderboard: true,
-            GroupLeaderboard: false,
-            CompanyLeaderboard: false,
-            FactionLeaderboard: false,
-            FirstLevelCategory: 'Vs. Players',
-            Category:
-              'Outpost Rush <img src="/lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan.png" scale="1.0" xPadding="2" yOffset="2"></img>',
-            SecondLevelCategory: 'Player Kills',
-            CategoryDescription:
-              '<img src="lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan" scale="2.0" xPadding="2" yOffset="5"></img> <font color="#ffffff"><font face="lyshineui/fonts/Nimbus_Regular.font">Regional Leaderboard</font></font>',
-            Rotation: ['Month', 'Season', 'Month', 'Season'],
-          },
-        ],
-        'Resources Contributed': [
-          {
-            LeaderboardDefinitionId: 'top_outpost_rush_resource_contributed',
-            DisplayName: 'Regional',
-            Value: 'Contributed',
-            CharacterLeaderboard: true,
-            GroupLeaderboard: false,
-            CompanyLeaderboard: false,
-            FactionLeaderboard: false,
-            FirstLevelCategory: 'Vs. Players',
-            Category:
-              'Outpost Rush <img src="/lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan.png" scale="1.0" xPadding="2" yOffset="2"></img>',
-            SecondLevelCategory: 'Resources Contributed',
-            CategoryDescription:
-              '<img src="lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan" scale="2.0" xPadding="2" yOffset="5"></img> <font color="#ffffff"><font face="lyshineui/fonts/Nimbus_Regular.font">Regional Leaderboard</font></font>',
-            Rotation: ['Month', 'Season', 'Month', 'Season'],
-          },
-        ],
-        'NPC Kills': [
-          {
-            LeaderboardDefinitionId: 'top_outpost_rush_npc_kills',
-            DisplayName: 'Regional',
-            Value: 'Kills',
-            CharacterLeaderboard: true,
-            GroupLeaderboard: false,
-            CompanyLeaderboard: false,
-            FactionLeaderboard: false,
-            FirstLevelCategory: 'Vs. Players',
-            Category:
-              'Outpost Rush <img src="/lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan.png" scale="1.0" xPadding="2" yOffset="2"></img>',
-            SecondLevelCategory: 'NPC Kills',
-            CategoryDescription:
-              '<img src="lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan" scale="2.0" xPadding="2" yOffset="5"></img> <font color="#ffffff"><font face="lyshineui/fonts/Nimbus_Regular.font">Regional Leaderboard</font></font>',
-            Rotation: ['Month', 'Season', 'Month', 'Season'],
-          },
-        ],
-        Wins: [
-          {
-            LeaderboardDefinitionId: 'top_outpost_rush_wins',
-            DisplayName: 'Regional',
-            Value: 'Wins',
-            CharacterLeaderboard: true,
-            GroupLeaderboard: false,
-            CompanyLeaderboard: false,
-            FactionLeaderboard: false,
-            FirstLevelCategory: 'Vs. Players',
-            Category:
-              'Outpost Rush <img src="/lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan.png" scale="1.0" xPadding="2" yOffset="2"></img>',
-            SecondLevelCategory: 'Wins',
-            CategoryDescription:
-              '<img src="lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan" scale="2.0" xPadding="2" yOffset="5"></img> <font color="#ffffff"><font face="lyshineui/fonts/Nimbus_Regular.font">Regional Leaderboard</font></font>',
-            Rotation: ['Month', 'Season', 'Month', 'Season'],
-          },
-        ],
-        'Kill/Death Ratio': [
-          {
-            LeaderboardDefinitionId: 'top_outpost_rush_kill_death_ratio',
-            DisplayName: 'Regional',
-            Value: 'Ratio',
-            CharacterLeaderboard: true,
-            GroupLeaderboard: false,
-            CompanyLeaderboard: false,
-            FactionLeaderboard: false,
-            FirstLevelCategory: 'Vs. Players',
-            Category:
-              'Outpost Rush <img src="/lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan.png" scale="1.0" xPadding="2" yOffset="2"></img>',
-            SecondLevelCategory: 'Kill/Death Ratio',
-            CategoryDescription:
-              '<img src="lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan" scale="2.0" xPadding="2" yOffset="5"></img> <font color="#ffffff"><font face="lyshineui/fonts/Nimbus_Regular.font">Regional Leaderboard</font></font>',
-            Rotation: ['Month', 'Season', 'Month', 'Season'],
-          },
-        ],
-        'Damage Dealt': [
-          {
-            LeaderboardDefinitionId: 'top_outpost_rush_damage_dealt',
-            DisplayName: 'Regional',
-            Value: 'Damage',
-            CharacterLeaderboard: true,
-            GroupLeaderboard: false,
-            CompanyLeaderboard: false,
-            FactionLeaderboard: false,
-            FirstLevelCategory: 'Vs. Players',
-            Category:
-              'Outpost Rush <img src="/lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan.png" scale="1.0" xPadding="2" yOffset="2"></img>',
-            SecondLevelCategory: 'Damage Dealt',
-            CategoryDescription:
-              '<img src="lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan" scale="2.0" xPadding="2" yOffset="5"></img> <font color="#ffffff"><font face="lyshineui/fonts/Nimbus_Regular.font">Regional Leaderboard</font></font>',
-            Rotation: ['Month', 'Season', 'Month', 'Season'],
-          },
-        ],
-      },
+    {
+      Score: [
+        {
+          LeaderboardDefinitionId: 'top_outpost_rush_score',
+          DisplayName: 'Regional',
+          Value: 'Score',
+          CharacterLeaderboard: true,
+          GroupLeaderboard: false,
+          CompanyLeaderboard: false,
+          FactionLeaderboard: false,
+          FirstLevelCategory: 'Vs. Players',
+          Category:
+            'Outpost Rush <img src="/lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan.png" scale="1.0" xPadding="2" yOffset="2"></img>',
+          SecondLevelCategory: 'Score',
+          CategoryDescription:
+            '<img src="lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan" scale="2.0" xPadding="2" yOffset="5"></img> <font color="#ffffff"><font face="lyshineui/fonts/Nimbus_Regular.font">Regional Leaderboard</font></font>\\n\\nYour Outpost Rush Score is the top score you\'ve received in a match.',
+          Rotation: ['Month', 'Season', 'Month', 'Season'],
+        },
+      ],
+      Heals: [
+        {
+          LeaderboardDefinitionId: 'top_outpost_rush_heals',
+          DisplayName: 'Regional',
+          Value: 'Heals',
+          CharacterLeaderboard: true,
+          GroupLeaderboard: false,
+          CompanyLeaderboard: false,
+          FactionLeaderboard: false,
+          FirstLevelCategory: 'Vs. Players',
+          Category:
+            'Outpost Rush <img src="/lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan.png" scale="1.0" xPadding="2" yOffset="2"></img>',
+          SecondLevelCategory: 'Heals',
+          CategoryDescription:
+            '<img src="lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan" scale="2.0" xPadding="2" yOffset="5"></img> <font color="#ffffff"><font face="lyshineui/fonts/Nimbus_Regular.font">Regional Leaderboard</font></font>',
+          Rotation: ['Month', 'Season', 'Month', 'Season'],
+        },
+      ],
+      'Player Kills': [
+        {
+          LeaderboardDefinitionId: 'top_outpost_rush_kills',
+          DisplayName: 'Regional',
+          Value: 'Kills',
+          CharacterLeaderboard: true,
+          GroupLeaderboard: false,
+          CompanyLeaderboard: false,
+          FactionLeaderboard: false,
+          FirstLevelCategory: 'Vs. Players',
+          Category:
+            'Outpost Rush <img src="/lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan.png" scale="1.0" xPadding="2" yOffset="2"></img>',
+          SecondLevelCategory: 'Player Kills',
+          CategoryDescription:
+            '<img src="lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan" scale="2.0" xPadding="2" yOffset="5"></img> <font color="#ffffff"><font face="lyshineui/fonts/Nimbus_Regular.font">Regional Leaderboard</font></font>',
+          Rotation: ['Month', 'Season', 'Month', 'Season'],
+        },
+      ],
+      'Resources Contributed': [
+        {
+          LeaderboardDefinitionId: 'top_outpost_rush_resource_contributed',
+          DisplayName: 'Regional',
+          Value: 'Contributed',
+          CharacterLeaderboard: true,
+          GroupLeaderboard: false,
+          CompanyLeaderboard: false,
+          FactionLeaderboard: false,
+          FirstLevelCategory: 'Vs. Players',
+          Category:
+            'Outpost Rush <img src="/lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan.png" scale="1.0" xPadding="2" yOffset="2"></img>',
+          SecondLevelCategory: 'Resources Contributed',
+          CategoryDescription:
+            '<img src="lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan" scale="2.0" xPadding="2" yOffset="5"></img> <font color="#ffffff"><font face="lyshineui/fonts/Nimbus_Regular.font">Regional Leaderboard</font></font>',
+          Rotation: ['Month', 'Season', 'Month', 'Season'],
+        },
+      ],
+      'NPC Kills': [
+        {
+          LeaderboardDefinitionId: 'top_outpost_rush_npc_kills',
+          DisplayName: 'Regional',
+          Value: 'Kills',
+          CharacterLeaderboard: true,
+          GroupLeaderboard: false,
+          CompanyLeaderboard: false,
+          FactionLeaderboard: false,
+          FirstLevelCategory: 'Vs. Players',
+          Category:
+            'Outpost Rush <img src="/lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan.png" scale="1.0" xPadding="2" yOffset="2"></img>',
+          SecondLevelCategory: 'NPC Kills',
+          CategoryDescription:
+            '<img src="lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan" scale="2.0" xPadding="2" yOffset="5"></img> <font color="#ffffff"><font face="lyshineui/fonts/Nimbus_Regular.font">Regional Leaderboard</font></font>',
+          Rotation: ['Month', 'Season', 'Month', 'Season'],
+        },
+      ],
+      Wins: [
+        {
+          LeaderboardDefinitionId: 'top_outpost_rush_wins',
+          DisplayName: 'Regional',
+          Value: 'Wins',
+          CharacterLeaderboard: true,
+          GroupLeaderboard: false,
+          CompanyLeaderboard: false,
+          FactionLeaderboard: false,
+          FirstLevelCategory: 'Vs. Players',
+          Category:
+            'Outpost Rush <img src="/lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan.png" scale="1.0" xPadding="2" yOffset="2"></img>',
+          SecondLevelCategory: 'Wins',
+          CategoryDescription:
+            '<img src="lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan" scale="2.0" xPadding="2" yOffset="5"></img> <font color="#ffffff"><font face="lyshineui/fonts/Nimbus_Regular.font">Regional Leaderboard</font></font>',
+          Rotation: ['Month', 'Season', 'Month', 'Season'],
+        },
+      ],
+      'Kill/Death Ratio': [
+        {
+          LeaderboardDefinitionId: 'top_outpost_rush_kill_death_ratio',
+          DisplayName: 'Regional',
+          Value: 'Ratio',
+          CharacterLeaderboard: true,
+          GroupLeaderboard: false,
+          CompanyLeaderboard: false,
+          FactionLeaderboard: false,
+          FirstLevelCategory: 'Vs. Players',
+          Category:
+            'Outpost Rush <img src="/lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan.png" scale="1.0" xPadding="2" yOffset="2"></img>',
+          SecondLevelCategory: 'Kill/Death Ratio',
+          CategoryDescription:
+            '<img src="lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan" scale="2.0" xPadding="2" yOffset="5"></img> <font color="#ffffff"><font face="lyshineui/fonts/Nimbus_Regular.font">Regional Leaderboard</font></font>',
+          Rotation: ['Month', 'Season', 'Month', 'Season'],
+        },
+      ],
+      'Damage Dealt': [
+        {
+          LeaderboardDefinitionId: 'top_outpost_rush_damage_dealt',
+          DisplayName: 'Regional',
+          Value: 'Damage',
+          CharacterLeaderboard: true,
+          GroupLeaderboard: false,
+          CompanyLeaderboard: false,
+          FactionLeaderboard: false,
+          FirstLevelCategory: 'Vs. Players',
+          Category:
+            'Outpost Rush <img src="/lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan.png" scale="1.0" xPadding="2" yOffset="2"></img>',
+          SecondLevelCategory: 'Damage Dealt',
+          CategoryDescription:
+            '<img src="lyshineui/images/icons/crossworld/icon_crossworld_identifier_tan" scale="2.0" xPadding="2" yOffset="5"></img> <font color="#ffffff"><font face="lyshineui/fonts/Nimbus_Regular.font">Regional Leaderboard</font></font>',
+          Rotation: ['Month', 'Season', 'Month', 'Season'],
+        },
+      ],
+    },
     'Open World PVP': {
       'Influence Earned': [
         {
@@ -5363,3 +5363,6 @@ export type LeaderboardDefinition = {
   Category?: string
   SecondLevelCategory?: string
 }
+
+
+export type LeaderboardData = typeof LEADERBOARD_DATA
