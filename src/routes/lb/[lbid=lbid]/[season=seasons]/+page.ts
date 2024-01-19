@@ -9,7 +9,7 @@ export const load = (async ({ fetch, params: { lbid, season } }) => {
     redirect(301, `/lb/${lbid}/${validSeasons.at(-1)}`);
   }
 
-  const json = fetch(`https://api.nwlb.info/json/${lbid}/${seasonId}?size=1000`).then((res) => res.json().then(res => res as LeaderboardAPIBoardItem[]))
+  const json = fetch(`https://api.nwlb.info/json/${lbid}/${seasonId}?size=1000`).then((res) => res.json() as unknown as LeaderboardAPIBoardItem[])
 
   return {
     json,

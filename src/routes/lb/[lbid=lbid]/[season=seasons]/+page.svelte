@@ -60,15 +60,15 @@
       {!isNaN(Number(leaderboard.DisplayName))
         ? `${secondlevelcategory}: ${category}, ${leaderboard.DisplayName}`
         : secondlevelcategory === leaderboard.DisplayName
-        ? `${category}: ${secondlevelcategory}`
-        : `${secondlevelcategory}: ${leaderboard.DisplayName}`} - Leaderboard
+          ? `${category}: ${secondlevelcategory}`
+          : `${secondlevelcategory}: ${leaderboard.DisplayName}`} - Leaderboard
     </title>
     <meta
       content={!isNaN(Number(leaderboard.DisplayName))
         ? `${secondlevelcategory}: ${category}, ${leaderboard.DisplayName}`
         : secondlevelcategory === leaderboard.DisplayName
-        ? `${category}: ${secondlevelcategory}`
-        : `${secondlevelcategory}: ${leaderboard.DisplayName}`}
+          ? `${category}: ${secondlevelcategory}`
+          : `${secondlevelcategory}: ${leaderboard.DisplayName}`}
       property="og:title"
     />
     <meta
@@ -122,14 +122,15 @@
     </div>
     {#if leaderboard}
       {@const t = Object.values(LEADERBOARD_DATA[firstlevelcategory][category])
-        //@ts-ignore
+        //@ts-expect-error
         .map((arr) => arr.filter((item) => item.CompanyLeaderboard === true))
         .some((arr) => arr.length)}
       <div class="join col-span-full row-start-1 row-end-2 place-self-center self-end rounded-none">
         <button
-          class="btn join-item btn-xs text-center sm:btn-md"
+          class="btn join-item btn-xs text-center outline outline-transparent sm:btn-md hover:outline-primary"
           disabled={true}
           class:btn-primary={leaderboard['FactionLeaderboard']}
+          class:outline-primary={filter === 'FactionLeaderboard' && !leaderboard.FactionLeaderboard}
           on:pointerup={() => {
             filter = 'FactionLeaderboard'
           }}
@@ -139,7 +140,8 @@
         <button
           class="btn join-item btn-xs text-center outline outline-transparent sm:btn-md hover:outline-primary"
           disabled={!t}
-          class:btn-primary={leaderboard['CompanyLeaderboard'] === true}
+          class:btn-primary={leaderboard['CompanyLeaderboard']}
+          class:outline-primary={filter == 'CompanyLeaderboard' && !leaderboard.CompanyLeaderboard}
           on:pointerup={() => {
             filter = 'CompanyLeaderboard'
           }}
@@ -155,8 +157,9 @@
           {/if}
         </button>
         <button
-          class="join-item btn-xs text-center outline outline-transparent sm:btn-md hover:outline-primary"
-          class:btn-primary={leaderboard['CharacterLeaderboard'] === true}
+          class="btn join-item btn-xs text-center outline outline-transparent sm:btn-md hover:outline-primary"
+          class:btn-primary={leaderboard['CharacterLeaderboard']}
+          class:outline-primary={filter === 'CharacterLeaderboard' && !leaderboard.CharacterLeaderboard}
           on:pointerup={() => {
             filter = 'CharacterLeaderboard'
           }}
@@ -235,7 +238,7 @@
       <Table {table} {id} season={$page.params.season} />
     {:catch e}
       <div class="col-span-full row-span-2 h-full w-full text-center lg:col-span-3 lg:row-span-3">
-        <h1 class="h-full w-full text-3xl">No data available</h1>
+        <h1 class="h-full w-full text-3xl">{e}</h1>
       </div>
     {/await}
   </div>
