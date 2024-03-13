@@ -3,28 +3,32 @@
 @tailwind utilities;
 
 .no-scrollbar {
-    -ms-overflow-style: none;
-    /* IE and Edge */
-    scrollbar-width: none;
-    /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 .no-scrollbar::-webkit-scrollbar {
-    display: none;
-    /* Chrome, Safari, Opera*/
+  display: none;
+  /* Chrome, Safari, Opera*/
 }
 
+* {
+  min-width: 0;
+  box-sizing: border-box;
+}
 
 /* Chrome, Edge, and Safari */
 *::-webkit-scrollbar {
-    @apply bg-base-300;
-    width: 0.2rem;
+  @apply bg-base-300;
+  width: 0.2rem;
 }
 
 *::-webkit-scrollbar-track {
-    @apply bg-base-300;
+  @apply bg-base-300;
 }
 
 *::-webkit-scrollbar-thumb {
-    @apply bg-accent;   
+  @apply bg-accent;
 }

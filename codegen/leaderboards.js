@@ -17,7 +17,6 @@ stream
   .pipe(csvParser())
   .on('data', (row) => {
     const convertedRow = {}
-
     for (const key in row) {
       if (row.hasOwnProperty(key)) {
         const value = row[key]
@@ -61,7 +60,7 @@ const xmlDoc = parser.parseFromString(localizationFile, 'application/xml')
 function resolveKey(string) {
   const newString = string.replace('@', '')
   const key = xmlDoc.querySelector(`[key="${newString}"]`)
-  return key.textContent
+  return key?.textContent
 }
 
 function addPNG(string) {
@@ -182,7 +181,7 @@ await writeFile(
   writePath,
   `export const LEADERBOARD_DATA = ${JSON.stringify(LEADERBOARD_DATA, null, 4)} as const\n
 export const LEADERBOARD_ID_MAP = ${JSON.stringify(LEADERBOARD_ID_MAP, null, 4)} as const\n
-export type LeaderboardDefinition = {
+export interface LeaderboardDefinition {
     Rotation: string[];
     Value: string;
     LeaderboardDefinitionId: string;
