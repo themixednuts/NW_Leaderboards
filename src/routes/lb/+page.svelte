@@ -1,11 +1,9 @@
 <script lang="ts">
   import { assets } from '$app/paths'
-  import { onMount } from 'svelte'
   import { page } from '$app/stores'
   import { LEADERBOARD_DATA } from '$lib/leaderboard/leaderboardmap'
-  import type { PageData } from './$types'
 
-  export let data: PageData
+  let { data } = $props()
 
   const factionImagePaths = [
     '/lyshineui/images/leaderboards/leaderboard_cat_bg_faction_syndicate.png',
@@ -13,16 +11,16 @@
     '/lyshineui/images/leaderboards/leaderboard_cat_bg_faction_convenant.png',
   ] as const
 
-  let currentIndex = 0
-  $: bannerMap = {
+  let currentIndex = $state(0)
+  let bannerMap = $derived({
     'Mutated Expeditions': '/lyshineui/images/leaderboards/leaderboard_cat_bg_expeditions.png',
     'Faction War': factionImagePaths[currentIndex],
     'Vs. Environment': '/lyshineui/images/leaderboards/leaderboard_cat_bg_environment.png',
     'Vs. Players': '/lyshineui/images/leaderboards/leaderboard_cat_bg_player.png',
     'Trade Skills': '/lyshineui/images/leaderboards/leaderboard_cat_bg_trade.png',
-  } as const
+  } as const)
 
-  $: bannerKeys = Object.keys(bannerMap) as (keyof typeof bannerMap)[]
+  let bannerKeys = $derived(Object.keys(bannerMap) as (keyof typeof bannerMap)[])
 
   function getDefaultLeaderboardURL(banner: (typeof bannerKeys)[number]): string {
     const first_level_categories = Object.keys(LEADERBOARD_DATA[banner])
@@ -33,7 +31,8 @@
     //@ts-expect-error
     return LEADERBOARD_DATA[banner][first_level_categories[0]][categories[0]][0].LeaderboardDefinitionId
   }
-  onMount(() => {
+
+  $effect(() => {
     const interval = setInterval(() => {
       currentIndex = (currentIndex + 1) % factionImagePaths.length
     }, 15000)
@@ -49,13 +48,13 @@
 >
   {#each bannerKeys as banner, key}
     <a
-      href="{$page.url.href}/{getDefaultLeaderboardURL(banner)}/{data.currentSeason}"
+      href="{$page.url.href}/{getDefaultLeaderboardURL(banner)}/{data.validSeasons[data.validSeasons.length - 1]}"
       class="relative grid h-full max-h-min place-content-center overflow-clip border-[1px] border-stone-400 border-opacity-80 bg-base-100 bg-center hover:cursor-pointer hover:border-accent {key ===
       0
         ? 'col-span-1 row-span-full'
         : key === 1
-        ? 'col-span-1 row-span-full place-self-center'
-        : 'col-span-1 row-span-1'}"
+          ? 'col-span-1 row-span-full place-self-center'
+          : 'col-span-1 row-span-1'}"
     >
       <img src={`${assets}${bannerMap[banner]}`} alt="" title={banner} />
 

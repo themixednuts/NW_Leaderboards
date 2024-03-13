@@ -5,9 +5,7 @@ import { Readable } from 'stream'
 
 const { JSDOM } = jsdom
 
-const leaderboard_response = await fetch(
-  'https://raw.githubusercontent.com/new-world-tools/datasheets-csv/main/LeaderboardData/LeaderboardDataTable.csv',
-)
+const leaderboard_response = await fetch( 'https://raw.githubusercontent.com/new-world-tools/datasheets-csv/main/LeaderboardData/LeaderboardDataTable.csv' )
 const data = []
 const stream = new Readable()
 stream.push(await leaderboard_response.text())

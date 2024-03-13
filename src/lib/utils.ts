@@ -209,3 +209,5 @@ export function addPNG(string: string) {
   const modifiedString = string.replace(srcAttributeValue, modifiedSrc)
   return modifiedString
 }
+
+

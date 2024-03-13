@@ -1,19 +1,5 @@
 import { LEADERBOARD_DATA, type LeaderboardData } from "$lib/leaderboard/leaderboardmap"
-
-export const validSeasons = ['q1', 's1', 's2', 's3', 's4'] as const
-export type ValidSeason = typeof validSeasons[number]
-
-export const seasons = validSeasons.map(s => {
-    const startsWithQ = s.startsWith('q')
-    const splitString = s.split(/([0-9]+)/).join(' ').trim()
-
-    const label = startsWithQ ? splitString.replace('q', 'Quarter') : splitString.replace('s', 'Season')
-
-    return {
-        id: s,
-        label
-    } as const
-}).reverse()
+import type { get_valid_seasons } from "$lib/server/db"
 
 export const factionImagePaths = [
     '/lyshineui/images/leaderboards/leaderboard_cat_bg_faction_syndicate.png',
@@ -37,7 +23,22 @@ export const currentImageBanner = (key: keyof BannerMap, idx: number) => {
     return bannerMap[key]
 }
 
-export function getLeaderboardCategoryKeys<T extends keyof LeaderboardData>(firstCategory: T, category: string) {
-    const obj = LEADERBOARD_DATA[firstCategory]
-    return Object.keys(obj[category]) as (keyof LeaderboardData[T][typeof category])[]
+export function seasons(seasons: Awaited<ReturnType<typeof get_valid_seasons>>) {
+    return seasons.map(s => {
+        const startsWithQ = s.startsWith('q')
+        const splitString = s.split(/([0-9]+)/).join(' ').trim()
+
+        const label = startsWithQ ? splitString.replace('q', 'Quarter') : splitString.replace('s', 'Season')
+
+        return {
+            id: s,
+            label
+        } as const
+    }).reverse()
+}
+
+export function getBannerMapKey(str: string) {
+    for (const key of Object.keys(bannerMap) as (keyof typeof bannerMap)[]) {
+        if (key.toLowerCase().replaceAll(' ', '').replaceAll('.', '') === str.toLowerCase()) return key
+    }
 }
