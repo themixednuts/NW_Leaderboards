@@ -14,8 +14,8 @@ export function replaceLynshineSrc(src?: string) {
 }
 export function appendPngToSrc(htmlString: string): string {
   // Use a regular expression to find and modify the src attribute
-  const modifiedHtmlString = htmlString.replace(/(src="[^"]*")/g, (match, src) => {
-    // Append ".png" to the src attribute
+  const modifiedHtmlString = htmlString.replace(/(src="([^"]*?)(?<!\.png)")/g, (match, src) => {
+    // Append ".png" to the src attribute if it doesn't already have it
     return `${src.slice(0, -1)}.png"`
   })
 
@@ -210,4 +210,28 @@ export function addPNG(string: string) {
   return modifiedString
 }
 
+declare global {
+  interface ObjectConstructor {
+    /**
+     * Groups members of an iterable according to the return value of the passed callback.
+     * @param items An iterable.
+     * @param keySelector A callback which will be invoked for each item in items.
+     */
+    groupBy<K extends PropertyKey, T>(
+      items: Iterable<T>,
+      keySelector: (item: T, index: number) => K,
+    ): Partial<Record<K, T[]>>
+  }
 
+  interface MapConstructor {
+    /**
+     * Groups members of an iterable according to the return value of the passed callback.
+     * @param items An iterable.
+     * @param keySelector A callback which will be invoked for each item in items.
+     */
+    groupBy<K, T>(
+      items: Iterable<T>,
+      keySelector: (item: T, index: number) => K,
+    ): Map<K, T[]>
+  }
+}

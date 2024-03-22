@@ -1,6 +1,6 @@
-import type { RequestHandler } from './$types';
-import { db } from '$lib/server/db';
-import { error, json } from '@sveltejs/kit';
+import type { RequestHandler } from './$types'
+import { db } from '$lib/server/db/users/client'
+import { error, json } from '@sveltejs/kit'
 
 export const GET: RequestHandler = async ({ setHeaders }) => {
 
@@ -11,17 +11,18 @@ export const GET: RequestHandler = async ({ setHeaders }) => {
     let result
     let startTime = performance.now()
     try {
-        result = await db.execute(`
-    -- EXPLAIN QUERY PLAN
-    SELECT DISTINCT server
-    FROM events
-    `)
-    } catch (e) {
+        // result = await db.selectDistinct().from()
+    }
+    catch (e) {
         console.log(e)
-        error(500, "Incorrect Request");
+        error(500, "Incorrect Request")
     }
     console.log('db timer - Servers: ', performance.now() - startTime, ' ms')
-    // console.log(result.rows)
 
+    //@ts-expect-error
     return json({ servers: result.rows.map(row => row.server) })
-};
+}
+// --EXPLAIN QUERY PLAN
+//     SELECT DISTINCT server
+//     FROM events
+//     `

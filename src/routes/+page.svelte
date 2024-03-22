@@ -8,11 +8,11 @@
 </svelte:head>
 
 <div
-  class="grid auto-rows-auto grid-cols-1 place-items-center border-2 border-stone-500 font-mono text-3xl font-extrabold"
+  class="grid size-full grow auto-rows-auto grid-cols-1 place-items-center border-2 border-stone-500 font-mono text-3xl font-extrabold"
 >
   <a href="/lb" class="">Leaderboards</a>
-  <div>
+  <!-- <div>
     <a href="/market" class="">Market</a>
     <div class="text-xs">work in progress</div>
-  </div>
+  </div> -->
 </div>

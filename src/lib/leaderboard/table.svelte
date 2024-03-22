@@ -1,32 +1,24 @@
 <script lang="ts">
-  import { LEADERBOARD_DATA, LEADERBOARD_ID_MAP, type LeaderboardDefinition } from './leaderboardmap'
   import { replaceLynshineSrc, appendPngToSrc } from '$lib/utils'
+  import type { LeaderboardAPIBoardItem } from '$lib/leaderboard/utils'
+  import type { LeaderboardData } from '$lib/leaderboard/types'
 
-  export let table: LeaderboardAPIBoardItem[]
-  export let id: keyof typeof LEADERBOARD_ID_MAP
-  export let season: string
-
-  const { FirstLevelCategory, SecondLevelCategory, Category } = LEADERBOARD_ID_MAP[id]
-
-  // const pullDate = table?.[0].date
-
-  let data: LeaderboardDefinition
-  //@ts-expect-error
-  $: data = LEADERBOARD_DATA?.[FirstLevelCategory]?.[Category]?.[SecondLevelCategory]?.find(
-    (item: LeaderboardDefinition) => item.LeaderboardDefinitionId === id,
-  )
-
-  const pageSize = Math.ceil(table.length / 10)
-  const pageSizeArray = Array.from({ length: pageSize }, (_, i) => i + 1)
-  let currentPage = 1
-  let itemsPerPage = 10
-
-  const pageArrayIndex = Array(itemsPerPage).fill(0)
-  for (let i = 0; i < pageArrayIndex.length; i++) {
-    pageArrayIndex[i] = i
+  type Props = {
+    table: LeaderboardAPIBoardItem[]
+    leaderboard: LeaderboardData
   }
 
-  const ranks = calculateRanks(table)
+  let { table, leaderboard }: Props = $props()
+
+  let pageSize = $state(Math.ceil(table.length / 10))
+  let pageSizeArray = $derived(Array.from({ length: pageSize }, (_, i) => i + 1))
+
+  let currentPage = $state(1)
+  let itemsPerPage = $state(10)
+
+  let pageArrayIndex: (number | null)[] = $state([])
+
+  const ranks = $derived(calculateRanks(table))
 
   function calculateRanks(data: LeaderboardAPIBoardItem[]) {
     let rank = 1
@@ -44,23 +36,29 @@
     return ranks
   }
 
-  function handleClickEvent(e: MouseEvent) {
+  $effect(() => {
+    const arr = Array(itemsPerPage).fill(0)
+    for (let i = 0; i < arr.length; i++) {
+      arr[i] = i
+    }
+    pageArrayIndex = arr
+  })
+
+  function handleClickEvent(e: PointerEvent & { currentTarget: EventTarget & HTMLButtonElement }) {
     if (e.button !== 0) return // Only handle left click (0)
-    const target = e.target as HTMLButtonElement
-    currentPage = parseInt(target.innerText)
+    currentPage = parseInt(e.currentTarget.innerText)
     displayPage(currentPage)
   }
 
   function displayPage(pageNumber: number) {
     const startIndex = (pageNumber - 1) * itemsPerPage
-    const endIndex = startIndex + itemsPerPage
-
+    // const endIndex = startIndex + itemsPerPage
     for (let i = 0; i < itemsPerPage; i++) {
       const index = startIndex + i
       if (index < table.length) {
         pageArrayIndex[i] = index
       } else {
-        pageArrayIndex[i] = null // Set null if the index exceeds the array length
+        pageArrayIndex[i] = null
       }
     }
   }
@@ -93,39 +91,41 @@
   }
 </script>
 
-<div class="grid grid-cols-1 grid-rows-[auto,1fr,auto]">
-  {#if data}
+<div class="grid min-w-fit grid-cols-1 grid-rows-[auto,1fr,auto] overflow-clip whitespace-nowrap contain-paint">
+  {#if leaderboard}
     <div
-      class="relative flex w-full place-items-center justify-center bg-base-300 py-4 text-2xl capitalize lg:text-4xl"
+      class="relative flex w-full min-w-fit place-items-center justify-center bg-base-300 py-4 text-sm uppercase sm:text-xl md:text-2xl xl:text-4xl"
     >
-      {@html replaceLynshineSrc(data.Category)}
-      - {!isNaN(Number(data.DisplayName)) ? `${Category}, ${data.DisplayName}` : data.DisplayName}
-      {#if data.CategoryAdditionalHeader}
+      {@html replaceLynshineSrc(leaderboard.Category)}
+      - {!isNaN(Number(leaderboard.DisplayName))
+        ? `${leaderboard.Category}, ${leaderboard.DisplayName}`
+        : leaderboard.DisplayName}
+      {#if leaderboard.CategoryAdditionalHeader}
         <div class="flex h-2/5 place-items-end gap-[2px] pl-2 text-sm">
-          {@html appendPngToSrc(data.CategoryAdditionalHeader)
-            .replace('scale="2.0"', 'height="24" width="24"')
-            .replace('lys', '/lys')}
+          {@html appendPngToSrc(leaderboard.CategoryAdditionalHeader).replace('scale="2.0"', 'height="24" width="24"')}
         </div>
       {/if}
     </div>
-    <div class="flex flex-col overflow-y-auto overflow-x-hidden">
+    <div class="flex min-w-fit flex-col overflow-auto">
       <table
-        class=" table table-zebra table-pin-rows table-sm relative table-fixed select-none sm:table-md md:table-lg"
+        class="table table-zebra table-pin-rows table-sm relative min-w-fit table-fixed select-none sm:table-md md:table-lg"
       >
         <thead class="">
           <tr>
-            <th scope="col">Rank</th>
-            <th scope="col">{data.Value}</th>
-            <th scope="col">Server</th>
+            <th scope="col" class="w-24">Rank</th>
+            <th scope="col">{leaderboard.ValueString}</th>
+            <th scope="col" class="w-44">Server</th>
           </tr>
         </thead>
         <tbody>
           {#each pageArrayIndex as i}
-            {#if table[i]}
+            {#if i != null && table[i]}
               <tr>
                 <td>{ranks[i]}</td>
                 <td>
-                  {data.Value === 'Time' ? secondsToTimeFormat(table[i].value) : table[i].value.toLocaleString()}
+                  {leaderboard.ValueString === 'Time'
+                    ? secondsToTimeFormat(table[i].value)
+                    : table[i].value.toLocaleString()}
                 </td>
                 <td>{table[i].server}</td>
               </tr>
@@ -133,12 +133,12 @@
           {/each}
         </tbody>
       </table>
-      <div class="absolute left-1/2 top-1/2 flex -translate-x-[25%] translate-y-[25%] select-none text-2xl opacity-20">
+      <!-- <div class="absolute left-1/2 top-1/2 flex -translate-x-[25%] translate-y-[25%] select-none text-2xl opacity-20">
         <span class="rotate-45">nwstats.info</span>
-      </div>
+      </div> -->
     </div>
 
-    <div class="join flex justify-center place-self-center rounded-none py-2">
+    <div class="join flex min-w-fit justify-center place-self-center rounded-none py-2">
       {#if pageSize > 5}
         <!-- Page 1 -->
         <button
@@ -246,10 +246,6 @@
         {/each}
       {/if}
     </div>
-    <!-- <div class="flex justify-center text-sm md:text-base">
-      {season.replace('s', 'Season: ').replace('q', 'Quarter: ')} - Date Pulled:
-      {getDateAndTime(pullDate)}
-    </div> -->
   {:else}
     <div>No Table</div>
   {/if}

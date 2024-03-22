@@ -4,7 +4,7 @@
   import { GetRomanFromNumber, ItemPerkScaling, getLocalizedDate, replaceLynshineSrc } from '$lib/utils'
   import { formatDistance, addSeconds, isPast } from 'date-fns'
   import { goto } from '$app/navigation'
-  import type { Action } from 'svelte/action' 
+  import type { Action } from 'svelte/action'
 
   export let items: Promise<(MarketData & { currentExpiration?: string })[]>
   $: sort = $page.url.searchParams.get('sort')
@@ -125,7 +125,7 @@
       <tr class="border-b-2 border-stone-500">
         {#each columns as { key, label, sortKey, isImage, isRotation } (key)}
           <th
-            class="relative h-full min-w-full overflow-hidden text-clip"
+            class="relative h-full min-w-full overflow-clip text-clip"
             class:w-80={key === 'name'}
             class:w-24={key !== 'name'}
           >

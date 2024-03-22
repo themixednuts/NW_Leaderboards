@@ -85,8 +85,8 @@
             </td>
             {#if statItems[server]}
               {#each statItems[server] as item, k}
-              {@const perks = item.perks?.toLowerCase()}
-              {@const length = statItems[server].length}
+                {@const perks = item.perks?.toLowerCase()}
+                {@const length = statItems[server].length}
                 <td class="text-center">
                   {#if (item.category === 'price' && k % length === 0) || (item.category === 'quantity' && k % length === 1) || ((item.category === 'unique' || item.fallback) && k % length === 2) || (item.category === 'tradingpost' && k % length === 3)}
                     <div
@@ -106,7 +106,7 @@
                           />
                         </a>
                       {/if}
-                      <div class="overflow-hidden">
+                      <div class="overflow-clip">
                         {#if item.id}
                           <a href="/market/items/{server}/{item.id}">
                             {item.name}

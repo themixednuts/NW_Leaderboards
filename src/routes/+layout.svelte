@@ -1,23 +1,26 @@
 <script lang="ts">
-  import { page } from '$app/stores'
   import '../app.css'
-  // import type { LayoutData } from './$types'
   import { navigating } from '$app/stores'
   import { tweened } from 'svelte/motion'
   import { cubicOut } from 'svelte/easing'
   import type { Action } from 'svelte/action'
+  import { Avatar, DropdownMenu, Button } from 'bits-ui'
+  import { SignIn, SignOut } from '@auth/sveltekit/components'
+  import { signOut } from '@auth/sveltekit/client'
 
-  // export let data: LayoutData
+  let { data } = $props()
 
-  const progress = tweened(0, { easing: cubicOut })
-  let progress_div: HTMLDivElement
-  $: if ($progress === 0.95) progress.set(0.99, { duration: 10000 })
-  $: {
-    if (progress_div) progress_div.style.width = `${$progress * 100}%`
-  }
+  const progress = $state(tweened(0, { easing: cubicOut }))
+  $effect(() => {
+    if ($progress === 0.95) progress.set(0.99, { duration: 10000 })
+  })
 
   const navigationProgress: Action<HTMLDivElement> = (ele: HTMLDivElement) => {
     progress.set(0.95, { duration: 1000 })
+    $effect(() => {
+      ele.style.width = `${$progress * 100}%`
+    })
+
     return {
       destroy() {
         progress.set(1, { duration: 0 })
@@ -25,22 +28,22 @@
       },
     }
   }
-  $: routes = $page.url.pathname?.split('/')
 </script>
 
 <svelte:head>
-  <script async src="https://nwdb.info/embed.js">
-  </script>
+  <script async src="https://nwdb.info/embed.js"></script>
 </svelte:head>
 
 {#if !!$navigating}
-  <div class="absolute left-0 top-0 z-[9999] h-1 bg-red-500" bind:this={progress_div} use:navigationProgress></div>
+  <div class="absolute left-0 top-0 z-[9999] h-1 bg-red-500" use:navigationProgress></div>
 {/if}
-<div class="container relative mx-auto grid h-screen grid-cols-1 grid-rows-[auto,1fr] place-content-center gap-2 pb-2">
-  <div class="navbar sticky z-50 col-span-full row-span-1 row-start-1 h-full justify-between bg-base-100">
+<div class="container relative flex min-h-svh flex-col gap-2 pb-2">
+  <div
+    class="navbar sticky top-0 z-50 col-span-full row-span-1 row-start-1 min-w-fit justify-between whitespace-nowrap bg-base-100 shadow-lg"
+  >
     <a href="/" class="font-sans text-2xl font-bold antialiased hover:link">NW STATS</a>
 
-    <div class="breadcrumbs place-self-center text-sm">
+    <!-- <div class="breadcrumbs place-self-center text-sm">
       <ul>
         {#each routes as route, i (i)}
           {#if route}
@@ -52,7 +55,7 @@
           {/if}
         {/each}
       </ul>
-    </div>
+    </div> -->
     <div class="flex">
       <a href="https://discord.gg/UQ3Q4SBqND" target="_blank" rel="noopener noreferrer" class="btn btn-ghost relative">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 127.14 96.36">
@@ -76,6 +79,72 @@
         </svg>
       </a>
     </div>
+    {@render dropdown(data.session?.user)}
   </div>
-  <slot />
+  <div class="flex max-h-fit min-w-min grow overflow-auto px-2">
+    <slot />
+  </div>
 </div>
+
+{#snippet dropdown(user)}
+  <DropdownMenu.Root>
+    <DropdownMenu.Trigger asChild let:builder>
+      {@const action = builder.action}
+      <button use:action {...builder}>
+        {#if user}
+          <Avatar.Root>
+            <Avatar.Image class="size-10 rounded-full" src={user.image} alt="avatar" />
+          </Avatar.Root>
+        {:else}
+          Log In
+        {/if}
+      </button>
+      <!-- <Button builders={[builder]} variant="link" class="flex items-center justify-center rounded-full"></Button> -->
+    </DropdownMenu.Trigger>
+    <DropdownMenu.Content class="mt-1">
+      <DropdownMenu.Group>
+        <DropdownMenu.Label>{user?.name}</DropdownMenu.Label>
+        <DropdownMenu.Separator />
+        <DropdownMenu.Item>
+          <a href={'/profile'} class="h-full w-full">Profile</a>
+        </DropdownMenu.Item>
+        <DropdownMenu.Sub>
+          <DropdownMenu.SubTrigger>Characters</DropdownMenu.SubTrigger>
+          <DropdownMenu.SubContent>
+            <!-- {#await characters then characters}
+                {#each characters as character}
+                  <DropdownMenu.Item>
+                    <a href="/profile/characters/{character.id}" class="h-full w-full">
+                      {character.name}
+                    </a>
+                  </DropdownMenu.Item>
+                {/each}
+                {#if characters.length}
+                  <DropdownMenu.Separator />
+                  <DropdownMenu.Item>
+                    <a href={'/profile/characters'} class="h-full w-full">All</a>
+                  </DropdownMenu.Item>
+                {:else}
+                  <DropdownMenu.Item>No Characters</DropdownMenu.Item>
+                {/if}
+              {/await} -->
+          </DropdownMenu.SubContent>
+        </DropdownMenu.Sub>
+        <!-- <DropdownMenu.Item>Settings</DropdownMenu.Item> -->
+        <DropdownMenu.Item>
+          Upload
+          <!-- <a href={'/upload'} class="h-full w-full">Upload</a> -->
+        </DropdownMenu.Item>
+        <DropdownMenu.Separator />
+
+        <DropdownMenu.Item>
+          {#if user}
+            <SignOut>Sign Out</SignOut>
+          {:else}
+            <SignIn provider="discord">Sign In</SignIn>
+          {/if}
+        </DropdownMenu.Item>
+      </DropdownMenu.Group>
+    </DropdownMenu.Content>
+  </DropdownMenu.Root>
+{/snippet}

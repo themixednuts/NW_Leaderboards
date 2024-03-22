@@ -2,6 +2,9 @@
 export default {
   content: ['./src/**/*.{html,js,svelte,ts}'],
   theme: {
+    container: {
+      center: true,
+    },
     extend: {
       backgroundImage: {
         leaderboard: "url('/lyshineui/images/leaderboards/leaderboard_backdrop_overlay.png')",
@@ -37,36 +40,41 @@ export default {
         'contract-subcategory':
           "url('/lyshineui/images/contracts/contracts_subcategorybutton_glow.png'), url('/lyshineui/images/contracts/contracts_subcategorybutton_hash.png')",
         'contract-browser': "url('/lyshineui/images/tradingpost/tradingpostbg.png')",
-        'search': "url('/lyshineui/images/slices/textinputsearch/primarysearchbg.png')",
+        search: "url('/lyshineui/images/slices/textinputsearch/primarysearchbg.png')",
         'search-hover': "url('/lyshineui/images/slices/textinputsearch/primarysearchbgfocus.png')",
         'contract-item': "url('/lyshineui/images/tradingpost/tradeentryhighlight.png')",
         'contract-tab': "url('/lyshineui/images/tradingpost/tabbg.png')",
         'contract-sort-l': "url('/lyshineui/images/tradingpost/sortbuttonbgleft.png')",
         'contract-sort-m': "url('/lyshineui/images/tradingpost/sortbuttonbgmid.png')",
         'contract-sort-r': "url('/lyshineui/images/tradingpost/sortbuttonbgright.png')",
-        'dropdown': "url('/lyshineui/images/slices/frame/frametexture2023.png')",
+        dropdown: "url('/lyshineui/images/slices/frame/frametexture2023.png')",
         'frame-2023': "url('/lyshineui/images/slices/framemultibg/framestyles/framebgdefault2023.png')",
-        "item-rarity-0": "url('/lyshineui/images/slices/itemlayout/itemraritybgsquare0.png'), url('/lyshineui/images/slices/itemlayout/itembgsquare0.png')",
-        "item-rarity-1": "url('/lyshineui/images/slices/itemlayout/itemraritybgsquare1.png'), url('/lyshineui/images/slices/itemlayout/itembgsquare1.png')",
-        "item-rarity-2": "url('/lyshineui/images/slices/itemlayout/itemraritybgsquare2.png'), url('/lyshineui/images/slices/itemlayout/itembgsquare2.png')",
-        "item-rarity-3": "url('/lyshineui/images/slices/itemlayout/itemraritybgsquare3.png'), url('/lyshineui/images/slices/itemlayout/itembgsquare3.png')",
-        "item-rarity-4": "url('/lyshineui/images/slices/itemlayout/itemraritybgsquare4.png'), url('/lyshineui/images/slices/itemlayout/itembgsquare4.png')",
-        'filter': "url('/lyshineui/images/slices/buttonsimple/button_simple_frame_cta_2023.png')",
-        'primary-button': "url('/lyshineui/images/slices/button/primarybuttonframe2023.png') , url('/lyshineui/images/slices/button/buttonbg2023.png')",
-        'primary-button-focus': "url('/lyshineui/images/slices/button/primarybuttonframefocus2023.png') , url('/lyshineui/images/slices/button/buttonbgfocus2023.png')",
+        'item-rarity-0':
+          "url('/lyshineui/images/slices/itemlayout/itemraritybgsquare0.png'), url('/lyshineui/images/slices/itemlayout/itembgsquare0.png')",
+        'item-rarity-1':
+          "url('/lyshineui/images/slices/itemlayout/itemraritybgsquare1.png'), url('/lyshineui/images/slices/itemlayout/itembgsquare1.png')",
+        'item-rarity-2':
+          "url('/lyshineui/images/slices/itemlayout/itemraritybgsquare2.png'), url('/lyshineui/images/slices/itemlayout/itembgsquare2.png')",
+        'item-rarity-3':
+          "url('/lyshineui/images/slices/itemlayout/itemraritybgsquare3.png'), url('/lyshineui/images/slices/itemlayout/itembgsquare3.png')",
+        'item-rarity-4':
+          "url('/lyshineui/images/slices/itemlayout/itemraritybgsquare4.png'), url('/lyshineui/images/slices/itemlayout/itembgsquare4.png')",
+        filter: "url('/lyshineui/images/slices/buttonsimple/button_simple_frame_cta_2023.png')",
+        'primary-button':
+          "url('/lyshineui/images/slices/button/primarybuttonframe2023.png') , url('/lyshineui/images/slices/button/buttonbg2023.png')",
+        'primary-button-focus':
+          "url('/lyshineui/images/slices/button/primarybuttonframefocus2023.png') , url('/lyshineui/images/slices/button/buttonbgfocus2023.png')",
         'large-tab': "url('/lyshineui/images/slices/largetab/largetablefthatching.png')",
-        'large-tab-highlight': "url('/lyshineui/images/slices/largetab/largetabhighlight.png'), url('/lyshineui/images/slices/largetab/largetablefthatching.png')",
+        'large-tab-highlight':
+          "url('/lyshineui/images/slices/largetab/largetabhighlight.png'), url('/lyshineui/images/slices/largetab/largetablefthatching.png')",
         'crafting-tab': "url('/lyshineui/images/crafting/crafting_buttonhash.png')",
         'crafting-tab-highlight': "url('/lyshineui/images/crafting/crafting_tabselected.png')",
       },
     },
   },
-  plugins: [require('daisyui')],
+  plugins: [require('daisyui'), require('tailwindcss-contain'), require('@tailwindcss/forms')],
   daisyui: {
     themes: ['light', 'dark'],
   },
-  safelist: [
-    { pattern: /^bg-item-rarity-/ },
-    "rotate-180"
-  ]
+  safelist: [{ pattern: /^bg-item-rarity-/ }, 'rotate-180'],
 }

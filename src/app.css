@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  height: 100svh;
+}
 .no-scrollbar {
   -ms-overflow-style: none;
   /* IE and Edge */
