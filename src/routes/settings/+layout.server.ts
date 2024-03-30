@@ -2,7 +2,7 @@
 
 import type { LayoutServerLoad } from "./$types"
 
-export const load = (async ({ event, locals }) => {
+export const load = (async ({ locals }) => {
 
   // if (!session) return error(400)
 

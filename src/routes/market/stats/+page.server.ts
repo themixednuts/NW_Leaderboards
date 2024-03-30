@@ -1,23 +1,23 @@
 import type { PageServerLoad } from './$types';
-import { db } from '$lib/server/db';
+// import { db } from '$lib/server/db';
 import { error } from '@sveltejs/kit';
 
 export const load = (async ({ fetch, setHeaders }) => {
 
-    setHeaders({
-        'cache-control': "public,s-maxage=9000"
-    })
+  setHeaders({
+    'cache-control': "public,s-maxage=9000"
+  })
 
-    let serverReq
-    try {
-        serverReq = await fetch('/market/api/servers')
-    } catch (e) {
-        console.log(e)
-        error(500);
-    }
-    const servers = await serverReq.json() as { servers: string[] }
+  let serverReq
+  try {
+    serverReq = await fetch('/market/api/servers')
+  } catch (e) {
+    console.log(e)
+    error(500);
+  }
+  const servers = await serverReq.json() as { servers: string[] }
 
-    const marketcap_query = `
+  const marketcap_query = `
     -- EXPLAIN QUERY PLAN
     SELECT s.server, SUM(o.price / 100 * o.quantity) AS market_cap, SUM(o.quantity) AS quantity
     FROM orders as o
@@ -26,10 +26,10 @@ export const load = (async ({ fetch, setHeaders }) => {
     GROUP BY s.server;
     `
 
-    const categoryPerServer_query: string[] = []
-    const normalizedServerList = servers.servers.sort()
-    for (const server of normalizedServerList) {
-        let query = `
+  const categoryPerServer_query: string[] = []
+  const normalizedServerList = servers.servers.sort()
+  for (const server of normalizedServerList) {
+    let query = `
         SELECT
         '${server}' AS server,
         TradingCategory,
@@ -37,10 +37,10 @@ export const load = (async ({ fetch, setHeaders }) => {
         FROM ${server}_trading_count
         GROUP BY TradingCategory
         `
-        categoryPerServer_query.push(query)
+    categoryPerServer_query.push(query)
 
-    }
-    const query = `
+  }
+  const query = `
     SELECT
         CASE
             WHEN o.id = metadata.maxprice_id THEN 'price'
@@ -99,20 +99,20 @@ export const load = (async ({ fetch, setHeaders }) => {
     WHERE o.id IN (metadata.maxprice_id, metadata.maxquantity_id, metadata.mostusedtp_id, metadata.mostlisted_id)
 `
 
-    const combined_category_query = categoryPerServer_query.join(' UNION ALL ')
-    let startTime = performance.now()
-    const stats = db.execute(query)
-    const results = db.batch([marketcap_query, combined_category_query], 'read')
-    console.log('db timer - Market Cap Per Server: ', performance.now() - startTime, 'ms')
-    // console.log(test_result.rows)
-    return {
-        streamed: {
-            items: results.then(res => ({
-                marketcaps: res[0].rows,
-                catergoryVolume: res[1].rows as unknown as { TradingCategory: string, count: number, server: string }[],
-            })),
-            stats: stats.then(res => res.rows as unknown as { id: string, price: number, iconPath: string, server: string, perks: string, category: 'price' | 'quantity' | 'unique' | 'tradingpost', name: string, gearScore: number, rarity: number, value: number, fallback: number | null }[])
-        },
-        servers: servers.servers,
-    };
+  const combined_category_query = categoryPerServer_query.join(' UNION ALL ')
+  let startTime = performance.now()
+  // const stats = db.execute(query)
+  // const results = db.batch([marketcap_query, combined_category_query], 'read')
+  console.log('db timer - Market Cap Per Server: ', performance.now() - startTime, 'ms')
+  // console.log(test_result.rows)
+  return {
+    streamed: {
+      // items: results.then(res => ({
+      //     marketcaps: res[0].rows,
+      //     catergoryVolume: res[1].rows as unknown as { TradingCategory: string, count: number, server: string }[],
+      // })),
+      // stats: stats.then(res => res.rows as unknown as { id: string, price: number, iconPath: string, server: string, perks: string, category: 'price' | 'quantity' | 'unique' | 'tradingpost', name: string, gearScore: number, rarity: number, value: number, fallback: number | null }[])
+    },
+    servers: servers.servers,
+  };
 }) satisfies PageServerLoad;

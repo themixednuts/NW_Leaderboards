@@ -1,26 +1,26 @@
 <script lang="ts">
-  import { EquippableSlotTypesBg, GetRomanFromNumber, type Paperdoll } from '$lib/utils'
+  // import { EquippableSlotTypesBg, GetRomanFromNumber, type Paperdoll } from '$lib/utils'
   import type { HTMLAttributes } from 'svelte/elements'
   import { twMerge } from 'tailwind-merge'
 
-  let {
-    class: className,
-    type,
-    paperdoll,
-    showTier = true,
-    ...rest
-  } = $props<
-    HTMLAttributes<HTMLDivElement> & {
-      type?: string
-      paperdoll: Paperdoll[]
-      showTier?: boolean
-    }
-  >()
+  // let {
+  //   class: className,
+  //   type,
+  //   paperdoll,
+  //   showTier = true,
+  //   ...rest
+  // } = $props<
+  //   HTMLAttributes<HTMLDivElement> & {
+  //     type?: string
+  //     paperdoll: Paperdoll[]
+  //     showTier?: boolean
+  //   }
+  // >()
 
-  let item = $derived(paperdoll.find((slot) => slot.slotName === type))
+  // let item = $derived(paperdoll.find((slot) => slot.slotName === type))
 </script>
 
-<div
+<!-- <div
   class={twMerge(
     'relative grid aspect-square size-full place-content-center place-items-center overflow-clip bg-contain bg-center bg-no-repeat ',
     className,
@@ -70,4 +70,4 @@
       {/if}
     {/if}
   </div>
-</div>
+</div> -->

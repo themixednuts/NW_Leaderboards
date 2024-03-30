@@ -137,7 +137,7 @@
           </dialog>
         </div>
         <div class="flex place-items-center gap-2 px-2">
-          <button class="shrink-0" class:pointer-events-none={isPageStart} disabled={isPageStart}>
+          <!-- <button class="shrink-0" class:pointer-events-none={isPageStart} disabled={isPageStart}>
             <a
               href={$page.route.id
                 ?.replace('[server]', $page.params.server)
@@ -154,6 +154,7 @@
               />
             </a>
           </button>
+          -->
           Page {$page.params.page} of {$endPage}
           <button class="shrink-0" class:pointer-events-none={isPageEnd} disabled={isPageEnd}>
             <a
