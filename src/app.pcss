@@ -1,0 +1,151 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --faction-purple-r: 140;
+    --faction-purple-g: 55;
+    --faction-purple-b: 217;
+    --faction-purple: rgba(var(--faction-purple-r), var(--faction-purple-g), var(--faction-purple-b), 1);
+    --faction-purple-dark-amount: calc(-12 / 100);
+    --faction-purple-dark: rgba(calc(min(max(var(--faction-purple-r) / 255 + var(--faction-purple-dark-amount), 0), 1) * 255),
+        calc(min(max(var(--faction-purple-g) / 255 + var(--faction-purple-dark-amount), 0), 1) * 255),
+        calc(min(max(var(--faction-purple-b) / 255 + var(--faction-purple-dark-amount), 0), 1) * 255),
+        1);
+    --faction-purple-light-amount: calc(25 / 100);
+    --faction-purple-light: rgba(calc(min(max(var(--faction-purple-r) / 255 + var(--faction-purple-light-amount), 0), 1) * 255),
+        calc(min(max(var(--faction-purple-g) / 255 + var(--faction-purple-light-amount), 0), 1) * 255),
+        calc(min(max(var(--faction-purple-b) / 255 + var(--faction-purple-light-amount), 0), 1) * 255),
+        1);
+    --faction-purple-chat-amount: calc(16 / 100);
+    --faction-purple-chat: rgba(calc(min(max(var(--faction-purple-r) / 255 + var(--faction-purple-chat-amount), 0), 1) * 255),
+        calc(min(max(var(--faction-purple-g) / 255 + var(--faction-purple-chat-amount), 0), 1) * 255),
+        calc(min(max(var(--faction-purple-b) / 255 + var(--faction-purple-chat-amount), 0), 1) * 255),
+        1);
+
+    --faction-green-r: 20;
+    --faction-green-g: 152;
+    --faction-green-b: 52;
+    --faction-green: rgba(var(--faction-green-r), var(--faction-green-g), var(--faction-green-b), 1);
+    --faction-green-dark-amount: calc(-15 / 100);
+    --faction-green-dark: rgba(calc(min(max(var(--faction-green-r) / 255 + var(--faction-green-dark-amount), 0), 1) * 255),
+        calc(min(max(var(--faction-green-g) / 255 + var(--faction-green-dark-amount), 0), 1) * 255),
+        calc(min(max(var(--faction-green-b) / 255 + var(--faction-green-dark-amount), 0), 1) * 255),
+        1);
+    --faction-green-light-amount: calc(25 / 100);
+    --faction-green-light: rgba(calc(min(max(var(--faction-green-r) / 255 + var(--faction-green-light-amount), 0), 1) * 255),
+        calc(min(max(var(--faction-green-g) / 255 + var(--faction-green-light-amount), 0), 1) * 255),
+        calc(min(max(var(--faction-green-b) / 255 + var(--faction-green-light-amount), 0), 1) * 255),
+        1);
+    --faction-green-chat-amount: calc(15 / 100);
+    --faction-green-chat: rgba(calc(min(max(var(--faction-green-r) / 255 + var(--faction-green-chat-amount), 0), 1) * 255),
+        calc(min(max(var(--faction-green-g) / 255 + var(--faction-green-chat-amount), 0), 1) * 255),
+        calc(min(max(var(--faction-green-b) / 255 + var(--faction-green-chat-amount), 0), 1) * 255),
+        1);
+
+    --amazon-orange-r: 255;
+    --amazon-orange-g: 153;
+    --amazon-orange-b: 0;
+    --amazon-orange: rgba(var(--amazon-orange-r), var(--amazon-orange-g), var(--amazon-orange-b), 1);
+    --amazon-orange-dark-amount: calc(-20 / 100);
+    --amazon-orange-dark: rgba(calc(min(max(var(--amazon-orange-r) / 255 + var(--amazon-orange-dark-amount), 0), 1) * 255),
+        calc(min(max(var(--amazon-orange-g) / 255 + var(--amazon-orange-dark-amount), 0), 1) * 255),
+        calc(min(max(var(--amazon-orange-b) / 255 + var(--amazon-orange-dark-amount), 0), 1) * 255),
+        1);
+    --amazon-orange-light-amount: calc(10 / 100);
+    --amazon-orange-light: rgba(calc(min(max(var(--amazon-orange-r) / 255 + var(--amazon-orange-light-amount), 0), 1) * 255),
+        calc(min(max(var(--amazon-orange-g) / 255 + var(--amazon-orange-light-amount), 0), 1) * 255),
+        calc(min(max(var(--amazon-orange-b) / 255 + var(--amazon-orange-light-amount), 0), 1) * 255),
+        1);
+    --amazon-orange-chat: var(--amazon-orange);
+    /* --amazon-orange-chat-amount: calc(10 / 100);
+	--amazon-orange-chat: rgba(
+		calc(min(max(var(--amazon-orange-r) / 255 + var(--amazon-orange-chat-amount), 0), 1) * 255),
+		calc(min(max(var(--amazon-orange-g) / 255 + var(--amazon-orange-chat-amount), 0), 1) * 255),
+		calc(min(max(var(--amazon-orange-b) / 255 + var(--amazon-orange-chat-amount), 0), 1) * 255),
+		1
+	); */
+
+    --tan-med: 40 23% 69%;
+    --tan-warm: 37 34% 88%;
+    --gray-70: 0 0% 67%;
+    --cerulean-dark: 204 41% 37%;
+    --cerulean-light: 198 82% 57%;
+    --cerulean-medium: 206 71% 50%;
+    --maroon: 0 56% 33%;
+    --blue-bright: 196 100% 69%;
+
+    --background: 0 0% 100%;
+    --foreground: 20 14.3% 4.1%;
+
+    --muted: 60 4.8% 95.9%;
+    --muted-foreground: 25 5.3% 44.7%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14.3% 4.1%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 20 14.3% 4.1%;
+
+    --border: 20 5.9% 90%;
+    --input: 20 5.9% 90%;
+
+    --primary: 24 9.8% 10%;
+    --primary-foreground: 60 9.1% 97.8%;
+
+    --secondary: 60 4.8% 95.9%;
+    --secondary-foreground: 24 9.8% 10%;
+
+    --accent: 60 4.8% 95.9%;
+    --accent-foreground: 24 9.8% 10%;
+
+    --destructive: 0 72.2% 50.6%;
+    --destructive-foreground: 60 9.1% 97.8%;
+
+    --ring: var(--blue-bright);
+
+    --radius: 0rem;
+  }
+
+  .dark {
+    --background: 20 14.3% 4.1%;
+    --foreground: var(--gray-70);
+
+    --muted: 12 6.5% 15.1%;
+    --muted-foreground: 24 5.4% 63.9%;
+
+    --popover: 20 14.3% 4.1%;
+    --popover-foreground: 60 9.1% 97.8%;
+
+    --card: 20 14.3% 4.1%;
+    --card-foreground: 60 9.1% 97.8%;
+
+    --border: 12 6.5% 15.1%;
+    --input: 12 6.5% 15.1%;
+
+    --primary: var(--cerulean-dark);
+    --primary-foreground: var(--tan-med);
+
+    --secondary: 12 6.5% 15.1%;
+    --secondary-foreground: var(--gray-70);
+
+    --accent: 12 6.5% 15.1%;
+    --accent-foreground: 60 9.1% 97.8%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 60 9.1% 97.8%;
+
+    --ring: var(--cerulean-dark);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}

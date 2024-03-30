@@ -1,10 +1,12 @@
 import { signIn } from "$lib/server/db/users/auth"
-import type { Actions } from "@sveltejs/kit"
-export const load = (async () => {
-    return {}
-})
+import { redirect, type Actions } from "@sveltejs/kit"
+import type { PageServerLoad } from "./$types"
 
-export const actions: Actions = {
-    default: signIn
-}
+export const load = (async ({ locals }) => {
+  return {}
+}) satisfies PageServerLoad
+
+export const actions = {
+  default: signIn
+} satisfies Actions
 

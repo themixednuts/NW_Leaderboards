@@ -1,10 +1,10 @@
 .svelte-kit
 node_modules
 build
-src/lib/assets/markdata
 .env
 *.db
 *.sql
 dev.db
 dev.db-shm
 dev.db-wal
+output

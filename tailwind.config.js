@@ -1,80 +1,122 @@
+import { fontFamily } from 'tailwindcss/defaultTheme'
+
 /** @type {import('tailwindcss').Config} */
-export default {
+const config = {
+  plugins: [require('tailwindcss-contain'), require('tailwind-merge'), require('tailwind-variants'), require('@designbycode/tailwindcss-mask-image')],
+  darkMode: ['class'],
   content: ['./src/**/*.{html,js,svelte,ts}'],
+  safelist: ['dark'],
   theme: {
     container: {
       center: true,
+      padding: '2rem',
+      screens: {
+        '2xl': '1400px',
+      },
     },
     extend: {
-      backgroundImage: {
-        leaderboard: "url('/lyshineui/images/leaderboards/leaderboard_backdrop_overlay.png')",
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-radial-to-tr': 'radial-gradient(115% 90% at 0% 100%, var(--tw-gradient-stops))',
-        'gradient-radial-to-tl': 'radial-gradient(115% 90% at 100% 100%, var(--tw-gradient-stops))',
-        'gradient-radial-to-br': 'radial-gradient(90% 115% at 0% 0%, var(--tw-gradient-stops))',
-        'gradient-radial-to-bl': 'radial-gradient(90% 115% at 100% 0%, var(--tw-gradient-stops))',
-        'item-rarity-square-0':
-          "url('/lyshineui/images/slices/itemlayout/itemraritybgsquare0.png'), url('/lyshineui/images/slices/itemlayout/itembgsquare0.png')",
-        'item-rarity-square-1':
-          "url('/lyshineui/images/slices/itemlayout/itemraritybgsquare1.png'), url('/lyshineui/images/slices/itemlayout/itembgsquare1.png')",
-        'item-rarity-square-2':
-          "url('/lyshineui/images/slices/itemlayout/itemraritybgsquare2.png'), url('/lyshineui/images/slices/itemlayout/itembgsquare2.png')",
-        'item-rarity-square-3':
-          "url('/lyshineui/images/slices/itemlayout/itemraritybgsquare3.png'), url('/lyshineui/images/slices/itemlayout/itembgsquare3.png')",
-        'item-rarity-square-4':
-          "url('/lyshineui/images/slices/itemlayout/itemraritybgsquare4.png'), url('/lyshineui/images/slices/itemlayout/itembgsquare4.png')",
-        'item-rarity-square-artifact':
-          "url('/lyshineui/images/slices/itemlayout/itemraritybgsquareartifact.png'), url('/lyshineui/images/slices/itemlayout/itembgsquareartifact.png')",
-        'item-rarity-circle-0':
-          "url('/lyshineui/images/slices/itemlayout/itemraritybgcircle0.png'), url('/lyshineui/images/slices/itemlayout/itembgcircle0.png')",
-        'item-rarity-circle-1':
-          "url('/lyshineui/images/slices/itemlayout/itemraritybgcircle1.png'), url('/lyshineui/images/slices/itemlayout/itembgcircle1.png')",
-        'item-rarity-circle-2':
-          "url('/lyshineui/images/slices/itemlayout/itemraritybgcircle2.png'), url('/lyshineui/images/slices/itemlayout/itembgcircle2.png')",
-        'item-rarity-circle-3':
-          "url('/lyshineui/images/slices/itemlayout/itemraritybgcircle3.png'), url('/lyshineui/images/slices/itemlayout/itembgcircle3.png')",
-        'item-rarity-circle-4':
-          "url('/lyshineui/images/slices/itemlayout/itemraritybgcircle4.png'), url('/lyshineui/images/slices/itemlayout/itembgcircle4.png')",
-        'contract-category':
-          "url('/lyshineui/images/contracts/contracts_categorybuttonselected.png'), url('/lyshineui/images/contracts/contracts_categorybuttonhash.png')",
-        'contract-subcategory':
-          "url('/lyshineui/images/contracts/contracts_subcategorybutton_glow.png'), url('/lyshineui/images/contracts/contracts_subcategorybutton_hash.png')",
-        'contract-browser': "url('/lyshineui/images/tradingpost/tradingpostbg.png')",
-        search: "url('/lyshineui/images/slices/textinputsearch/primarysearchbg.png')",
-        'search-hover': "url('/lyshineui/images/slices/textinputsearch/primarysearchbgfocus.png')",
-        'contract-item': "url('/lyshineui/images/tradingpost/tradeentryhighlight.png')",
-        'contract-tab': "url('/lyshineui/images/tradingpost/tabbg.png')",
-        'contract-sort-l': "url('/lyshineui/images/tradingpost/sortbuttonbgleft.png')",
-        'contract-sort-m': "url('/lyshineui/images/tradingpost/sortbuttonbgmid.png')",
-        'contract-sort-r': "url('/lyshineui/images/tradingpost/sortbuttonbgright.png')",
-        dropdown: "url('/lyshineui/images/slices/frame/frametexture2023.png')",
-        'frame-2023': "url('/lyshineui/images/slices/framemultibg/framestyles/framebgdefault2023.png')",
-        'item-rarity-0':
-          "url('/lyshineui/images/slices/itemlayout/itemraritybgsquare0.png'), url('/lyshineui/images/slices/itemlayout/itembgsquare0.png')",
-        'item-rarity-1':
-          "url('/lyshineui/images/slices/itemlayout/itemraritybgsquare1.png'), url('/lyshineui/images/slices/itemlayout/itembgsquare1.png')",
-        'item-rarity-2':
-          "url('/lyshineui/images/slices/itemlayout/itemraritybgsquare2.png'), url('/lyshineui/images/slices/itemlayout/itembgsquare2.png')",
-        'item-rarity-3':
-          "url('/lyshineui/images/slices/itemlayout/itemraritybgsquare3.png'), url('/lyshineui/images/slices/itemlayout/itembgsquare3.png')",
-        'item-rarity-4':
-          "url('/lyshineui/images/slices/itemlayout/itemraritybgsquare4.png'), url('/lyshineui/images/slices/itemlayout/itembgsquare4.png')",
-        filter: "url('/lyshineui/images/slices/buttonsimple/button_simple_frame_cta_2023.png')",
-        'primary-button':
-          "url('/lyshineui/images/slices/button/primarybuttonframe2023.png') , url('/lyshineui/images/slices/button/buttonbg2023.png')",
-        'primary-button-focus':
-          "url('/lyshineui/images/slices/button/primarybuttonframefocus2023.png') , url('/lyshineui/images/slices/button/buttonbgfocus2023.png')",
-        'large-tab': "url('/lyshineui/images/slices/largetab/largetablefthatching.png')",
-        'large-tab-highlight':
-          "url('/lyshineui/images/slices/largetab/largetabhighlight.png'), url('/lyshineui/images/slices/largetab/largetablefthatching.png')",
-        'crafting-tab': "url('/lyshineui/images/crafting/crafting_buttonhash.png')",
-        'crafting-tab-highlight': "url('/lyshineui/images/crafting/crafting_tabselected.png')",
+      colors: {
+        tan: {
+          warm: 'hsl(var(--tan-warm) / <alpha-value>)',
+          med: 'hsl(var(--tan-med) / <alpha-value>)',
+        },
+        blue: {
+          bright: 'hsl(var(--blue-bright) / <alpha-value>)',
+        },
+        border: 'hsl(var(--border) / <alpha-value>)',
+        input: 'hsl(var(--input) / <alpha-value>)',
+        ring: 'hsl(var(--ring) / <alpha-value>)',
+        background: 'hsl(var(--background) / <alpha-value>)',
+        foreground: 'hsl(var(--foreground) / <alpha-value>)',
+        primary: {
+          DEFAULT: 'hsl(var(--primary) / <alpha-value>)',
+          foreground: 'hsl(var(--primary-foreground) / <alpha-value>)',
+        },
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary) / <alpha-value>)',
+          foreground: 'hsl(var(--secondary-foreground) / <alpha-value>)',
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive) / <alpha-value>)',
+          foreground: 'hsl(var(--destructive-foreground) / <alpha-value>)',
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted) / <alpha-value>)',
+          foreground: 'hsl(var(--muted-foreground) / <alpha-value>)',
+        },
+        accent: {
+          DEFAULT: 'hsl(var(--accent) / <alpha-value>)',
+          foreground: 'hsl(var(--accent-foreground) / <alpha-value>)',
+        },
+        popover: {
+          DEFAULT: 'hsl(var(--popover) / <alpha-value>)',
+          foreground: 'hsl(var(--popover-foreground) / <alpha-value>)',
+        },
+        card: {
+          DEFAULT: 'hsl(var(--card) / <alpha-value>)',
+          foreground: 'hsl(var(--card-foreground) / <alpha-value>)',
+        },
+        faction: {
+          purple: 'var(--faction-purple)',
+          foreground: {
+            0: {
+              DEFAULT: 'rgba(255, 255, 255, 1)',
+            },
+            1: {
+              DEFAULT: 'rgba(255, 255, 255, 1)',
+            },
+            2: {
+              DEFAULT: 'rgba(255, 255, 255, 1)',
+            },
+            3: {
+              DEFAULT: 'rgba(255, 255, 255, 1)',
+            },
+          },
+          background: {
+            0: {
+              DEFAULT: 'rgba(255, 255, 255, 1)',
+              dark: 'rgba(255, 255, 255, 1)',
+              light: 'rgba(255, 255, 255, 1)',
+            },
+            1: {
+              DEFAULT: 'var(--faction-purple)',
+              dark: 'var(--faction-purple-dark)',
+              light: 'var(--faction-purple-light)',
+            },
+            2: {
+              DEFAULT: 'var(--faction-green)',
+              dark: 'var(--faction-green-dark)',
+              light: 'var(--faction-green-light)',
+            },
+            3: {
+              DEFAULT: 'var(--amazon-orange)',
+              dark: 'var(--amazon-orange-dark)',
+              light: 'var(--amazon-orange-light)',
+            },
+          },
+          chat: {
+            0: 'rgba(153, 153, 153, 1)',
+            1: 'var(--faction-purple-chat)',
+            2: 'var(--faction-green-chat)',
+            3: 'var(--amazon-orange)',
+          },
+          logo: {
+            1: 'rgba(82, 62, 87, 1)',
+            2: 'rgba(31, 113, 39, 1)',
+            3: 'rgba(164, 55, 19, 1)',
+          },
+        },
+      },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
+      },
+      fontFamily: {
+        sans: [...fontFamily.sans],
       },
     },
   },
-  plugins: [require('daisyui'), require('tailwindcss-contain'), require('@tailwindcss/forms')],
-  daisyui: {
-    themes: ['light', 'dark'],
-  },
-  safelist: [{ pattern: /^bg-item-rarity-/ }, 'rotate-180'],
 }
+
+export default config

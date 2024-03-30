@@ -16,7 +16,7 @@ export function appendPngToSrc(htmlString: string): string {
   // Use a regular expression to find and modify the src attribute
   const modifiedHtmlString = htmlString.replace(/(src="([^"]*?)(?<!\.png)")/g, (match, src) => {
     // Append ".png" to the src attribute if it doesn't already have it
-    return `${src.slice(0, -1)}.png"`
+    return `${src.toLowerCase().slice(0, -1)}.png"`
   })
 
   return modifiedHtmlString
@@ -234,4 +234,14 @@ declare global {
       keySelector: (item: T, index: number) => K,
     ): Map<K, T[]>
   }
+}
+
+export const steamAppIdMap = {
+  1063730: 'Live',
+  1205550: 'PTR',
+  1183900: 'Mkt'
+}
+
+export interface WorldsData {
+  servers: { worldId: string, worldName: string, region: string, isRTA: boolean, isFS: boolean }[]
 }

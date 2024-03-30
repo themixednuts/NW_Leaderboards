@@ -64,6 +64,7 @@ export interface LeaderboardAPIBoardItem {
     value: number
     server: string
     entityId?: string
+    faction?: 'Faction1' | 'Faction2' | 'Faction3'
     // date: string
 }
 

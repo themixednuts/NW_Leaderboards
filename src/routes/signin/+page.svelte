@@ -1,28 +1,21 @@
 <script lang="ts">
-  import { SignIn, SignOut } from '@auth/sveltekit/components'
-  import { page } from '$app/stores'
-
-  let { data } = $props()
+  import { Button } from '$lib/shadcn/components/ui/button/index.js'
+  import * as Card from '$lib/shadcn/components/ui/card/index.js'
+  import { signIn } from '@auth/sveltekit/client'
 </script>
 
-<div>
-  {#if $page.data.session}
-    {#if $page.data.session.user?.image}
-      <img src={$page.data.session.user.image} class="avatar" alt="User Avatar" />
-    {/if}
-    <span class="signedInText">
-      <small>Signed in as</small>
-      <br />
-      <strong>{$page.data.session.user?.name ?? 'User'}</strong>
-    </span>
-    <SignOut>
-      <div slot="submitButton" class="buttonPrimary">Sign out</div>
-    </SignOut>
-  {:else}
-    <span class="notSignedInText">You are not signed in</span>
-    <SignIn provider="discord">
-      <div slot="submitButton" class="buttonPrimary">Sign in</div>
-    </SignIn>
-    <SignIn provider="facebook" />
-  {/if}
+<div class="flex grow place-content-center place-items-center">
+  <Card.Root class="">
+    <Card.Header>
+      <Card.Title class="text-2xl">Login</Card.Title>
+      <Card.Description>Discord Authentication</Card.Description>
+    </Card.Header>
+    <Card.Content>
+      <div class="grid gap-4">
+        <Button variant="outline" class="w-full" onclick={() => signIn('discord', { callbackUrl: '/lb' })}>
+          Login with Discord
+        </Button>
+      </div>
+    </Card.Content>
+  </Card.Root>
 </div>

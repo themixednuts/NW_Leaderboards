@@ -22,6 +22,7 @@
   } as const)
 
   let bannerKeys = $derived(Object.keys(bannerMap) as (keyof typeof bannerMap)[])
+  $inspect(bannerKeys)
 
   $effect(() => {
     const interval = setInterval(() => {
@@ -44,7 +45,7 @@
 </script>
 
 <div
-  class="grid-col-1 grid grow grid-flow-row gap-2 place-self-center border-2 border-base-100 md:grid-cols-[1fr,1.31967213fr,1fr] md:grid-rows-3"
+  class="grid-col-1 grid grow grid-flow-row gap-2 place-self-center border-2 md:grid-cols-[1fr,1.31967213fr,1fr] md:grid-rows-3"
 >
   {#each bannerKeys as banner, key}
     {@const leaderboard = leaderboards?.find((leaderboard) =>
@@ -61,7 +62,7 @@
           second: normalize_leaderboard_string(leaderboard, 'SecondLevelCategory'),
           season: seasons[seasons.length - 1],
         })}
-        class="relative col-span-1 row-span-1 grid h-full max-h-min overflow-clip border-[1px] border-stone-400 border-opacity-80 bg-base-100 bg-center object-cover hover:cursor-pointer hover:border-accent"
+        class="relative col-span-1 row-span-1 grid h-full max-h-min overflow-clip border-[1px] border-stone-400 border-opacity-80 bg-center object-cover hover:cursor-pointer hover:border-accent"
         class:sm:row-span-full={key === 0 || key === 1}
         class:sm:col-span-2={key === 4}
         class:md:col-span-1={key === 4}
@@ -69,10 +70,11 @@
         <img loading="lazy" src={`${assets}${bannerMap[banner]}`} class="w-full" alt="" title={banner} />
 
         <div
-          class=" absolute left-1/2 top-1/2 h-[calc(100%-10px)] w-[calc(100%-10px)] -translate-x-1/2 -translate-y-1/2 overflow-clip border-[1px] border-stone-400 border-opacity-60"
+
+          class="absolute left-1/2 top-1/2 h-[calc(100%-10px)] w-[calc(100%-10px)] -translate-x-1/2 -translate-y-1/2 overflow-clip border-[1px] border-stone-400 border-opacity-60"
         >
           <div
-            class="absolute left-0 top-0 z-10 grid h-full w-full bg-base-100 bg-opacity-25 text-2xl hover:bg-opacity-0 sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl"
+            class="absolute left-0 top-0 z-10 grid h-full w-full bg-opacity-25 text-2xl hover:bg-opacity-0 sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl"
           >
             <div class="self-end px-4 py-4 text-white">
               {banner}

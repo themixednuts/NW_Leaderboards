@@ -1,11 +1,10 @@
 <script lang="ts">
   import { page } from '$app/stores'
-  import { assets, resolveRoute } from '$app/paths'
+  import { assets } from '$app/paths'
   import {
     leaderboard_group_by,
     normalize_leaderboard_string,
     match_leaderboard,
-    bannerMap,
     currentImageBanner,
     FACTION_IMAGE_PATHS,
     getBannerMapKey,
@@ -14,10 +13,14 @@
     LEADERBOARD_TYPE,
   } from '$lib/leaderboard/utils'
   import type { LeaderboardData } from '$lib/leaderboard/types'
-  import type { MouseEventHandler } from 'svelte/elements'
+  import { Button } from '@/shadcn/components/ui/button'
+  import * as DropdownMenu from '@/shadcn/components/ui/dropdown-menu'
+  import ScrollArea from '@/shadcn/components/ui/scroll-area/scroll-area.svelte'
+  import { cn } from '@/shadcn/utils.js'
 
   let { data } = $props()
   let { season, type, category, rotation, first, second } = $derived($page.params)
+  $inspect(type)
 
   let seasons: ReturnType<typeof get_seasons> | undefined = $state()
 
@@ -42,7 +45,7 @@
   $inspect(group_by_category)
 
   let currentIndex = 0
-  let bannerImgSrc = $derived(currentImageBanner(getBannerMapKey(first), currentIndex))
+  let bannerImgSrc = $derived(currentImageBanner(getBannerMapKey(first || 'Mutated Expeditions'), currentIndex))
 
   $effect(() => {
     const interval = setInterval(() => {
@@ -63,28 +66,14 @@
     leaderboard = lbs.lb
     seasons = get_seasons(lbs.seasons)
   }
-
-  function closeDialogs(e?: MouseEvent & { currentTarget: HTMLElement & EventTarget }) {
-    const d = e?.currentTarget?.closest('details')
-    document.querySelectorAll('details').forEach((detail) => {
-      if (d === detail) return
-      if (detail.open) detail.open = false
-    })
-  }
 </script>
 
-<svelte:window
-  onkeydown={(e) => {
-    if (e.key === 'Escape') closeDialogs()
-  }}
-/>
-
 <div
-  class="relative grid max-h-fit w-full grid-flow-row grid-cols-[minmax(min-content,1fr)] grid-rows-[repeat(3,min-content)] gap-2 bg-base-300 px-2 py-2 contain-paint md:grid-cols-[repeat(2,minmax(min-content,1fr))] md:grid-rows-[repeat(2,min-content),repeat(2,minmax(min-content,1fr))] lg:grid-cols-[20rem,1fr] lg:grid-rows-[min-content,58rem]"
+  class="relative grid max-h-fit w-full grid-flow-row grid-cols-[minmax(min-content,1fr)] grid-rows-[repeat(3,min-content)] gap-2 px-2 py-2 contain-paint md:grid-cols-[repeat(2,minmax(min-content,1fr))] md:grid-rows-[repeat(2,min-content),repeat(2,minmax(min-content,1fr))] lg:grid-cols-[20rem,1fr] lg:grid-rows-[min-content,58rem]"
 >
   {#if leaderboards}
     <div
-      class="col-span-full row-span-1 row-start-1 flex size-full max-h-60 place-content-center border-2 border-base-100 p-2 lg:col-start-2 lg:place-self-start"
+      class="col-span-full row-span-1 row-start-1 flex size-full max-h-60 place-content-center border-2 p-2 lg:col-start-2 lg:place-self-start"
     >
       <a href="/lb" class="grid w-full grid-cols-1 grid-rows-1 overflow-clip border-2 border-stone-500">
         <img
@@ -101,114 +90,88 @@
       </a>
     </div>
     <div
-      class="col-span-full col-start-1 row-start-2 grid h-full w-full grid-cols-[repeat(2,minmax(min-content,1fr))] grid-rows-3 place-items-center border-2 border-base-100 p-2 md:col-span-1 md:col-start-1 lg:row-start-1 lg:row-end-2"
+      class="col-span-full col-start-1 row-start-2 grid h-full w-full grid-cols-[repeat(2,minmax(min-content,1fr))] grid-rows-3 place-items-center border-2 p-2 md:col-span-1 md:col-start-1 lg:row-start-1 lg:row-end-2"
     >
-      <div class="join col-span-full row-start-1 grid w-full min-w-fit grid-cols-subgrid gap-1 self-end rounded-none">
-        <details class="dropdown">
-          <summary class="btn join-item btn-xs w-full capitalize sm:btn-md" onclick={closeDialogs}>
-            {rotation}
-          </summary>
-          <ul class="menu dropdown-content z-[1] w-52 bg-base-100 p-2 shadow">
+      <div class="col-span-full grid grid-cols-subgrid self-end">
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger asChild let:builder>
+            <Button variant="outline" builders={[builder]} class=" w-full capitalize">
+              {rotation}
+            </Button>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content>
             {#each rotations as rotation}
-              <li>
+              <DropdownMenu.Item>
                 <a
-                  href={resolveRoute('/lb/[first]/[category]/[second]/[rotation]/[type]/[season]', {
-                    first,
-                    category,
-                    second,
-                    rotation: rotation.toLowerCase(),
-                    type,
-                    season,
-                  })}
-                  onclick={() => closeDialogs()}
+                  href={`/lb/${first}/${category}/${second}/${rotation?.toLowerCase()}/${type}/${season}`}
                   class="rounded-none capitalize"
                 >
                   {rotation}
                 </a>
-              </li>
+              </DropdownMenu.Item>
             {/each}
-          </ul>
-        </details>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
         {#if seasons}
-          <details class="dropdown">
-            <summary class="btn join-item btn-xs w-full sm:btn-md" onclick={closeDialogs}>
-              {seasons.find((s) => season === s.id)?.label || seasons[0].label}
-            </summary>
-            <ul class="menu dropdown-content z-[1] w-52 bg-base-100 p-2 shadow">
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger asChild let:builder>
+              <Button variant="outline" builders={[builder]} class="w-full capitalize">
+                {seasons.find((s) => season === s.id)?.label || seasons[0].label}
+              </Button>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content>
               {#each seasons as season}
-                <li>
+                <DropdownMenu.Item>
                   <a
-                    href={resolveRoute('/lb/[first]/[category]/[second]/[rotation]/[type]/[season]', {
-                      first,
-                      category,
-                      second,
-                      rotation,
-                      type,
-                      season: season.id,
-                    })}
-                    onclick={() => closeDialogs()}
-                    class="rounded-none"
+                    href={`/lb/${first}/${category}/${second}/${rotation}/${type}/${season.id}`}
+                    class="self rounded-none"
                   >
                     {season.label}
                   </a>
-                </li>
+                </DropdownMenu.Item>
               {/each}
-            </ul>
-          </details>
+            </DropdownMenu.Content>
+          </DropdownMenu.Root>
         {/if}
       </div>
-      <div class="join col-span-full row-start-2 w-full min-w-fit rounded-none">
-        <a
-          class="btn join-item btn-xs h-full grow text-center ring-inset sm:btn-md hover:ring"
-          class:ring={type === 'faction'}
-          class:btn-disabled={!leaderboards?.find((lb) =>
-            match_leaderboard(lb, { FactionLeaderboard: true, FirstLevelCategory: leaderboard?.FirstLevelCategory }),
-          )}
-          href={resolveRoute('/lb/[first]/[category]/[second]/[rotation]/[type]/[season]', {
-            first,
-            category,
-            second,
-            rotation,
-            type: 'faction',
-            season,
+
+      <div class="col-span-full row-start-2 grid w-full min-w-fit grid-flow-col rounded-none">
+        <Button
+          variant="outline"
+          class={cn('', {
+            'pointer-events-none opacity-30': !leaderboards?.find((lb) =>
+              match_leaderboard(lb, { FactionLeaderboard: true, FirstLevelCategory: leaderboard?.FirstLevelCategory }),
+            ),
+            'ring ring-ring': type === 'faction',
           })}
+          href={`/lb/${first}/${category}/${second}/${rotation}/faction/${season}`}
         >
           Faction
-        </a>
-        <a
-          class="btn join-item btn-xs h-full grow text-center ring-inset sm:btn-md hover:ring"
-          class:ring={type === 'company'}
-          class:btn-disabled={!leaderboards?.find((lb) =>
-            match_leaderboard(lb, { CompanyLeaderboard: true, FirstLevelCategory: leaderboard?.FirstLevelCategory }),
-          )}
-          href={resolveRoute('/lb/[first]/[category]/[second]/[rotation]/[type]/[season]', {
-            first,
-            category,
-            second,
-            rotation,
-            type: 'company',
-            season,
+        </Button>
+        <Button
+          variant="outline"
+          class={cn('', {
+            'pointer-events-none opacity-30': !leaderboards?.find((lb) =>
+              match_leaderboard(lb, { CompanyLeaderboard: true, FirstLevelCategory: leaderboard?.FirstLevelCategory }),
+            ),
+            'ring ring-ring': type === 'company',
           })}
+          href={`/lb/${first}/${category}/${second}/${rotation}/company/${season}`}
         >
           Company
-        </a>
-        <a
-          class="btn join-item btn-xs h-full grow text-center ring-inset sm:btn-md hover:ring"
-          class:ring={type === 'character'}
-          class:btn-disabled={!leaderboards?.find((leaderboard) =>
-            match_leaderboard(leaderboard, { CharacterLeaderboard: true }),
-          )}
-          href={resolveRoute('/lb/[first]/[category]/[second]/[rotation]/[type]/[season]', {
-            first,
-            category,
-            second,
-            rotation,
-            type: 'character',
-            season,
+        </Button>
+        <Button
+          variant="outline"
+          class={cn('', {
+            'pointer-events-none opacity-30': !leaderboards?.find((leaderboard) =>
+              match_leaderboard(leaderboard, { CharacterLeaderboard: true }),
+            ),
+            'ring ring-ring': type === 'character',
           })}
+          href={`/lb/${first}/${category}/${second}/${rotation}/character/${season}`}
         >
           Character
-        </a>
+        </Button>
       </div>
       <div class="col-span-full w-full self-start">
         {#if leaderboards && leaderboard?.DisplayName}
@@ -226,47 +189,40 @@
           )}
           <!-- {@debug lbs} -->
           {#if lbs.length > 1}
-            <details class="dropdown w-full">
-              <summary class="btn join-item btn-xs w-full rounded-none sm:btn-md" onclick={closeDialogs}>
-                {leaderboard?.DisplayName}
-              </summary>
-              <ul class="menu dropdown-content z-[1] w-52 bg-base-100 p-2 shadow">
+            <DropdownMenu.Root>
+              <DropdownMenu.Trigger asChild let:builder>
+                <Button variant="outline" builders={[builder]} class="w-full capitalize">
+                  {leaderboard?.DisplayName}
+                </Button>
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Content>
                 {#each lbs as leaderboard}
-                  <li>
+                  <DropdownMenu.Item>
                     <a
-                      href={resolveRoute('/lb/[first]/[category]/[second]/[rotation]/[type]/[season]?q=[name]', {
-                        first,
-                        category,
-                        second,
-                        rotation,
-                        type,
-                        season,
-                        name: normalize_leaderboard_string(leaderboard, 'DisplayName'),
-                      })}
-                      onclick={() => closeDialogs()}
+                      href={`/lb/${first}/${category}/${second}/${rotation}/${type}/${season}?q=${normalize_leaderboard_string(leaderboard, 'DisplayName')}`}
                       class="rounded-none"
                     >
                       {leaderboard.DisplayName}
                     </a>
-                  </li>
+                  </DropdownMenu.Item>
                 {/each}
-              </ul>
-            </details>
+              </DropdownMenu.Content>
+            </DropdownMenu.Root>
           {/if}
         {/if}
       </div>
     </div>
-    <div
-      class="col-span-full col-start-1 row-start-3 row-end-4 flex h-64 w-full max-w-full flex-col gap-4 overflow-y-auto overflow-x-clip border-2 border-base-100 bg-base-300 py-2 uppercase contain-paint md:col-start-2 md:row-start-2 md:row-end-3 lg:col-span-1 lg:col-start-1 lg:row-span-full lg:row-start-2 lg:h-full"
+    <ScrollArea
+      class="col-span-full col-start-1 row-start-3 row-end-4 flex h-64 w-full max-w-full flex-col gap-4 overflow-y-auto overflow-x-clip border-2 py-2 uppercase contain-paint md:col-start-2 md:row-start-2 md:row-end-3 lg:col-span-1 lg:col-start-1 lg:row-span-full lg:row-start-2 lg:h-full"
     >
       {#if group_by_category?.length}
-        {#each group_by_category as [cat, category_leaderboards]}
+        {#each group_by_category as [cat, category_leaderboards] (cat)}
           <div class="flex grow-0 flex-col gap-2 px-2">
-            <div class="flex flex-nowrap border-b-2 border-base-100 bg-base-300 px-2 text-xl">
+            <div class="flex grow flex-nowrap gap-2 border-b-2 px-2 pt-2 text-left text-xl">
               {@html cat?.replace('/lyshineui/images', 'https://cdn.nwdb.info/db/images/live/v35')}
             </div>
             {#if category_leaderboards}
-              {#each category_leaderboards as [secondlevelcategory, secondlevelcategory_leaderboards]}
+              {#each category_leaderboards as [secondlevelcategory, secondlevelcategory_leaderboards] (cat + secondlevelcategory)}
                 {@const lb =
                   secondlevelcategory_leaderboards?.find((lb) =>
                     match_leaderboard(lb, {
@@ -274,51 +230,55 @@
                       [LEADERBOARD_TYPE[type]]: true,
                       //@ts-ignore-error
                       FirstLevelCategory: first,
-                      // SecondLevelCategory: second,
-                      Category: category,
                       //@ts-ignore-error
                       Rotation: rotation,
                     }),
-                  ) || secondlevelcategory_leaderboards?.[0]}
+                  ) ?? secondlevelcategory_leaderboards?.[0]}
                 {#if lb}
-                  <a
-                    class="text-md btn flex w-full grow rounded-none border-4 border-transparent p-0 text-left hover:link hover:animate-[pulse_1.5s_ease-in-out_infinite] hover:border-l-primary"
-                    class:border-l-primary={match_leaderboard(lb, {
-                      //@ts-ignore-error
-                      [LEADERBOARD_TYPE[type]]: true,
-                      //@ts-ignore-error
-                      FirstLevelCategory: first,
-                      SecondLevelCategory: second,
-                      Category: category,
-                      //@ts-ignore-error
-                      Rotation: rotation,
-                    })}
-                    class:btn-disabled={!match_leaderboard(lb, {
-                      //@ts-ignore-error
-                      [LEADERBOARD_TYPE[type]]: true,
-                    })}
-                    href={resolveRoute('/lb/[first]/[category]/[second]/[rotation]/[type]/[season]', {
-                      first,
-                      category: normalize_string(cat),
-                      second: normalize_leaderboard_string(lb, 'SecondLevelCategory'),
-                      rotation: normalize_leaderboard_string(lb, 'Rotation'),
-                      type,
-                      season,
-                    })}
+                  <Button
+                    variant="outline"
+                    class={cn(
+                      'flex justify-start border-l-4 border-transparent  hover:animate-[pulse_1.5s_ease-in-out_infinite] hover:border-l-primary',
+                      {
+                        'border-l-blue-bright': match_leaderboard(lb, {
+                          //@ts-ignore-error
+                          [LEADERBOARD_TYPE[type]]: true,
+                          //@ts-ignore-error
+                          FirstLevelCategory: first,
+                          SecondLevelCategory: second,
+                          Category: category,
+                          //@ts-ignore-error
+                          Rotation: rotation,
+                        }),
+                        'pointer-events-none opacity-30': !match_leaderboard(lb, {
+                          //@ts-ignore-error
+                          [LEADERBOARD_TYPE[type]]: true,
+                        }),
+                      },
+                    )}
+                    href={`/lb/${first}/${normalize_string(cat)}/${normalize_leaderboard_string(lb, 'SecondLevelCategory')}/${normalize_leaderboard_string(lb, 'Rotation')}/${type}/${season}`}
                   >
-                    <div class=" w-full whitespace-break-spaces pl-2">
-                      {secondlevelcategory}
-                    </div>
-                  </a>
+                    <!-- {match_leaderboard(lb, {
+                        //@ts-ignore-error
+                        [LEADERBOARD_TYPE[type]]: true,
+                        //@ts-ignore-error
+                        FirstLevelCategory: first,
+                        SecondLevelCategory: second,
+                        Category: category,
+                        //@ts-ignore-error
+                        Rotation: rotation,
+                      })} -->
+                    {secondlevelcategory}
+                  </Button>
                 {/if}
               {/each}
             {/if}
           </div>
         {/each}
       {/if}
-    </div>
+    </ScrollArea>
     <div
-      class="relative col-span-full row-span-2 row-start-4 grid h-full w-full grid-cols-1 place-self-start border-2 border-base-100 md:row-span-full md:row-start-3 lg:col-start-2 lg:row-start-2"
+      class="relative col-span-full row-span-2 row-start-4 grid h-full w-full grid-cols-1 place-self-start border-2 md:row-span-full md:row-start-3 lg:col-start-2 lg:row-start-2"
     >
       <slot />
     </div>

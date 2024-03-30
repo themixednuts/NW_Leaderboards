@@ -1,6 +1,5 @@
 import { integer, sqliteTable, text, primaryKey } from 'drizzle-orm/sqlite-core'
 import type { AdapterAccount } from '@auth/core/adapters'
-import { sql } from 'drizzle-orm'
 
 export const users = sqliteTable('user', {
   id: text('id').notNull().primaryKey(),
@@ -54,33 +53,4 @@ export const verificationTokens = sqliteTable(
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   }),
 )
-export const characters = sqliteTable('characters', {
-  id: text('id').primaryKey(),
-  userId: text('user_id'),
-  name: text('name').notNull(),
-  level: integer('level'),
-  guildId: text('guild_id'),
-  factionId: integer('faction_id').notNull(),
-  worldId: text('world_id').notNull(),
-  // steamAppId: integer('steam_app_id').notNull(),
-  foregroundImagePath: text('foreground_image_path'),
-  backgroundImagePath: text('background_image_path'),
-  midgroundImagePath: text('midground_image_path'),
-  foregroundColor: text('foreground_color'),
-  backgroundColor: text('background_color'),
-  midgroundColor: text('midground_color'),
-  submittedAt: text('submitted_at').notNull().default(sql`CURRENT_TIMESTAMP`),
-  updatedAt: text('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`),
-})
 
-export const guilds = sqliteTable('guilds', {
-  id: text('id').primaryKey(),
-  name: text('name').notNull(),
-  guildMasterId: text('guildmaster_id'),
-  factionId: integer('faction_id'),
-  crestForeground: text('crest_foreground'),
-  crestBackground: text('crest_background'),
-  numPlayers: integer('num_players').notNull(),
-  submittedAt: text('submitted_at').notNull().default(sql`CURRENT_TIMESTAMP`),
-  updatedAt: text('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`),
-})
