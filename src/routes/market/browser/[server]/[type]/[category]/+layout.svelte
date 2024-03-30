@@ -55,7 +55,7 @@
   <div class="flex">
     {#each ['Buy', 'Sell'] as tab}
       <a
-        class="flex h-14 w-56 place-content-center place-items-center border-2 border-b-0 border-stone-500 bg-crafting-tab bg-cover bg-left bg-no-repeat uppercase hover:bg-crafting-tab-highlight {tab ===
+        class="bg-crafting-tab hover:bg-crafting-tab-highlight flex h-14 w-56 place-content-center place-items-center border-2 border-b-0 border-stone-500 bg-cover bg-left bg-no-repeat uppercase {tab ===
         'sell'
           ? '-ml-[2px]'
           : '-mr-[2px]'}"
@@ -83,7 +83,7 @@
     <div class="row-span-full flex h-full w-full grid-rows-[subgrid] flex-col sm:grid">
       <div class="row-start-1 flex flex-nowrap place-items-center justify-between">
         <div
-          class="flex aspect-square h-full place-content-center place-items-center bg-filter bg-contain bg-center bg-no-repeat px-2"
+          class="bg-filter flex aspect-square h-full place-content-center place-items-center bg-contain bg-center bg-no-repeat px-2"
         >
           <!-- Open the modal using ID.showModal() method -->
           <button class="" on:click={() => filterModal.showModal()}>
@@ -92,7 +92,7 @@
           <dialog bind:this={filterModal} class="modal animate-none rounded-none">
             <form method="GET" on:submit|preventDefault={handleSubmit} action={$page.url.href}>
               <div
-                class="modal-box w-[600px] max-w-[700px] animate-none overflow-visible rounded-none bg-transparent bg-frame-2023 bg-[length:225%] bg-[left_-7px_top_-10px] bg-no-repeat"
+                class="modal-box bg-frame-2023 w-[600px] max-w-[700px] animate-none overflow-visible rounded-none bg-transparent bg-[length:225%] bg-[left_-7px_top_-10px] bg-no-repeat"
               >
                 <div class="grid grid-cols-1 grid-rows-[auto,1fr] place-content-center place-items-center">
                   <div class="flex w-full place-content-center text-xl uppercase">filters</div>
@@ -103,13 +103,13 @@
                     <div class="flex w-full justify-around gap-2">
                       <button
                         type="reset"
-                        class="h-14 w-64 bg-primary-button bg-contain bg-center bg-no-repeat hover:bg-primary-button-focus"
+                        class="bg-primary-button hover:bg-primary-button-focus h-14 w-64 bg-contain bg-center bg-no-repeat"
                       >
                         Clear All
                       </button>
                       <button
                         type="submit"
-                        class="h-14 w-64 bg-primary-button bg-contain bg-center bg-no-repeat hover:bg-primary-button-focus"
+                        class="bg-primary-button hover:bg-primary-button-focus h-14 w-64 bg-contain bg-center bg-no-repeat"
                       >
                         Apply
                       </button>
@@ -156,7 +156,7 @@
           </button>
           -->
           Page {$page.params.page} of {$endPage}
-          <button class="shrink-0" class:pointer-events-none={isPageEnd} disabled={isPageEnd}>
+          <!-- <button class="shrink-0" class:pointer-events-none={isPageEnd} disabled={isPageEnd}>
             <a
               href={$page.route.id
                 ?.replace('[server]', $page.params.server)
@@ -173,6 +173,7 @@
               />
             </a>
           </button>
+          -->
         </div>
       </div>
       <slot />
