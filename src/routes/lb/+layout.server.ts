@@ -7,10 +7,6 @@ import { BYPASS_TOKEN } from '$env/static/private'
 
 export const config: Config = {
   runtime: 'nodejs20.x',
-  isr: {
-    expiration: 300,
-    bypassToken: BYPASS_TOKEN,
-  }
 }
 
 async function f(params: Parameters<LayoutServerLoad>[0]['params']) {

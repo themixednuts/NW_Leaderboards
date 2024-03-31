@@ -13,10 +13,10 @@ dependencies:
     specifier: 0.27.0
     version: 0.27.0
   '@auth/drizzle-adapter':
-    specifier: ^0.8.0
+    specifier: ^0.8.1
     version: 0.8.1
   '@auth/sveltekit':
-    specifier: ^0.14.0
+    specifier: ^0.14.1
     version: 0.14.1(@sveltejs/kit@2.5.5)(svelte@5.0.0-next.90)
   '@designbycode/tailwindcss-mask-image':
     specifier: ^2.0.3
@@ -25,19 +25,19 @@ dependencies:
     specifier: ^0.5.6
     version: 0.5.6
   '@sveltejs/adapter-vercel':
-    specifier: ^5.0.0
+    specifier: ^5.2.0
     version: 5.2.0(@sveltejs/kit@2.5.5)
   '@vercel/analytics':
-    specifier: ^1.1.2
+    specifier: ^1.2.2
     version: 1.2.2
   '@vercel/edge-config':
     specifier: ^1.1.0
-    version: 1.1.0(typescript@5.5.0-dev.20240330)
+    version: 1.1.0(typescript@5.5.0-dev.20240331)
   bits-ui:
     specifier: ^0.21.1
     version: 0.21.1(svelte@5.0.0-next.90)
   chart.js:
-    specifier: ^4.4.1
+    specifier: ^4.4.2
     version: 4.4.2
   chartjs-adapter-date-fns:
     specifier: ^3.0.0
@@ -52,10 +52,10 @@ dependencies:
     specifier: ^2.1.0
     version: 2.1.0
   date-fns:
-    specifier: ^3.2.0
+    specifier: ^3.6.0
     version: 3.6.0
   drizzle-orm:
-    specifier: ^0.30.2
+    specifier: ^0.30.6
     version: 0.30.6(@libsql/client@0.5.6)
   formsnap:
     specifier: ^1.0.0
@@ -76,17 +76,17 @@ dependencies:
     specifier: ^5.4.1
     version: 5.4.1
   prettier:
-    specifier: ^3.2.4
+    specifier: ^3.2.5
     version: 3.2.5
   prettier-plugin-svelte:
-    specifier: ^3.1.2
+    specifier: ^3.2.2
     version: 3.2.2(prettier@3.2.5)(svelte@5.0.0-next.90)
   prettier-plugin-tailwindcss:
-    specifier: ^0.5.11
+    specifier: ^0.5.13
     version: 0.5.13(prettier-plugin-svelte@3.2.2)(prettier@3.2.5)
   quicktype-core:
-    specifier: ^23.0.106
-    version: 23.0.114
+    specifier: ^23.0.115
+    version: 23.0.115
   sharp:
     specifier: ^0.33.3
     version: 0.33.3
@@ -94,7 +94,7 @@ dependencies:
     specifier: ^7.8.3
     version: 7.8.3
   svelte-sonner:
-    specifier: ^0.3.19
+    specifier: ^0.3.20
     version: 0.3.20(svelte@5.0.0-next.90)
   sveltekit-superforms:
     specifier: ^2.12.2
@@ -114,19 +114,19 @@ dependencies:
 
 devDependencies:
   '@sveltejs/enhanced-img':
-    specifier: ^0.1.8
+    specifier: ^0.1.9
     version: 0.1.9(svelte@5.0.0-next.90)
   '@sveltejs/kit':
-    specifier: ^2.4.0
+    specifier: ^2.5.5
     version: 2.5.5(@sveltejs/vite-plugin-svelte@3.0.2)(svelte@5.0.0-next.90)(vite@5.2.7)
   '@sveltejs/vite-plugin-svelte':
-    specifier: ^3.0.1
+    specifier: ^3.0.2
     version: 3.0.2(svelte@5.0.0-next.90)(vite@5.2.7)
   '@tailwindcss/forms':
     specifier: ^0.5.7
     version: 0.5.7(tailwindcss@3.4.3)
   '@types/bun':
-    specifier: ^1.0.10
+    specifier: ^1.0.12
     version: 1.0.12
   '@types/jsdom':
     specifier: ^21.1.6
@@ -135,7 +135,7 @@ devDependencies:
     specifier: ^5.3.14
     version: 5.3.14
   autoprefixer:
-    specifier: ^10.4.17
+    specifier: ^10.4.19
     version: 10.4.19(postcss@8.4.38)
   drizzle-kit:
     specifier: ^0.20.14
@@ -144,16 +144,16 @@ devDependencies:
     specifier: ^1.4.2
     version: 1.4.2(svelte@5.0.0-next.90)
   postcss:
-    specifier: ^8.4.33
+    specifier: ^8.4.38
     version: 8.4.38
   svelte:
     specifier: next
     version: 5.0.0-next.90
   svelte-check:
-    specifier: ^3.6.3
+    specifier: ^3.6.8
     version: 3.6.8(postcss@8.4.38)(svelte@5.0.0-next.90)
   tailwindcss:
-    specifier: ^3.4.1
+    specifier: ^3.4.3
     version: 3.4.3
   tailwindcss-contain:
     specifier: ^0.1.1
@@ -166,9 +166,9 @@ devDependencies:
     version: 2.6.2
   typescript:
     specifier: next
-    version: 5.5.0-dev.20240330
+    version: 5.5.0-dev.20240331
   vite:
-    specifier: ^5.0.11
+    specifier: ^5.2.7
     version: 5.2.7
 
 packages:
@@ -1650,7 +1650,7 @@ packages:
     resolution: {integrity: sha512-NRIBwfcS0bUoUbRWlNGetqjvLSwgYH/BqKqDN7vK1g32p7dN96k0712COgaz6VFizAm9b0g6IG6hR6+hc0KCPg==}
     dev: false
 
-  /@vercel/edge-config@1.1.0(typescript@5.5.0-dev.20240330):
+  /@vercel/edge-config@1.1.0(typescript@5.5.0-dev.20240331):
     resolution: {integrity: sha512-es/4BzzKfyUilL5E1knR42MZHJqHMRfqitrnv18gVZZUha9ywrX3qNoCrPsNMJ1HS8xAAz/FJEyel7YFIDfKoQ==}
     engines: {node: '>=14.6'}
     peerDependencies:
@@ -1660,7 +1660,7 @@ packages:
         optional: true
     dependencies:
       '@vercel/edge-config-fs': 0.1.0
-      ts-essentials: 9.4.1(typescript@5.5.0-dev.20240330)
+      ts-essentials: 9.4.1(typescript@5.5.0-dev.20240331)
     transitivePeerDependencies:
       - typescript
     dev: false
@@ -1829,7 +1829,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.23.0
-      caniuse-lite: 1.0.30001600
+      caniuse-lite: 1.0.30001603
       fraction.js: 4.3.7
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -1907,7 +1907,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001600
+      caniuse-lite: 1.0.30001603
       electron-to-chromium: 1.4.722
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.23.0)
@@ -1955,8 +1955,8 @@ packages:
     dev: false
     optional: true
 
-  /caniuse-lite@1.0.30001600:
-    resolution: {integrity: sha512-+2S9/2JFhYmYaDpZvo0lKkfvuKIglrx68MwOBqMGHhQsNkLjB5xtc/TGoEPs+MxjSyN/72qer2g97nzR641mOQ==}
+  /caniuse-lite@1.0.30001603:
+    resolution: {integrity: sha512-iL2iSS0eDILMb9n5yKQoTBim9jMZ0Yrk8g0N9K7UzYyWnfIKzXBZD5ngpM37ZcL/cv0Mli8XtVMRYMQAfFpi5Q==}
     dev: true
 
   /chalk@5.3.0:
@@ -3538,8 +3538,8 @@ packages:
   /queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
-  /quicktype-core@23.0.114:
-    resolution: {integrity: sha512-5RUll4bQq5q890T+s9xZUqbubnLF1FuoAQtg7x95pgvKOnOYaHPAQAtLiktStFTk0oz4zV+wpzAjGWssAFeWJw==}
+  /quicktype-core@23.0.115:
+    resolution: {integrity: sha512-wrDX8TtHjlCMQgPOxv94NoNfhvIO4V0qFQZY2NOyuup0hINKT6gKKnqceu6QMkME33V7Nt58lx6ABbWQ5f4f2Q==}
     dependencies:
       '@glideapps/ts-necessities': 2.1.3
       '@types/urijs': 1.19.25
@@ -4199,7 +4199,7 @@ packages:
     engines: {node: '>=14.13.1'}
     dev: false
 
-  /ts-essentials@9.4.1(typescript@5.5.0-dev.20240330):
+  /ts-essentials@9.4.1(typescript@5.5.0-dev.20240331):
     resolution: {integrity: sha512-oke0rI2EN9pzHsesdmrOrnqv1eQODmJpd/noJjwj2ZPC3Z4N2wbjrOEqnsEgmvlO2+4fBb0a794DCna2elEVIQ==}
     peerDependencies:
       typescript: '>=4.1.0'
@@ -4207,7 +4207,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      typescript: 5.5.0-dev.20240330
+      typescript: 5.5.0-dev.20240331
     dev: false
 
   /ts-interface-checker@0.1.13:
@@ -4238,8 +4238,8 @@ packages:
     hasBin: true
     dev: true
 
-  /typescript@5.5.0-dev.20240330:
-    resolution: {integrity: sha512-N8P34nHmNVcIbh3AsZ3W3rl9TCcvO3R5mHu4HzF1WtL4sUZPy+huGhENKMmwgYS1sxw2l2ts66hQdZmv+jHZxw==}
+  /typescript@5.5.0-dev.20240331:
+    resolution: {integrity: sha512-StCr+/vp6ratgAvX0z51Xz8wKQ5RzUb05sSKXVf4SbZFDPzI5yzxemIhwggAIw9ip0ZxK0kAJl6SBFQLKs8MBw==}
     engines: {node: '>=14.17'}
     hasBin: true
 
