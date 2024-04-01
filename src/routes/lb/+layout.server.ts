@@ -9,32 +9,20 @@ export const config: Config = {
   runtime: 'nodejs20.x',
 }
 
-async function f(params: Parameters<LayoutServerLoad>[0]['params']) {
-  const { first, type, rotation, second, category } = params
+export const load = (async ({ params: { first } }) => {
   const inactive = first === 'inactive'
-
   const seasons = await get_valid_seasons()
-  const leaderboards = await leaderboard_datatable()
-  const lbs = leaderboards.filter(leaderboard => {
+  const leaderboards = leaderboard_datatable().then(leaderboards => leaderboards.filter(leaderboard => {
     if (!inactive && match_leaderboard(leaderboard, { FirstLevelCategory: FirstLevelCategory.Inactive })) { return false }
     if (!first) { return true }
     return match_leaderboard(leaderboard, {
       //@ts-expect-error
       FirstLevelCategory: first,
     })
-  })
+  }))
 
   return {
     seasons,
-    leaderboards: lbs
-  }
-}
-
-export const load = (async ({ params }) => {
-  const leaderboards = f(params)
-  leaderboards.catch(e => console.log(e))
-
-  return {
-    lbs: leaderboards
+    leaderboards
   }
 }) satisfies LayoutServerLoad

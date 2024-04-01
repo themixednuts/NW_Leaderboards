@@ -21,6 +21,7 @@
   import Package2 from 'lucide-svelte/icons/package-2'
   import Menu from 'lucide-svelte/icons/menu'
   import { Gear, SignIn, SignOut, Question } from 'phosphor-svelte'
+  import { enhance } from '$app/forms'
 
   interface Props {
     data: PageData
@@ -84,13 +85,14 @@
       </Sheet.Content>
     </Sheet.Root>
     <div class="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
-      <form class="ml-auto flex-1 sm:flex-initial">
+      <form class="ml-auto flex-1 sm:flex-initial" method="post" action="/?/search" use:enhance>
         <div class="relative">
           <Search class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             type="search"
             placeholder="Search players, companies..."
             class="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
+            name="q"
           />
         </div>
       </form>
