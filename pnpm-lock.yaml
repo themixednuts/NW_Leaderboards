@@ -13,11 +13,11 @@ dependencies:
     specifier: 0.27.0
     version: 0.27.0
   '@auth/drizzle-adapter':
-    specifier: ^0.8.1
-    version: 0.8.1
+    specifier: ^0.8.2
+    version: 0.8.2
   '@auth/sveltekit':
-    specifier: ^0.14.1
-    version: 0.14.1(@sveltejs/kit@2.5.5)(svelte@5.0.0-next.90)
+    specifier: ^0.14.2
+    version: 0.14.2(@sveltejs/kit@2.5.5)(svelte@5.0.0-next.90)
   '@designbycode/tailwindcss-mask-image':
     specifier: ^2.0.3
     version: 2.0.3(tailwindcss@3.4.3)
@@ -32,7 +32,7 @@ dependencies:
     version: 1.2.2
   '@vercel/edge-config':
     specifier: ^1.1.0
-    version: 1.1.0(typescript@5.5.0-dev.20240331)
+    version: 1.1.0(typescript@5.5.0-dev.20240401)
   bits-ui:
     specifier: ^0.21.1
     version: 0.21.1(svelte@5.0.0-next.90)
@@ -166,7 +166,7 @@ devDependencies:
     version: 2.6.2
   typescript:
     specifier: next
-    version: 5.5.0-dev.20240331
+    version: 5.5.0-dev.20240401
   vite:
     specifier: ^5.2.7
     version: 5.2.7
@@ -207,8 +207,8 @@ packages:
       preact-render-to-string: 5.2.3(preact@10.11.3)
     dev: false
 
-  /@auth/drizzle-adapter@0.8.1:
-    resolution: {integrity: sha512-WILvFJ6tOUjSy2azJY3l2xnLNV7P5jDw970e4wg3ug6sIWLATBr0MN6w+xJBuXVSoDz7jSWTlyWkfiiT0l0Ugg==}
+  /@auth/drizzle-adapter@0.8.2:
+    resolution: {integrity: sha512-IrySrHLr427+J5CjiM5fI6XFDmH5R2G7wd4E26z+J64C3t2aegdZdlfMAUerLjeoxAXnMas7bECtOYRO33EfKA==}
     dependencies:
       '@auth/core': 0.27.0
     transitivePeerDependencies:
@@ -217,8 +217,8 @@ packages:
       - nodemailer
     dev: false
 
-  /@auth/sveltekit@0.14.1(@sveltejs/kit@2.5.5)(svelte@5.0.0-next.90):
-    resolution: {integrity: sha512-NBmMO4L4pwNv2QMADCAwjtrFgd8WRaVjuPyDF2aR5QlXiXLihHGy9MIs6YeNV6dXa90AIsJMpguEOdsaWhsaGA==}
+  /@auth/sveltekit@0.14.2(@sveltejs/kit@2.5.5)(svelte@5.0.0-next.90):
+    resolution: {integrity: sha512-HCVCCdOOk3KvobUJrMIyAGoKTCNPT18rXL2RiQbM9mTtkvvSlbmwf7ELzMlh6RK7k5SkMD8D4f3WHUfdXIFF0A==}
     peerDependencies:
       '@sveltejs/kit': ^1.0.0 || ^2.0.0
       svelte: ^3.54.0 || ^4.0.0 || ^5
@@ -1650,7 +1650,7 @@ packages:
     resolution: {integrity: sha512-NRIBwfcS0bUoUbRWlNGetqjvLSwgYH/BqKqDN7vK1g32p7dN96k0712COgaz6VFizAm9b0g6IG6hR6+hc0KCPg==}
     dev: false
 
-  /@vercel/edge-config@1.1.0(typescript@5.5.0-dev.20240331):
+  /@vercel/edge-config@1.1.0(typescript@5.5.0-dev.20240401):
     resolution: {integrity: sha512-es/4BzzKfyUilL5E1knR42MZHJqHMRfqitrnv18gVZZUha9ywrX3qNoCrPsNMJ1HS8xAAz/FJEyel7YFIDfKoQ==}
     engines: {node: '>=14.6'}
     peerDependencies:
@@ -1660,7 +1660,7 @@ packages:
         optional: true
     dependencies:
       '@vercel/edge-config-fs': 0.1.0
-      ts-essentials: 9.4.1(typescript@5.5.0-dev.20240331)
+      ts-essentials: 9.4.1(typescript@5.5.0-dev.20240401)
     transitivePeerDependencies:
       - typescript
     dev: false
@@ -4199,7 +4199,7 @@ packages:
     engines: {node: '>=14.13.1'}
     dev: false
 
-  /ts-essentials@9.4.1(typescript@5.5.0-dev.20240331):
+  /ts-essentials@9.4.1(typescript@5.5.0-dev.20240401):
     resolution: {integrity: sha512-oke0rI2EN9pzHsesdmrOrnqv1eQODmJpd/noJjwj2ZPC3Z4N2wbjrOEqnsEgmvlO2+4fBb0a794DCna2elEVIQ==}
     peerDependencies:
       typescript: '>=4.1.0'
@@ -4207,7 +4207,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      typescript: 5.5.0-dev.20240331
+      typescript: 5.5.0-dev.20240401
     dev: false
 
   /ts-interface-checker@0.1.13:
@@ -4238,8 +4238,8 @@ packages:
     hasBin: true
     dev: true
 
-  /typescript@5.5.0-dev.20240331:
-    resolution: {integrity: sha512-StCr+/vp6ratgAvX0z51Xz8wKQ5RzUb05sSKXVf4SbZFDPzI5yzxemIhwggAIw9ip0ZxK0kAJl6SBFQLKs8MBw==}
+  /typescript@5.5.0-dev.20240401:
+    resolution: {integrity: sha512-YeImidiTV9afClWslA8QLyJTTU6PQ5oWyeBSS04yjoVelrK2kpPPtJdnGLooOdzfFRgtZhGIxRIffDen8X93vw==}
     engines: {node: '>=14.17'}
     hasBin: true
 

@@ -9,10 +9,13 @@ export const config: Config = {
   runtime: 'nodejs20.x',
 }
 
+
+const leaderboards = leaderboard_datatable()
+
 export const load = (async ({ params: { first } }) => {
   const inactive = first === 'inactive'
   const seasons = await get_valid_seasons()
-  const leaderboards = leaderboard_datatable().then(leaderboards => leaderboards.filter(leaderboard => {
+  leaderboards.then(leaderboards => leaderboards.filter(leaderboard => {
     if (!inactive && match_leaderboard(leaderboard, { FirstLevelCategory: FirstLevelCategory.Inactive })) { return false }
     if (!first) { return true }
     return match_leaderboard(leaderboard, {
