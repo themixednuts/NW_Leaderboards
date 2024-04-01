@@ -17,8 +17,13 @@
   import * as DropdownMenu from '@/shadcn/components/ui/dropdown-menu'
   import ScrollArea from '@/shadcn/components/ui/scroll-area/scroll-area.svelte'
   import { cn } from '@/shadcn/utils.js'
+  import type { LayoutData } from './$types.js'
 
-  let { data } = $props()
+  interface Props {
+    data: LayoutData
+  }
+
+  let { data }: Props = $props()
   let { season, type, category, rotation, first, second } = $derived($page.params)
   $inspect(type)
 
@@ -69,7 +74,7 @@
 </script>
 
 <div
-  class="relative grid max-h-fit w-full grid-flow-row grid-cols-[minmax(min-content,1fr)] grid-rows-[repeat(3,min-content)] gap-2 px-2 py-2 contain-paint md:grid-cols-[repeat(2,minmax(min-content,1fr))] md:grid-rows-[repeat(2,min-content),repeat(2,minmax(min-content,1fr))] lg:grid-cols-[20rem,1fr] lg:grid-rows-[min-content,58rem]"
+  class="relative grid max-h-fit w-full grid-flow-row grid-cols-[minmax(min-content,1fr)] grid-rows-[repeat(3,min-content)] gap-2 px-2 py-2 contain-paint md:grid-cols-[repeat(2,minmax(min-content,1fr))] md:grid-rows-[repeat(2,min-content),repeat(2,minmax(min-content,1fr))] lg:grid-cols-[20rem,1fr] lg:grid-rows-[15rem,58rem]"
 >
   {#if leaderboards}
     <div
@@ -103,7 +108,7 @@
             {#each rotations as rotation}
               <DropdownMenu.Item>
                 <a
-                  href={`/lb/${first}/${category}/${second}/${rotation?.toLowerCase()}/${type}/${season}`}
+                  href={`/lb/${first}/${category}/${second}/${rotation.toLowerCase()}/${type}/${season}`}
                   class="rounded-none capitalize"
                 >
                   {rotation}

@@ -140,10 +140,10 @@
       <Table.Root class="relative">
         <Table.Header class="sticky top-0">
           <Table.Row class="">
-            <Table.Head>Rank</Table.Head>
+            <Table.Head class="w-16">Rank</Table.Head>
             <Table.Head class="capitalize">{type}</Table.Head>
-            <Table.Head>{leaderboard.ValueString}</Table.Head>
-            <Table.Head>Server</Table.Head>
+            <Table.Head class="w-20">{leaderboard.ValueString}</Table.Head>
+            <Table.Head class="w-24">Server</Table.Head>
           </Table.Row>
         </Table.Header>
         <Table.Body>

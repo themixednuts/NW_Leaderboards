@@ -87,7 +87,11 @@
       <form class="ml-auto flex-1 sm:flex-initial">
         <div class="relative">
           <Search class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input type="search" placeholder="Search products..." class="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]" />
+          <Input
+            type="search"
+            placeholder="Search players, companies..."
+            class="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
+          />
         </div>
       </form>
       <DropdownMenu.Root>
@@ -102,20 +106,18 @@
           </Button>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content align="end">
-          <DropdownMenu.Label>
-            {#if data.session?.user}
+          {#if data.session?.user}
+            <DropdownMenu.Label>
               {data.session.user.name}
-            {:else}
-              My Account
-            {/if}
-          </DropdownMenu.Label>
-          <DropdownMenu.Separator />
-          <DropdownMenu.Item>
-            <a href="/settings/profile" class="flex place-items-center gap-2 whitespace-nowrap">
-              <Gear />
-              <div>Settings</div>
-            </a>
-          </DropdownMenu.Item>
+            </DropdownMenu.Label>
+            <DropdownMenu.Separator />
+            <DropdownMenu.Item>
+              <a href="/settings/profile" class="flex place-items-center gap-2 whitespace-nowrap">
+                <Gear />
+                <div>Settings</div>
+              </a>
+            </DropdownMenu.Item>
+          {/if}
           <DropdownMenu.Item>
             <a
               href="https://discord.gg/2QCFwyE9Yr"
@@ -152,6 +154,6 @@
 {#snippet logo()}
   <a href="/" class="flex items-center gap-2 text-lg font-semibold md:text-base">
     <Package2 class="h-6 w-6" />
-    <span class="sr-only">Acme Inc</span>
+    <span class="sr-only">NW Stats</span>
   </a>
 {/snippet}
