@@ -12,7 +12,6 @@
     normalize_string,
     LEADERBOARD_TYPE,
   } from '$lib/leaderboard/utils'
-  import type { LeaderboardData } from '$lib/leaderboard/types'
   import { Button } from '@/shadcn/components/ui/button'
   import * as DropdownMenu from '@/shadcn/components/ui/dropdown-menu'
   import ScrollArea from '@/shadcn/components/ui/scroll-area/scroll-area.svelte'
@@ -25,22 +24,34 @@
 
   let { data }: Props = $props()
   let { season, type, category, rotation, first, second } = $derived($page.params)
-  $inspect(type)
+  let displayName = $derived($page.url.searchParams.get('q'))
 
-  let seasons: ReturnType<typeof get_seasons> | undefined = $state()
+  let seasons: ReturnType<typeof get_seasons> | undefined = $derived(get_seasons(data.seasons))
+  let leaderboard = $derived(
+    data.leaderboards.find((lb) =>
+      match_leaderboard(lb, {
+        //@ts-expect-error
+        FirstLevelCategory: first,
+        Category: category,
+        SecondLevelCategory: second,
+        //@ts-expect-error
+        Rotation: rotation,
+        CharacterLeaderboard: type === 'character' ? true : undefined,
+        FactionLeaderboard: type === 'faction' ? true : undefined,
+        GroupLeaderboard: type === 'group' ? true : undefined,
+        CompanyLeaderboard: type === 'company' ? true : undefined,
+        //@ts-expect-error
+        DisplayName: displayName,
+      }),
+    ),
+  )
 
-  let leaderboards: LeaderboardData[] | undefined = $state()
-  $inspect(leaderboards)
-
-  let leaderboard: LeaderboardData | undefined = $state()
-  $inspect(leaderboard)
-
-  const rotations = $derived([...new Set(leaderboards?.map((lb) => lb.Rotation))])
+  const rotations = $derived([...new Set(data.leaderboards?.map((lb) => lb.Rotation))])
   $inspect(rotations)
 
   let group_by_category = $derived(
     leaderboard_group_by(
-      leaderboards?.filter((lb) =>
+      data.leaderboards?.filter((lb) =>
         match_leaderboard(lb, {
           FirstLevelCategory: leaderboard?.FirstLevelCategory,
         }),
@@ -60,23 +71,12 @@
     if ($page.params.first !== 'factionwar') clearInterval(interval)
     return () => clearInterval(interval)
   })
-
-  $effect(() => {
-    setLeaderboard(data)
-  })
-
-  async function setLeaderboard(d: typeof data) {
-    const lbs = await d.lbs
-    leaderboards = lbs.leaderboards
-    leaderboard = lbs.lb
-    seasons = get_seasons(lbs.seasons)
-  }
 </script>
 
 <div
   class="relative grid max-h-fit w-full grid-flow-row grid-cols-[minmax(min-content,1fr)] grid-rows-[repeat(3,min-content)] gap-2 px-2 py-2 contain-paint md:grid-cols-[repeat(2,minmax(min-content,1fr))] md:grid-rows-[repeat(2,min-content),repeat(2,minmax(min-content,1fr))] lg:grid-cols-[20rem,1fr] lg:grid-rows-[15rem,58rem]"
 >
-  {#if leaderboards}
+  {#if data.leaderboards}
     <div
       class="col-span-full row-span-1 row-start-1 flex size-full max-h-60 place-content-center border-2 p-2 lg:col-start-2 lg:place-self-start"
     >
@@ -144,10 +144,10 @@
         <Button
           variant="outline"
           class={cn('', {
-            'pointer-events-none opacity-30': !leaderboards?.find((lb) =>
+            'pointer-events-none opacity-30': !data.leaderboards?.find((lb) =>
               match_leaderboard(lb, { FactionLeaderboard: true, FirstLevelCategory: leaderboard?.FirstLevelCategory }),
             ),
-            'ring ring-ring': type === 'faction',
+            'ring ring-inset ring-ring': type === 'faction',
           })}
           href={`/lb/${first}/${category}/${second}/${rotation}/faction/${season}`}
         >
@@ -156,10 +156,10 @@
         <Button
           variant="outline"
           class={cn('', {
-            'pointer-events-none opacity-30': !leaderboards?.find((lb) =>
+            'pointer-events-none opacity-30': !data.leaderboards?.find((lb) =>
               match_leaderboard(lb, { CompanyLeaderboard: true, FirstLevelCategory: leaderboard?.FirstLevelCategory }),
             ),
-            'ring ring-ring': type === 'company',
+            'ring ring-inset ring-ring': type === 'company',
           })}
           href={`/lb/${first}/${category}/${second}/${rotation}/company/${season}`}
         >
@@ -168,10 +168,10 @@
         <Button
           variant="outline"
           class={cn('', {
-            'pointer-events-none opacity-30': !leaderboards?.find((leaderboard) =>
+            'pointer-events-none opacity-30': !data.leaderboards?.find((leaderboard) =>
               match_leaderboard(leaderboard, { CharacterLeaderboard: true }),
             ),
-            'ring ring-ring': type === 'character',
+            'ring ring-inset ring-ring': type === 'character',
           })}
           href={`/lb/${first}/${category}/${second}/${rotation}/character/${season}`}
         >
@@ -179,8 +179,8 @@
         </Button>
       </div>
       <div class="col-span-full w-full self-start">
-        {#if leaderboards && leaderboard?.DisplayName}
-          {@const lbs = leaderboards.filter((lb) =>
+        {#if data.leaderboards && leaderboard?.DisplayName}
+          {@const lbs = data.leaderboards.filter((lb) =>
             match_leaderboard(lb, {
               DataSheetCategory: leaderboard?.DataSheetCategory,
               SecondLevelCategory: leaderboard?.SecondLevelCategory,
@@ -263,16 +263,6 @@
                     )}
                     href={`/lb/${first}/${normalize_string(cat)}/${normalize_leaderboard_string(lb, 'SecondLevelCategory')}/${normalize_leaderboard_string(lb, 'Rotation')}/${type}/${season}`}
                   >
-                    <!-- {match_leaderboard(lb, {
-                        //@ts-ignore-error
-                        [LEADERBOARD_TYPE[type]]: true,
-                        //@ts-ignore-error
-                        FirstLevelCategory: first,
-                        SecondLevelCategory: second,
-                        Category: category,
-                        //@ts-ignore-error
-                        Rotation: rotation,
-                      })} -->
                     {secondlevelcategory}
                   </Button>
                 {/if}
@@ -289,12 +279,3 @@
     </div>
   {/if}
 </div>
-
-<style>
-  /* .my-grid {
-    grid-template-rows:
-      minmax(15vh, 0.3fr) min-content minmax(15vh, min-content)
-      minmax(35vh, 1fr);
-    grid-template-columns: repeat(2, minmax(min-content, auto)) repeat(2, minmax(min-content, 1fr));
-  } */
-</style>

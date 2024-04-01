@@ -15,7 +15,7 @@ export const config: Config = {
 export const load = (async ({ params: { season, type, first, second, category, rotation }, parent, url: { searchParams }, locals }) => {
   const { leaderboards } = await parent()
   const displayName = searchParams.get('q')
-  const info = leaderboards.then(leaderboards => leaderboards.find(lb => match_leaderboard(lb, {
+  const leaderboard = leaderboards.find(lb => match_leaderboard(lb, {
     //@ts-expect-error
     FirstLevelCategory: first,
     Category: category,
@@ -28,21 +28,19 @@ export const load = (async ({ params: { season, type, first, second, category, r
     CompanyLeaderboard: type === 'company' ? true : undefined,
     //@ts-expect-error
     DisplayName: displayName,
-  }))).then(async (leaderboard) => {
-    const id = type === 'faction' ? leaderboard?.FactionLeaderboardDefinitionId : leaderboard?.LeaderboardDefinitionId
-    return {
-      json: fetch(`https://api.nwlb.info/json/${id}/${season}?size=1000&eid=true`).then(async (res) => {
-        if (!res.ok) error(res.status)
-        const json = res.json() as Promise<LeaderboardAPIBoardItem[]>
-        return json
-      }),
-      leaderboard
-    }
+  }))
+
+  const id = type === 'faction' ? leaderboard?.FactionLeaderboardDefinitionId : leaderboard?.LeaderboardDefinitionId
+  const json = fetch(`https://api.nwlb.info/json/${id}/${season}?size=1000&eid=true`).then(async (res) => {
+    if (!res.ok) error(res.status)
+    const json = res.json() as Promise<LeaderboardAPIBoardItem[]>
+    return json
   })
 
-  info.catch((e) => console.log(e))
+  json.catch((e) => console.log(e))
 
   return {
-    info
+    json,
+    leaderboard,
   }
 }) satisfies PageServerLoad

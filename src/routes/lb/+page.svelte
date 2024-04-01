@@ -1,13 +1,12 @@
 <script lang="ts">
   import { resolveRoute } from '$app/paths'
-  import { FirstLevelCategory, type LeaderboardData } from '$lib/leaderboard/types'
+  import { FirstLevelCategory } from '$lib/leaderboard/types'
   import {
     sort_leaderboards,
     match_leaderboard,
     normalize_leaderboard_string,
     FACTION_IMAGE_PATHS,
   } from '$lib/leaderboard/utils'
-  import { onMount } from 'svelte'
   import type { PageData } from './$types.js'
   import { cn } from '@/shadcn/utils.js'
 
@@ -16,7 +15,8 @@
   }
 
   let { data }: Props = $props()
-  let seasons: Awaited<(typeof data)['lbs']>['seasons'] = $state([])
+  let seasons = $derived(data.seasons)
+  let leaderboards = $derived(data.leaderboards)
 
   let currentIndex = $state(0)
   let banners = $derived([
@@ -55,14 +55,7 @@
     }
   })
 
-  let leaderboards: LeaderboardData[] | undefined = $state()
-  $inspect(leaderboards)
-
-  onMount(async () => {
-    const lbs = await data.lbs
-    leaderboards = lbs.leaderboards.sort(sort_leaderboards)
-    seasons = lbs.seasons
-  })
+  // $inspect(leaderboards)
 </script>
 
 <div

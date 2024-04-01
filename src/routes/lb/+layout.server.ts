@@ -10,19 +10,19 @@ export const config: Config = {
 }
 
 
-const leaderboards = leaderboard_datatable()
+const leaderboard_results = await leaderboard_datatable()
 
 export const load = (async ({ params: { first } }) => {
   const inactive = first === 'inactive'
   const seasons = await get_valid_seasons()
-  leaderboards.then(leaderboards => leaderboards.filter(leaderboard => {
+  const leaderboards = leaderboard_results.filter(leaderboard => {
     if (!inactive && match_leaderboard(leaderboard, { FirstLevelCategory: FirstLevelCategory.Inactive })) { return false }
     if (!first) { return true }
     return match_leaderboard(leaderboard, {
       //@ts-expect-error
       FirstLevelCategory: first,
     })
-  }))
+  })
 
   return {
     seasons,
