@@ -1,6 +1,7 @@
+import type { users } from "../users/schema"
 import { db } from "./client"
-import { characters } from "./schema"
-import { prepared_characters } from "./statements"
+import { characters, guilds } from "./schema"
+import { prepared_characters, prepared_guilds_with_members } from "./statements"
 
 // HELPER FUNCTIONS
 export const getCharactersByUser = async (userId: typeof characters.$inferSelect.userId) => {
@@ -14,4 +15,8 @@ export const updateCharacterVisibility = async (character: typeof characters.$in
       visibility: character.visibility
     }
   }).returning()
+}
+
+export const getCompaniesAndMembers = async (userId: typeof characters.$inferSelect.userId, role: typeof users.$inferSelect.role) => {
+  return prepared_guilds_with_members.all({ userId, role })
 }

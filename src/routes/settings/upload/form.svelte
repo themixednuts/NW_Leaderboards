@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { toast } from 'svelte-sonner'
   import * as Form from '@/shadcn/components/ui/form/index'
   import { Input } from '@/shadcn/components/ui/input'
   import SuperDebug, { fileProxy, superForm, type Infer, type SuperValidated } from 'sveltekit-superforms'
   import { zodClient } from 'sveltekit-superforms/adapters'
   import { gameLogFormSchema, type GameLogFormSchema } from './schema'
+  import { dev } from '$app/environment'
 
   interface Props {
     data: SuperValidated<Infer<GameLogFormSchema>>
@@ -33,6 +33,8 @@
   <Form.Button type="submit" class="">Submit</Form.Button>
 </form>
 
-<div class="absolute bottom-10 w-full min-w-fit max-w-xl">
-  <SuperDebug data={$formData} />
-</div>
+{#if dev}
+  <div class="absolute bottom-10 w-full min-w-fit max-w-xl">
+    <SuperDebug data={$formData} />
+  </div>
+{/if}
