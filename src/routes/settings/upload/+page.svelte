@@ -9,10 +9,6 @@
   }
 
   let { data, form }: Props = $props()
-  // const handleForm = (async ({ formData }) => {
-  //   return async ({ result, update }) => {
-  //   }
-  // }) satisfies SubmitFunction
   $effect(() => {
     if (!form?.form) return
     const { form: formData } = form

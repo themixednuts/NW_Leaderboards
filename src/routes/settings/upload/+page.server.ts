@@ -77,7 +77,6 @@ export const actions = {
     })
       .returning({ name: characters.name })
 
-    console.log(upsert)
     return message<{ type: 'gamelog', upsert: typeof upsert }>(form, {
       type: 'gamelog',
       upsert
