@@ -1,7 +1,11 @@
 <script lang="ts">
   import { Buildings, FileArrowUp, User, Users, UsersThree } from 'phosphor-svelte'
+  import type { LayoutData } from './$types'
 
-  let { data } = $props()
+  interface Props {
+    data: LayoutData
+  }
+  let { data }: Props = $props()
 
   const options = [
     {
@@ -19,7 +23,7 @@
         },
         {
           icon: Buildings,
-          link: '/settings/guild',
+          link: '/settings/company',
           label: 'Company',
         },
       ],
@@ -38,7 +42,7 @@
 </script>
 
 <div class="flex grow flex-wrap gap-4">
-  <div class="flex w-80 flex-col p-2">
+  <div class="flex h-min flex-col p-2">
     {#each options as option}
       <div class="py-2 text-sm">
         {option.group}
@@ -55,7 +59,7 @@
     {/each}
   </div>
 
-  <div class="flex grow">
+  <div class="flex h-full grow">
     <slot />
   </div>
 </div>

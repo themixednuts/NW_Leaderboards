@@ -19,7 +19,7 @@
   import * as Form from '@/shadcn/components/ui/form'
   import { applyAction, enhance } from '$app/forms'
   import { toast } from 'svelte-sonner'
-
+  import type { SubmitFunction } from '../../../routes/settings/characters/$types'
   interface Props {
     character: Awaited<ReturnType<typeof getCharactersByUser>>[number]
   }
@@ -29,19 +29,27 @@
   let vis = $state(character.visibility)
   let formEl: HTMLFormElement | undefined = $state()
 
-  $effect(() => {
-    if ($page.form?.success) {
-      toast.success('Updated Visility', {
-        description: `Visibility for ${$page.form.upsert[0].name} changed to ${$page.form.upsert[0].visibility}`,
-      })
+  const handleForm = (({ formData, action, cancel, submitter, formElement }) => {
+    formData.set('visibility', vis)
+    formData.set('character', JSON.stringify(character))
+
+    return async ({ result, update }) => {
+      if (result.type === 'success') {
+        toast.success('Updated Visility', {
+          description: `Visibility for ${result.data?.upsert[0].name} changed to ${result.data?.upsert[0].visibility}`,
+        })
+      }
+      if (result.type === 'failure') {
+        toast.error('Failed to update', {
+          description: `Visibility for ${character.name} failed. Reverted back to ${character.visibility}`,
+        })
+      }
+      if (result) {
+        await applyAction(result)
+      }
+      await update()
     }
-    if (!$page.form?.success && $page.form?.message) {
-      toast.error('Failed to update', {
-        description: `Visibility for ${character.name} failed. Reverted back to ${character.visibility}`,
-      })
-      vis = character.visibility
-    }
-  })
+  }) satisfies SubmitFunction
 
   function submit(value: 'private' | 'public' | 'guild') {
     vis = value
@@ -89,12 +97,17 @@
         {/await}
       </small>
     </div>
-    <div class="">Guild:</div>
+    {#if character.guild}
+      <div class="">
+        Company: {character.guild.name}
+      </div>
+    {/if}
 
     <!-- <div class="col-span-5 col-start-4 row-start-3">{character.faction?.name}</div> -->
-    <div class="flex grow items-end justify-end text-xl font-medium">
+    <!-- <div class="flex grow items-end justify-end text-xl font-medium">
       {700}
-    </div>
+    </div> 
+    -->
     {#if character.steamAppId && steamAppIdMap[character.steamAppId as keyof typeof steamAppIdMap] !== 'Live'}
       <div
         class="relative flex rotate-45 items-center justify-center capitalize before:absolute before:left-1/2 before:top-1/2 before:-z-10 before:h-3/5 before:w-[500%] before:-translate-x-1/2 before:-translate-y-1/2 before:bg-gray-600"
@@ -124,19 +137,7 @@
         <DropdownMenu.RadioItem value="guild">Guild</DropdownMenu.RadioItem>
         <DropdownMenu.RadioItem value="private">Private</DropdownMenu.RadioItem>
       </DropdownMenu.RadioGroup>
-      <form
-        method="post"
-        action="?/visibility"
-        use:enhance={({ formData, action, cancel, submitter, formElement }) => {
-          formData.set('visibility', vis)
-          formData.set('character', JSON.stringify(character))
-          return async ({ result, update }) => {
-            if (result) await applyAction(result)
-            await update()
-          }
-        }}
-        bind:this={formEl}
-      ></form>
+      <form method="post" action="?/visibility" use:enhance={handleForm} bind:this={formEl}></form>
     </DropdownMenu.Content>
   </DropdownMenu.Root>
 </div>

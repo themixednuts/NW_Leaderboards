@@ -52,6 +52,7 @@
     "clsx": "^2.1.0",
     "date-fns": "^3.6.0",
     "drizzle-orm": "^0.30.6",
+    "drizzle-zod": "^0.5.1",
     "formsnap": "^1.0.0",
     "jsdom": "latest",
     "lucide-svelte": "^0.363.0",

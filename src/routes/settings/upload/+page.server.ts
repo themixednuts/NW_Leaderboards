@@ -1,21 +1,29 @@
-import { fail, type Actions } from '@sveltejs/kit'
+import type { Actions } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
 import { db } from '$lib/server/db/gamedata/client'
 import { characters } from '$lib/server/db/gamedata/schema'
 import { sql } from 'drizzle-orm'
+import { fail, message, setError, superValidate, withFiles } from 'sveltekit-superforms'
+import { zod } from 'sveltekit-superforms/adapters'
+import { gameLogFormSchema } from './schema'
 
 export const load = (async () => {
-  return {}
+  return {
+    form: await superValidate(zod(gameLogFormSchema))
+  }
 }) satisfies PageServerLoad
 
 export const actions = {
-  gamelog: async ({ request, locals }) => {
-    const session = await locals.auth()
-    if (!session?.user?.id) return fail(500, { message: 'Not Authorized, Please Login' })
+  gamelog: async (event) => {
+    const form = await superValidate(event, zod(gameLogFormSchema))
+    if (!form.valid) return fail(400, { form })
 
-    const data = await request.formData()
-    const file = data.get('file')
-    if (!(file instanceof File)) return fail(400, { message: 'File Content Required' })
+    const session = await event.locals.auth()
+    if (!session?.user?.id) {
+      return setError(form, 'file', 'Not Authorized', { status: 500 })
+    }
+
+    const file = form.data.file
 
     const PLAYER_NAME = '[GameConnection] GameConnectionWrapper::Connect: playerName = '
     const WORLD_ID = '[Game] LogEnvironmentString: World ID: '
@@ -69,12 +77,11 @@ export const actions = {
     })
       .returning({ name: characters.name })
 
-    return {
-      success: true,
+    console.log(upsert)
+    return message<{ type: 'gamelog', upsert: typeof upsert }>(form, {
       type: 'gamelog',
       upsert
-
-    }
+    })
 
   }
 } satisfies Actions

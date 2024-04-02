@@ -112,7 +112,7 @@
     <div
       class="relative flex w-full min-w-fit flex-col place-content-center place-items-start whitespace-nowrap py-4 pl-2 text-sm uppercase sm:text-xl md:text-2xl xl:text-4xl"
     >
-      <div>
+      <div class="flex *:aspect-square *:h-min">
         {@html replaceLynshineSrc(leaderboard.Category)}, {leaderboard.DisplayName}
       </div>
       <div class="flex place-content-center place-items-center text-sm">
