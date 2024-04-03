@@ -14,6 +14,7 @@
 
   let form = superForm(data, {
     validators: zodClient(gameLogFormSchema),
+    invalidateAll: false,
   })
 
   let formData = form.form

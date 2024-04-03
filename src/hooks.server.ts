@@ -1,4 +1,5 @@
 import { handle as authjs } from '$lib/server/db/users/auth'
+import type { users } from '@/server/db/users/schema'
 import { redirect, type Handle } from '@sveltejs/kit'
 import { sequence } from '@sveltejs/kit/hooks'
 
@@ -15,7 +16,10 @@ const authorization = (async ({ event, resolve }) => {
 export const handle = sequence(authjs, authorization) satisfies Handle
 
 declare module "@auth/core/types" {
-  interface Session {
+  export interface Session {
     error?: "RefreshAccessTokenError"
+  }
+  export interface User {
+    role: typeof users.$inferSelect.role
   }
 }

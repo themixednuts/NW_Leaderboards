@@ -14,8 +14,8 @@ const prepared = union(
           eq(characters.visibility, 'public'),
           inArray(sql.placeholder('role'), ['admin', 'maintainer'])
         ))),
-  db.select({ id: guilds.id, name: guilds.name, type: sql<string>`'guild'` }).from(guilds).where(like(guilds.name, sql.placeholder('name')))
-).prepare()
+  db.select({ id: guilds.id, name: guilds.name, type: sql<string>`'guild'` }).from(guilds).where(like(guilds.name, sql.placeholder('name'))),
+).limit(10).prepare()
 
 export const actions = {
   search: async ({ request, locals }) => {
@@ -25,11 +25,10 @@ export const actions = {
 
     const session = await locals.auth()
 
-    const results = await prepared.all({ name: '%' + q + '%', userId: session?.user?.id ?? null, role: null })
+    const results = await prepared.all({ name: '%' + q + '%', userId: session?.user?.id ?? null, role: session?.user.role ?? null })
     if (!results) return fail(400, { message: 'No Results' })
 
     return {
-      success: true,
       results
     }
   }

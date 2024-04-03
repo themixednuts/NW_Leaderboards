@@ -7,7 +7,7 @@ export const load = (async ({ locals }) => {
   const session = await locals.auth()
   if (!session?.user?.id) return error(403, 'Not Authorized')
 
-  const res = getCharactersByUser(session.user.id)
+  const res = getCharactersByUser(session.user)
   res.catch(e => console.log(e))
 
   return {

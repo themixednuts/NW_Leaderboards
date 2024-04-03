@@ -6,28 +6,38 @@
   import { cubicOut } from 'svelte/easing'
   import { signIn, signOut } from '@auth/sveltekit/client'
   import * as Sheet from '@/shadcn/components/ui/sheet'
-  import { Input } from '@/shadcn/components/ui/input'
   import { Button } from '@/shadcn/components/ui/button'
   import * as DropdownMenu from '@/shadcn/components/ui/dropdown-menu'
   import { Toaster } from '@/shadcn/components/ui/sonner'
+  import * as Command from '@/shadcn/components/ui/command'
 
   // types
   import type { Action } from 'svelte/action'
-  import type { PageData } from './$types.js'
+  import type { ActionData, PageData } from './$types.js'
 
   // icons
   import Search from 'lucide-svelte/icons/search'
   import CircleUser from 'lucide-svelte/icons/circle-user'
   import Package2 from 'lucide-svelte/icons/package-2'
   import Menu from 'lucide-svelte/icons/menu'
-  import { Gear, SignIn, SignOut, Question } from 'phosphor-svelte'
-  import { enhance } from '$app/forms'
+  import { Gear, SignIn, SignOut, Question, ChartPieSlice } from 'phosphor-svelte'
+  import { applyAction, enhance } from '$app/forms'
+  import type { SubmitFunction } from './$types'
 
   interface Props {
     data: PageData
+    form: ActionData
   }
 
-  let { data }: Props = $props()
+  let { data, form }: Props = $props()
+  $inspect(form)
+
+  let open = $state(false)
+  let formEl: HTMLFormElement | undefined = $state()
+  let value: string = $state('')
+
+  let characters: NonNullable<typeof form>['results'] = $state([])
+  let guilds: NonNullable<typeof form>['results'] = $state([])
 
   const progress = $state(tweened(0, { easing: cubicOut }))
   $effect(() => {
@@ -47,11 +57,52 @@
       },
     }
   }
+
+  const handleSubmit = (async ({ formData }) => {
+    if (value) formData.set('q', value)
+    return async ({ result }) => {
+      if (result.type === 'success') {
+        const { data } = result
+        if (data) {
+          characters = data.results.filter((res) => res.type === 'character')
+          guilds = data.results.filter((res) => res.type === 'guild')
+        }
+      }
+
+      applyAction(result)
+    }
+  }) satisfies SubmitFunction
+
+  let timer: ReturnType<typeof setTimeout> | undefined = $state()
+  function debounce<T extends (...args: Parameters<T>) => ReturnType<T>>(callback: T, delay: number) {
+    return new Promise<ReturnType<T> | Error>((resolve, reject) => {
+      clearTimeout(timer)
+      timer = setTimeout(() => {
+        try {
+          //@ts-expect-error
+          resolve(callback())
+        } catch (err) {
+          if (err instanceof Error) {
+            reject(err)
+          }
+          reject(new Error(`An error has occurred: ${err}`))
+        }
+      }, delay)
+    })
+  }
 </script>
 
 <svelte:head>
   <script async src="https://nwdb.info/embed.js"></script>
 </svelte:head>
+<svelte:window
+  onkeydown={(e) => {
+    if (e.key === '/') {
+      e.preventDefault()
+      open = true
+    }
+  }}
+/>
 <Toaster />
 
 {#if !!$navigating}
@@ -85,17 +136,15 @@
       </Sheet.Content>
     </Sheet.Root>
     <div class="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
-      <form class="ml-auto flex-1 sm:flex-initial" method="post" action="/?/search" use:enhance>
-        <div class="relative">
-          <Search class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search players, companies..."
-            class="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
-            name="q"
-          />
-        </div>
-      </form>
+      <Button
+        variant="outline"
+        onclick={() => (open = true)}
+        class="ml-auto flex flex-nowrap place-items-center justify-start gap-2 px-2 contain-paint sm:w-[300px] md:w-[200px] lg:w-[300px]"
+      >
+        <Search class="pointer-events-none shrink-0" />
+        <div class="pointer-events-none shrink opacity-70">Characters, companies...</div>
+        <kbd class="ml-auto shrink-0">/</kbd>
+      </Button>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild let:builder>
           <Button builders={[builder]} variant="secondary" size="icon" class="rounded-full">
@@ -152,10 +201,60 @@
     <slot />
   </div>
 </div>
+<form
+  class="ml-auto flex-1 sm:flex-initial"
+  method="post"
+  action="/?/search"
+  use:enhance={handleSubmit}
+  bind:this={formEl}
+>
+  <Command.Dialog label="Search" bind:open class="">
+    <Command.Input
+      placeholder="Search players, companies..."
+      class="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
+      name="q"
+      bind:value
+      oninput={() =>
+        debounce(() => {
+          if (value.length) formEl?.requestSubmit()
+          else {
+            characters = []
+            guilds = []
+          }
+        }, 500)}
+    />
+    <Command.List>
+      <Command.Empty>No results found</Command.Empty>
+      <Command.Group heading="Characters" alwaysRender={false}>
+        {#if characters?.length}
+          {#each characters as character}
+            <Command.Item onSelect={() => (open = false)}>
+              <a href="/character/{character.id}" class="size-full">
+                {character.name}
+              </a>
+            </Command.Item>
+          {/each}
+        {/if}
+      </Command.Group>
+      <Command.Separator />
+      <Command.Group heading="Guilds">
+        {#if guilds?.length}
+          {#each guilds as guild}
+            <Command.Item onSelect={() => (open = false)}>
+              <a href="/company/{guild.id}" class="size-full">
+                {guild.name}
+              </a>
+            </Command.Item>
+          {/each}
+        {/if}
+      </Command.Group>
+    </Command.List>
+  </Command.Dialog>
+</form>
 
 {#snippet logo()}
-  <a href="/" class="flex items-center gap-2 text-lg font-semibold md:text-base">
-    <Package2 class="h-6 w-6" />
+  <a href="/" class="flex flex-nowrap items-center gap-2 text-lg font-semibold md:text-base">
+    <ChartPieSlice class="h-6 w-6" />
     <span class="sr-only">NW Stats</span>
   </a>
 {/snippet}

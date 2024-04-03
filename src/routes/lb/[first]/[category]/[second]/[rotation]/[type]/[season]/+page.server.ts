@@ -31,7 +31,8 @@ export const load = (async ({ params: { season, type, first, second, category, r
   }))
 
   const id = type === 'faction' ? leaderboard?.FactionLeaderboardDefinitionId : leaderboard?.LeaderboardDefinitionId
-  const json = fetch(`https://api.nwlb.info/json/${id}/${season}?size=1000&eid=true`).then(async (res) => {
+  const api = `https://api.nwlb.info/json/${id}/${season}?size=1000&eid=true`
+  const json = fetch(api).then(async (res) => {
     if (!res.ok) error(res.status)
     const json = res.json() as Promise<LeaderboardAPIBoardItem[]>
     return json

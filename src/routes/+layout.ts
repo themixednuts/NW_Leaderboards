@@ -5,9 +5,9 @@ import type { Actions } from '@sveltejs/kit'
 
 inject({ mode: dev ? 'development' : 'production' })
 
-export const load = (async ({ data: { session } }) => {
+export const load = (async ({ data }) => {
 
   return {
-    session,
+    ...data
   }
 }) satisfies LayoutLoad

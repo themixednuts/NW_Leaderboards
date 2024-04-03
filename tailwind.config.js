@@ -2,7 +2,7 @@ import { fontFamily } from 'tailwindcss/defaultTheme'
 
 /** @type {import('tailwindcss').Config} */
 const config = {
-  plugins: [require('tailwindcss-contain'), require('tailwind-merge'), require('tailwind-variants'), require('@designbycode/tailwindcss-mask-image')],
+  plugins: [require('tailwindcss-contain'), require('tailwind-merge'), require('tailwind-variants'), require('tailwind-gradient-mask-image')],
   darkMode: ['class'],
   content: ['./src/**/*.{html,js,svelte,ts}'],
   safelist: ['dark'],

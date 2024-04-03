@@ -48,7 +48,8 @@ export const guilds = sqliteTable('guilds', {
 export const guildsRelations = relations(guilds, ({ one, many }) => ({
   guildMaster: one(characters, {
     fields: [guilds.guildMasterId],
-    references: [characters.id]
+    references: [characters.id],
+
   }),
   characters: many(characters)
 }))

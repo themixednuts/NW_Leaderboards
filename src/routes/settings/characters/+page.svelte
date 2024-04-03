@@ -14,7 +14,7 @@
 {#await data.characters then characters}
   <ScrollArea class="flex gap-2">
     {#each characters as character (character.id)}
-      <Card {character} class="max-w-96" />
+      <Card {character} class="min-h-0 max-w-96" />
     {/each}
   </ScrollArea>
 {/await}

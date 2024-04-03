@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { replaceLynshineSrc, appendPngToSrc } from '$lib/utils'
+  import { replaceLynshineSrc, appendPngToSrc, FACTIONS } from '$lib/utils'
   import type { LeaderboardAPIBoardItem } from '$lib/leaderboard/utils'
   import type { LeaderboardData } from '$lib/leaderboard/types'
   import Player from './player.svelte'
@@ -99,12 +99,6 @@
       timeOptions,
     )}`
   }
-
-  const factions = {
-    1: 'Syndacite',
-    2: 'Marauders',
-    3: 'Covenant',
-  }
 </script>
 
 <div class="grid min-w-fit grid-cols-1 grid-rows-[auto,1fr,auto] overflow-y-auto contain-paint">
@@ -158,7 +152,7 @@
                       <Player id={player} type={type === 'character' ? 'character' : 'guild'} />
                     {/each}
                   {:else}
-                    {factions[table[1].faction?.replace('Faction', '') as unknown as keyof typeof factions]}
+                    {FACTIONS[table[i].faction?.replace('Faction', '') as unknown as keyof typeof FACTIONS]}
                   {/if}
                 </Table.Cell>
                 <Table.Cell>
@@ -176,87 +170,128 @@
 
     <div class="join flex min-w-fit justify-center place-self-center rounded-none py-2">
       {#if pageSize > 5}
+        {@const page = pageSizeArray[0]}
         <!-- Page 1 -->
         <!-- class:active={currentPage === pageSizeArray[0]} -->
         <Button
-          class="join-item rounded-none"
+          variant="secondary"
+          class={cn({
+            'bg-primary': currentPage === page,
+          })}
           onclick={(e: Parameters<typeof handleClickEvent>[0]) => handleClickEvent(e)}
         >
-          {pageSizeArray[0]}
+          {page}
         </Button>
         <!-- Page 2 or currentPage - 1 -->
         {#if currentPage - 1 > 2 && currentPage - 1 <= pageSize - 3}
+          {@const page = currentPage - 1}
           <!-- class:active={currentPage === currentPage - 1} -->
           <Button
-            class="join-item rounded-none"
+            variant="secondary"
+            class={cn({
+              'bg-primary': currentPage === page,
+            })}
             onclick={(e: Parameters<typeof handleClickEvent>[0]) => handleClickEvent(e)}
           >
-            {currentPage - 1}
+            {page}
           </Button>
         {:else if currentPage - 1 >= pageSize - 3}
+          {@const page = pageSize - 3}
           <!-- class:active={currentPage === pageSize - 3} -->
           <Button
-            class="join-item rounded-none"
+            variant="secondary"
+            class={cn({
+              'bg-primary': currentPage === page,
+            })}
             onclick={(e: Parameters<typeof handleClickEvent>[0]) => handleClickEvent(e)}
           >
-            {pageSize - 3}
+            {page}
           </Button>
         {:else}
+          {@const page = pageSizeArray[1]}
           <!-- class:active={currentPage === pageSizeArray[1]} -->
           <Button
-            class="join-item rounded-none"
+            variant="secondary"
+            class={cn({
+              'bg-primary': currentPage === page,
+            })}
             onclick={(e: Parameters<typeof handleClickEvent>[0]) => handleClickEvent(e)}
           >
-            {pageSizeArray[1]}
+            {page}
           </Button>
         {/if}
         <!-- Page 3 or currentPage -->
         {#if currentPage > 3 && currentPage < pageSize - 1}
+          {@const page = currentPage}
           <!-- class:active={currentPage === currentPage} -->
           <Button
-            class="join-item rounded-none"
+            variant="secondary"
+            class={cn({
+              'bg-primary': currentPage === page,
+            })}
             onclick={(e: Parameters<typeof handleClickEvent>[0]) => handleClickEvent(e)}
           >
-            {currentPage}
+            {page}
           </Button>
         {:else if currentPage >= 1 && currentPage < 4}
+          {@const page = pageSizeArray[2]}
           <!-- class:active={currentPage === pageSizeArray[2]} -->
+
           <Button
-            class="join-item rounded-none"
+            variant="secondary"
+            class={cn({
+              'bg-primary': currentPage === page,
+            })}
             onclick={(e: Parameters<typeof handleClickEvent>[0]) => handleClickEvent(e)}
           >
-            {pageSizeArray[2]}
+            {page}
           </Button>
         {:else}
+          {@const page = pageSize - 2}
           <!-- class:active={currentPage === pageSize - 2} -->
           <Button
-            class="join-item rounded-none"
+            variant="secondary"
+            class={cn({
+              'bg-primary': currentPage === page,
+            })}
             onclick={(e: Parameters<typeof handleClickEvent>[0]) => handleClickEvent(e)}
           >
-            {pageSize - 2}
+            {page}
           </Button>
         {/if}
         <!-- Page 4 or Page 5 or currentPage + 1 -->
         {#if currentPage + 1 < pageSize - 1 && currentPage + 1 > pageSizeArray[2]}
+          {@const page = currentPage + 1}
           <!-- class:active={currentPage === currentPage + 1} -->
           <Button
-            class="join-item rounded-none"
+            variant="secondary"
+            class={cn({
+              'bg-primary': currentPage === page,
+            })}
             onclick={(e: Parameters<typeof handleClickEvent>[0]) => handleClickEvent(e)}
           >
-            {currentPage + 1}
+            {page}
           </Button>
         {:else if currentPage + 1 <= pageSizeArray[2]}
+          {@const page = pageSizeArray[3]}
           <!-- class:active={currentPage === pageSizeArray[3]} -->
           <Button
-            class="join-item rounded-none"
+            variant="secondary"
+            class={cn({
+              'bg-primary': currentPage === page,
+            })}
             onclick={(e: Parameters<typeof handleClickEvent>[0]) => handleClickEvent(e)}
           >
-            {pageSizeArray[3]}
+            {page}
           </Button>
         {:else}
+          {@const page = pageSize - 1}
           <!-- class:active={currentPage === pageSize - 1} -->
           <Button
-            class="join-item rounded-none"
+            variant="secondary"
+            class={cn({
+              'bg-primary': currentPage === page,
+            })}
             onclick={(e: Parameters<typeof handleClickEvent>[0]) => handleClickEvent(e)}
           >
             {pageSize - 1}
@@ -265,19 +300,26 @@
         <!-- Page 6 or last page -->
         <!-- class:active={currentPage === pageSize} -->
         <Button
-          class="join-item rounded-none"
+          variant="secondary"
+          class={cn({
+            'bg-primary': currentPage === pageSize,
+          })}
           onclick={(e: Parameters<typeof handleClickEvent>[0]) => handleClickEvent(e)}
         >
           {pageSize}
         </Button>
       {:else}
         {#each pageSizeArray as i}
+          {@const page = i}
           <!-- class:active={currentPage === i}  -->
           <Button
-            class="join-item rounded-none"
+            variant="secondary"
+            class={cn({
+              'bg-primary': currentPage === page,
+            })}
             onclick={(e: Parameters<typeof handleClickEvent>[0]) => handleClickEvent(e)}
           >
-            {i}
+            {page}
           </Button>
         {/each}
       {/if}

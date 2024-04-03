@@ -14,8 +14,7 @@
     {#await fetch(resolveRoute( `/lb/api/[type]/[id]`, { type, id: id.replace(/\{|\}/g, '') }, )).then( (res) => res.json(), )}
       loading
     {:then data}
-      <!-- {@debug data} -->
-      {#if data[data.type]}
+      {#if data.id}
         <Flyout {data} />
       {:else}
         <div>Private</div>

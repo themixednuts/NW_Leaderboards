@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { getCharactersByUser } from '@/server/db/gamedata/helpers'
+  import type { getCharacterById, getCharactersByUser } from '@/server/db/gamedata/helpers'
   import * as Card from '@/shadcn/components/ui/card'
   // import Item from '../equipment/item.svelte'
   import { cn } from '@/shadcn/utils'
@@ -7,7 +7,7 @@
   import type { HTMLAttributes } from 'svelte/elements'
 
   interface BaseVariant extends HTMLAttributes<HTMLDivElement> {
-    character: Awaited<ReturnType<typeof getCharactersByUser>>[number]
+    character: NonNullable<Awaited<ReturnType<typeof getCharacterById>>>
     variant?: null
   }
   interface SmallVariant extends Omit<BaseVariant, 'variant'> {
@@ -24,11 +24,20 @@
   }
 
   type Props = BaseVariant | SmallVariant | MediumVariant | LargeVariant
-  let { character, variant, ...restProps }: Props = $props()
+  let { character, variant, class: className, ...restProps }: Props = $props()
 </script>
 
-<div class="flex gap-1">
-  <Card.Root {...restProps}>
+<div class="flex grow-0 gap-1">
+  <Card.Root
+    {...restProps}
+    class={cn(
+      'max-h-32',
+      {
+        'max-h-96': variant === 'sm',
+      },
+      className,
+    )}
+  >
     <Card.Header class="p-2">
       <Header {character} />
     </Card.Header>

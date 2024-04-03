@@ -11,4 +11,3 @@ export const load = (async ({ locals }) => {
     worlds
   }
 }) satisfies LayoutServerLoad
-

@@ -245,3 +245,19 @@ export const steamAppIdMap = {
 export interface WorldsData {
   servers: { worldId: string, worldName: string, region: string, isRTA: boolean, isFS: boolean }[]
 }
+
+export class Debouncer {
+  private timer = $state()
+
+  constructor() {
+
+  }
+
+}
+
+export enum FACTIONS {
+  Guildless,
+  Syndacite,
+  Maruaders,
+  Covenant
+}
