@@ -57,16 +57,20 @@
           loading="lazy"
           src="/{character.backgroundImagePath?.toLowerCase().replace('.dds', '.png')}"
           alt=""
-          class={cn(
-            'col-start-1 row-start-1 min-w-0 rounded-[50%]',
-            `bg-[${character.backgroundColor?.replace(' ', '')}]`,
-          )}
+          class={cn('col-start-1 row-start-1 min-w-0 rounded-[50%]')}
+          style="background: {character.backgroundColor};"
         />
         <img
           loading="lazy"
           src="/{character.midgroundImagePath?.toLowerCase().replace('.dds', '.png')}"
           alt=""
-          class="col-start-1 row-start-1 min-w-0 rounded-[50%] bg-[{character.backgroundColor?.replace(' ', '')}]"
+          class="col-start-1 row-start-1 min-w-0 rounded-[50%]"
+        />
+        <img
+          loading="lazy"
+          src="/{character.foregroundImagePath?.toLowerCase().replace('.dds', '.png')}"
+          alt=""
+          class="col-start-1 row-start-1 min-w-0 rounded-[50%]"
         />
       {:else}
         <img loading="lazy" src={$page.data.session?.user?.image} alt="" class="col-start-1 row-start-1 min-w-0" />

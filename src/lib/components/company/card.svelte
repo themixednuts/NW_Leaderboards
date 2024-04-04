@@ -1,6 +1,5 @@
 <script lang="ts">
   import type { getCompanyWithMembersById } from '@/server/db/gamedata/helpers'
-  import type { guilds } from '@/server/db/gamedata/schema'
   import * as Card from '@/shadcn/components/ui/card'
   import ScrollArea from '@/shadcn/components/ui/scroll-area/scroll-area.svelte'
   import * as Table from '@/shadcn/components/ui/table'
@@ -17,11 +16,23 @@
 </script>
 
 <Card.Root class="w-full max-w-4xl">
-  <Card.Header class="flex flex-row flex-nowrap place-content-start place-items-center gap-10">
-    <div class="grid size-16 place-content-center place-items-center">
+  <Card.Header
+    class={cn(
+      'flex flex-row flex-nowrap place-content-start place-items-center gap-10 bg-gradient-to-br to-transparent to-60%',
+      {
+        'from-faction-background-1-dark': guild.factionId === 1,
+        'from-faction-background-2-dark': guild.factionId === 2,
+        'from-faction-background-3-dark': guild.factionId === 3,
+      },
+    )}
+  >
+    <div
+      class="grid size-16 place-content-center place-items-center bg-black mask-size-contain mask-position-center"
+      style="mask-image: url('/{guild.backgroundImagePath?.replace('dds', 'png')}');"
+    >
       <div
         class={cn(
-          ` col-start-1 row-start-1 size-16 mask-size-contain mask-repeat-no-repeat mask-position-center mask-composite-exclude mask-mode-luminance`,
+          ` col-start-1 row-start-1 size-16 mask-size-contain mask-repeat-no-repeat mask-position-center mask-composite-add mask-mode-luminance`,
         )}
         style="background: {guild.backgroundColor}; mask-image: url('/{guild.backgroundImagePath?.replace(
           'dds',
@@ -30,7 +41,7 @@
       />
       <div
         class={cn(
-          ` col-start-1 row-start-1 size-16 mask-size-contain mask-repeat-no-repeat mask-position-center mask-composite-exclude mask-mode-luminance`,
+          ` col-start-1 row-start-1 size-16 mask-size-contain mask-repeat-no-repeat mask-position-center mask-composite-add mask-mode-luminance`,
         )}
         style="background: {guild.foregroundColor}; mask-image: url('/{guild.foregroundImagePath?.replace(
           'dds',
@@ -43,7 +54,7 @@
         {guild.name}
       </Card.Title>
       <Card.Description>
-        {guild.guildMaster?.name}
+        Governor: {guild.guildMaster?.name}
         <!--        {FACTIONS[guild.factionId]} -->
       </Card.Description>
     </div>
@@ -63,6 +74,7 @@
       <Table.Caption>Public Members</Table.Caption>
       <Table.Header>
         <Table.Row>
+          <Table.Head></Table.Head>
           <Table.Head>Name</Table.Head>
           <Table.Head>Rank</Table.Head>
           <Table.Head>Level</Table.Head>
@@ -71,7 +83,24 @@
       <Table.Body>
         {#each guild.characters as character}
           <Table.Row>
-            <Table.Cell>
+            <Table.Cell class="grid size-8">
+              <img
+                src="/{character.backgroundImagePath?.toLowerCase().replace('dds', 'png')}"
+                alt=""
+                class="col-start-1 row-start-1"
+              />
+              <img
+                src="/{character.midgroundImagePath?.toLowerCase().replace('dds', 'png')}"
+                alt=""
+                class="col-start-1 row-start-1"
+              />
+              <img
+                src="/{character.foregroundImagePath?.toLowerCase().replace('dds', 'png')}"
+                alt=""
+                class="col-start-1 row-start-1"
+              />
+            </Table.Cell>
+            <Table.Cell class="">
               <a href="/character/{character.id}">
                 {character.name}
               </a>

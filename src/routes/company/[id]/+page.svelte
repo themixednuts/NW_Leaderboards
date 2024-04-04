@@ -6,8 +6,6 @@
     data: PageData
   }
   let { data }: Props = $props()
-
-  $inspect(data)
 </script>
 
 <div class="container flex place-content-center">
