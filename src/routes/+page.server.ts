@@ -16,7 +16,7 @@ const prepared = union(
         )
       )
     ),
-  db.select({ id: guilds.id, name: guilds.name, type: sql<string>`'guild'` }).from(guilds).where(like(guilds.name, sql.placeholder('name'))),
+  db.select({ id: guilds.id, name: guilds.name, type: sql<string>`'guild'` }).from(guilds).where(like(guilds.name, sql`'%' || ${sql.placeholder('name')} || '%'`)),
 ).limit(10).prepare()
 
 export const actions = {
