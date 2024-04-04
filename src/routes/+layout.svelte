@@ -23,6 +23,7 @@
   import { Gear, SignIn, SignOut, Question, ChartPieSlice } from 'phosphor-svelte'
   import { applyAction, enhance } from '$app/forms'
   import type { SubmitFunction } from './$types'
+  import { afterNavigate } from '$app/navigation'
 
   interface Props {
     data: PageData
@@ -57,10 +58,10 @@
       },
     }
   }
-
+  let cmdInput: HTMLInputElement | undefined = $state()
   const handleSubmit = (async ({ formData }) => {
     if (value) formData.set('q', value)
-    return async ({ result }) => {
+    return async ({ result, update }) => {
       if (result.type === 'success') {
         const { data } = result
         if (data) {
@@ -68,8 +69,6 @@
           guilds = data.results.filter((res) => res.type === 'guild')
         }
       }
-
-      applyAction(result)
     }
   }) satisfies SubmitFunction
 
@@ -214,6 +213,7 @@
       class="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
       name="q"
       bind:value
+      autofocus
       oninput={() =>
         debounce(() => {
           if (value.length) formEl?.requestSubmit()
@@ -222,12 +222,13 @@
             guilds = []
           }
         }, 500)}
+      bind:el={cmdInput}
     />
     <Command.List>
       <Command.Empty>No results found</Command.Empty>
       <Command.Group heading="Characters" alwaysRender={false}>
         {#if characters?.length}
-          {#each characters as character}
+          {#each characters as character (character.id)}
             <Command.Item onSelect={() => (open = false)}>
               <a href="/character/{character.id}" class="size-full">
                 {character.name}
@@ -239,7 +240,7 @@
       <Command.Separator />
       <Command.Group heading="Guilds">
         {#if guilds?.length}
-          {#each guilds as guild}
+          {#each guilds as guild (guild.id)}
             <Command.Item onSelect={() => (open = false)}>
               <a href="/company/{guild.id}" class="size-full">
                 {guild.name}

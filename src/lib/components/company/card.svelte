@@ -4,6 +4,7 @@
   import * as Card from '@/shadcn/components/ui/card'
   import ScrollArea from '@/shadcn/components/ui/scroll-area/scroll-area.svelte'
   import * as Table from '@/shadcn/components/ui/table'
+  import { cn } from '@/shadcn/utils'
   import { FACTIONS } from '@/utils'
   import { Date } from 'svelte/reactivity'
 
@@ -13,14 +14,29 @@
   let { guild }: Props = $props()
 
   let updatedAt = new Date(guild.updatedAt)
-  // {company.name}
 </script>
 
 <Card.Root class="w-full max-w-4xl">
   <Card.Header class="flex flex-row flex-nowrap place-content-start place-items-center gap-10">
     <div class="grid size-16 place-content-center place-items-center">
-      <img src="/{guild.backgroundImagePath?.replace('dds', 'png')}" alt="" class="col-start-1 row-start-1" />
-      <img src="/{guild.foregroundImagePath?.replace('dds', 'png')}" alt="" class="col-start-1 row-start-1" />
+      <div
+        class={cn(
+          ` col-start-1 row-start-1 size-16 mask-size-contain mask-repeat-no-repeat mask-position-center mask-composite-exclude mask-mode-luminance`,
+        )}
+        style="background: {guild.backgroundColor}; mask-image: url('/{guild.backgroundImagePath?.replace(
+          'dds',
+          'png',
+        )}');"
+      />
+      <div
+        class={cn(
+          ` col-start-1 row-start-1 size-16 mask-size-contain mask-repeat-no-repeat mask-position-center mask-composite-exclude mask-mode-luminance`,
+        )}
+        style="background: {guild.foregroundColor}; mask-image: url('/{guild.foregroundImagePath?.replace(
+          'dds',
+          'png',
+        )}');"
+      />
     </div>
     <div class="flex flex-col place-content-start px-2">
       <Card.Title>

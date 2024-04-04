@@ -22,6 +22,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
   callbacks: {
     async session({ session, user }) {
       session.user.role = (await db.select({ role: users.role }).from(users).where(eq(users.id, user.id)).get())?.role ?? 'user'
+      // console.log('session callback')
       return session
     },
   },

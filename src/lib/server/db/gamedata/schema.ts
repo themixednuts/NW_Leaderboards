@@ -3,7 +3,7 @@ import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
 
 export const characters = sqliteTable('characters', {
   id: text('id').primaryKey(),
-  userId: text('user_id').notNull(),
+  userId: text('user_id'),
   name: text('name').notNull(),
   level: integer('level'),
   guildId: text('guild_id'),
