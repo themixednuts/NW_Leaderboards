@@ -43,7 +43,7 @@ export const p_character_by_id = db.query.characters.findFirst({
 
   ),
   extras: {
-    ownedByUser: inArray(characters.userId, [sql.placeholder('userId')]).as('owned_by_user')
+    ownedByUser: inArray(characters.userId, [sql.placeholder('userId')]).as('owned_by_user'),
   }
 }).prepare()
 

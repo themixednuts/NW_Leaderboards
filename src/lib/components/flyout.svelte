@@ -13,6 +13,7 @@
   }
 
   let { data }: Props = $props()
+  $inspect(data)
 </script>
 
 <Tooltip.Root openDelay={0} disableHoverableContent>
@@ -49,7 +50,7 @@
           class="col-start-1 row-start-1 aspect-square"
         />
       </div>
-      <a href="/{data.type}/{data.id}">
+      <a href="/{data.type === 'guild' ? 'company' : 'character'}/{data.id}">
         {data.name}
       </a>
     </div>
@@ -96,7 +97,7 @@
         </div>
       </div>
       <div class="col-start-2">
-        <a href="/{data.type}/data{data.type}.id">
+        <a href="/{data.type === 'guild' ? 'company' : 'character'}/data.id">
           {data.name}
         </a>
       </div>

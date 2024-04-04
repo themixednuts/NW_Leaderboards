@@ -6,7 +6,6 @@ import { p_character_by_id, p_characters_by_user, p_guild_by_id, p_guild_with_me
 
 // HELPER FUNCTIONS
 export const getCharactersByUser = async (user?: User) => {
-  const role = user?.role ?? null
   const userId = user?.id ?? null
   return p_characters_by_user.all({ userId })
 }
@@ -31,9 +30,11 @@ export const getCompaniesWithMembersByUser = async (user?: User) => {
   const userId = user?.id ?? null
   return p_guilds_with_members_by_user.all({ userId, role })
 }
+
 export const getCompanyWithMembersById = async (id: typeof guilds.$inferSelect.id, user?: User) => {
   const role = user?.role ?? null
   const userId = user?.id ?? null
+
   return p_guild_with_members_by_id.get({ userId, role, id })
 }
 
