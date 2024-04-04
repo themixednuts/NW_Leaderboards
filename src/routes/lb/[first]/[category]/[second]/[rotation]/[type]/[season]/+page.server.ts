@@ -29,16 +29,21 @@ export const load = (async ({ params: { season, type, first, second, category, r
     //@ts-expect-error
     DisplayName: displayName,
   }))
+  if (!leaderboard) error(400, `This category is not tracked by ${type}`)
 
-  const id = type === 'faction' ? leaderboard?.FactionLeaderboardDefinitionId : leaderboard?.LeaderboardDefinitionId
+  const id = type === 'faction' ? leaderboard.FactionLeaderboardDefinitionId : leaderboard.LeaderboardDefinitionId
+  if (!id) error(400, 'Leaderboard ID not found')
+
   const api = `https://api.nwlb.info/json/${id}/${season}?size=1000&eid=true`
   const json = fetch(api).then(async (res) => {
-    if (!res.ok) error(res.status)
+    if (!res.ok) return error(res.status)
     const json = res.json() as Promise<LeaderboardAPIBoardItem[]>
     return json
   })
 
-  json.catch((e) => console.log(e))
+  json.catch((e) => {
+    console.log(e)
+  })
 
   return {
     json,

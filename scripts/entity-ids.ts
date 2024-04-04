@@ -7,7 +7,7 @@ const t = performance.now()
 let s = performance.now()
 const leaderboards = await leaderboard_datatable()
 console.log('Fetched! -> ', performance.now() - s, 'ms')
-const SEASON = 's4'
+const SEASON = 's5'
 
 interface LeaderboardItem {
   entityId: string
@@ -20,12 +20,17 @@ const m: Record<string, string[]> = {}
 console.log('Fetching Leaderboard Stats')
 s = performance.now()
 const ids = await Promise.all(leaderboards.flatMap(async (leaderboard) => {
-  const { CharacterLeaderboard, FactionLeaderboard, GroupLeaderboard, CompanyLeaderboard, LeaderboardDefinitionId, FactionLeaderboardDefinitionId } = leaderboard
-  const id = FactionLeaderboard ? FactionLeaderboardDefinitionId : LeaderboardDefinitionId
+  const { LeaderboardDefinitionId, FactionLeaderboardDefinitionId } = leaderboard
+  const ids = [FactionLeaderboardDefinitionId, LeaderboardDefinitionId]
+  console.log('Leaderboard', leaderboard.LeaderboardId, '-> hasFactionBoard:', FactionLeaderboardDefinitionId ? true : false, 'IDs:', ids.filter(Boolean).join(', '))
 
-  return await fetch(`https://api.nwlb.info/json/${id}/${SEASON}?size=1000&eid=true`).then(async res => await (res.json() as Promise<LeaderboardItem[]>))
+  const fetches = ids.filter(Boolean).map(id =>
+    fetch(`https://api.nwlb.info/json/${id}/${SEASON}?size=1000&eid=true`)
+      .then(res => res.json() as Promise<LeaderboardItem[]>).catch(e => console.log('Error fetching:', id))
+  );
+  return Promise.all(fetches).then(res => res.flat())
 }))
-console.log('Fetched! -> ', performance.now() - s, 'ms')
+console.log('\nFetched! -> ', performance.now() - s, 'ms')
 
 console.log('Processing Stats')
 s = performance.now()
