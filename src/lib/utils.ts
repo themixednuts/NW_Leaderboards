@@ -211,7 +211,7 @@ export function addPNG(string: string) {
 }
 
 declare global {
-  interface ObjectConstructor {
+  export interface ObjectConstructor {
     /**
      * Groups members of an iterable according to the return value of the passed callback.
      * @param items An iterable.
@@ -223,7 +223,7 @@ declare global {
     ): Partial<Record<K, T[]>>
   }
 
-  interface MapConstructor {
+  export interface MapConstructor {
     /**
      * Groups members of an iterable according to the return value of the passed callback.
      * @param items An iterable.
