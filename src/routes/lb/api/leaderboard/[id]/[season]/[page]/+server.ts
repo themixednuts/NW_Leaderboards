@@ -9,6 +9,7 @@ export const config = {
     expiration: 1500,
     bypassToken: BYPASS_TOKEN
   },
+  runtime: 'nodejs20.x'
 } satisfies Config
 
 export const GET = (async ({ request, params: { id, season, page }, url, fetch }) => {
