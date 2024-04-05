@@ -4,6 +4,7 @@ import type { get_valid_seasons } from "$lib/server/db/utils"
 import type { LeaderboardData } from '$lib/leaderboard/types'
 
 if (typeof Object.groupBy === typeof undefined) {
+  console.log('polyfill Object.groupBy')
   Object.groupBy = (arr, callback) => {
     return arr.reduce((acc = {}, ...args) => {
       const key = callback(...args);

@@ -22,7 +22,13 @@
   let file = fileProxy(formData, 'file')
 </script>
 
-<form action="?/gamelog" method="post" use:enhance enctype="multipart/form-data" class="flex items-center gap-2">
+<form
+  action="?/gamelog"
+  method="post"
+  use:enhance
+  enctype="multipart/form-data"
+  class="flex items-center justify-center gap-2"
+>
   <Form.Field {form} name="file">
     <Form.Control let:attrs>
       <Form.Label>Upload Game.log</Form.Label>
