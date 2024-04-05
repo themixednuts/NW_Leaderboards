@@ -1,4 +1,4 @@
-import { handle as authjs } from '$lib/server/db/users/auth'
+import { handle as authentication } from '$lib/server/db/users/auth'
 import type { users } from '@/server/db/users/schema'
 import { redirect, type Handle, type HandleServerError } from '@sveltejs/kit'
 import { sequence } from '@sveltejs/kit/hooks'
@@ -13,7 +13,7 @@ const authorization = (async ({ event, resolve }) => {
   return resolve(event)
 }) satisfies Handle
 
-export const handle = sequence(authjs, authorization) satisfies Handle
+export const handle = sequence(authentication, authorization) satisfies Handle
 
 declare module "@auth/core/types" {
   export interface Session {

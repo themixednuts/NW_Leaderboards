@@ -181,12 +181,15 @@
           <DropdownMenu.Separator />
           <DropdownMenu.Item>
             {#if data.session?.user}
-              <button onclick={() => signOut()} class="flex place-items-center gap-2 whitespace-nowrap">
+              <button onclick={() => signOut()} class="flex size-full place-items-center gap-2 whitespace-nowrap">
                 <SignOut />
                 <div class="">Logout</div>
               </button>
             {:else}
-              <button onclick={() => signIn('discord')} class="flex place-items-center gap-2 whitespace-nowrap">
+              <button
+                onclick={() => signIn('discord')}
+                class="flex size-full place-items-center gap-2 whitespace-nowrap"
+              >
                 <SignIn />
                 <div>Login</div>
               </button>

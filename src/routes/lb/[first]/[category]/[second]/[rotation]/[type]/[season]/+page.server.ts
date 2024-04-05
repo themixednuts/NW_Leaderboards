@@ -2,8 +2,9 @@ import { match_leaderboard, type LeaderboardAPIBoardItem } from '$lib/leaderboar
 import { error } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
 
-export const load = (async ({ fetch, url, params: { season, type, first, second, category, rotation }, parent, url: { searchParams } }) => {
+export const load = (async ({ request, locals, fetch, url, params: { season, type, first, second, category, rotation }, setHeaders, parent, url: { searchParams } }) => {
   const { leaderboards } = await parent()
+
   const displayName = searchParams.get('q')
   const leaderboard = leaderboards.find(lb => match_leaderboard(lb, {
     //@ts-expect-error
@@ -23,17 +24,30 @@ export const load = (async ({ fetch, url, params: { season, type, first, second,
 
   const id = type === 'faction' ? leaderboard.FactionLeaderboardDefinitionId : leaderboard.LeaderboardDefinitionId
   if (!id) error(400, 'Leaderboard ID not found')
-  const link = `/lb/api/leaderboard/${id}/${season}/1`
-  console.log(url.host)
-  const json = fetch(link, {
-    headers: {
-      host: url.host,
-    }
-  }).then(res => res.json() as Promise<LeaderboardAPIBoardItem[]>)
-  json.catch(e => console.log(e))
+  // const link = `/lb/api/leaderboard/${id}/${season}/1`
+
+  // console.log('page.server.ts', request.headers, url)
+  // const json = fetch(link, {
+  //   headers: {
+  //     host: url.host,
+  //   }
+  // }).then(res => res.json() as Promise<LeaderboardAPIBoardItem[]>)
+  // json.catch(e => console.log(e))
+
+
+  const api = `https://api.nwlb.info/json/${id}/${season}?size=100000&eid=true`
+  const data = fetch(api).then(async (res) => {
+    if (!res.ok) return error(res.status)
+    const json = res.json() as Promise<LeaderboardAPIBoardItem[]>
+    return json
+  })
+
+  data.catch((e) => {
+    console.log(e)
+  })
 
   return {
-    json,
+    json: data,
     leaderboard,
   }
 }) satisfies PageServerLoad

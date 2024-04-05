@@ -11,7 +11,8 @@ export const config = {
   },
 } satisfies Config
 
-export const GET = (async ({ params: { id, season, page }, fetch, }) => {
+export const GET = (async ({ request, params: { id, season, page }, url, fetch }) => {
+  console.log('server.ts', request.headers, url)
   const api = `https://api.nwlb.info/json/${id}/${season}?size=100000&eid=true`
   const data = fetch(api).then(async (res) => {
     if (!res.ok) return error(res.status)
