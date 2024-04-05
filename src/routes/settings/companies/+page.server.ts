@@ -1,5 +1,5 @@
 import { getCompaniesWithMembersByUser } from "@/server/db/gamedata/helpers";
-import type { PageServerLoad } from "./$types";
+import type { PageServerLoad } from "../company/$types";
 import { error } from "@sveltejs/kit";
 
 export const load = (async ({ locals }) => {

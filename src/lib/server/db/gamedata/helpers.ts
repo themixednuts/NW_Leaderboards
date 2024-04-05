@@ -1,8 +1,7 @@
 import type { User } from "@auth/core/types"
-import type { users } from "../users/schema"
 import { db } from "./client"
 import { characters, guilds } from "./schema"
-import { p_character_by_id, p_characters_by_user, p_guild_by_id, p_guild_with_members_by_id, p_guilds_with_members_by_user } from "./statements"
+import { p_character_by_id, p_character_by_name, p_characters_by_user, p_guild_by_id, p_guild_with_members_by_id, p_guild_with_members_by_name, p_guilds_with_members_by_user } from "./statements"
 
 // HELPER FUNCTIONS
 export const getCharactersByUser = async (user?: User) => {
@@ -14,6 +13,13 @@ export const getCharacterById = async (id: typeof characters.$inferSelect.id, us
   const role = user?.role ?? null
   const userId = user?.id ?? null
   return p_character_by_id.get({ id, userId, role })
+}
+export const getCharacterByName = async (name: typeof characters.$inferSelect.name, user?: User) => {
+  const role = user?.role ?? null
+  const userId = user?.id ?? null
+  name = name.replaceAll('_', ' ')
+
+  return p_character_by_name.get({ name, userId, role })
 }
 
 export const updateCharacterVisibility = async (character: typeof characters.$inferInsert) => {
@@ -36,6 +42,14 @@ export const getCompanyWithMembersById = async (id: typeof guilds.$inferSelect.i
   const userId = user?.id ?? null
 
   return p_guild_with_members_by_id.get({ userId, role, id })
+}
+
+export const getCompanyWithMembersByName = async (name: typeof guilds.$inferSelect.name, user?: User) => {
+  const role = user?.role ?? null
+  const userId = user?.id ?? null
+  name = name.replaceAll('_', ' ')
+
+  return p_guild_with_members_by_name.get({ userId, role, name })
 }
 
 export const getCompanyById = async (id: typeof guilds.$inferSelect.id, user?: User) => {

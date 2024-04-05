@@ -2,7 +2,7 @@
   import { page } from '$app/stores'
   import type { getCharacterById, getCharactersByUser } from '@/server/db/gamedata/helpers'
   import { cn } from '@/shadcn/utils'
-  import { type WorldsData, steamAppIdMap } from '@/utils'
+  import { type WorldsData, steamAppIdMap, normalize_name } from '@/utils'
   import { DotsThree, Eye, EyeClosed, EyeSlash } from 'phosphor-svelte'
   import * as DropdownMenu from '@/shadcn/components/ui/dropdown-menu'
   import * as Form from '@/shadcn/components/ui/form'
@@ -11,6 +11,7 @@
   import type { SubmitFunction } from '../../../routes/settings/characters/$types'
   import * as Card from '@/shadcn/components/ui/card'
   import { Skeleton } from '@/shadcn/components/ui/skeleton'
+  import { normalize_leaderboard_id } from '@/leaderboard/utils'
 
   interface Props {
     character: NonNullable<Awaited<ReturnType<typeof getCharacterById>>>
@@ -92,7 +93,7 @@
   <div class="col-start-2 row-start-1 flex min-w-min flex-col">
     <div class="truncate">
       <Card.Title>
-        <a href="/character/{character.id}">
+        <a href="/character/{normalize_name(character.name)}">
           {character.name}
         </a>
       </Card.Title>
@@ -106,7 +107,7 @@
     </div>
     {#if character.guild}
       <Card.Description>
-        <a href="/company/{character.guild.id}" class="text-xs">
+        <a href="/company/{normalize_name(character.guild.name)}" class="text-xs">
           Company: {character.guild.name}
         </a>
       </Card.Description>

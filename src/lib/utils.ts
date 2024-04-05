@@ -255,6 +255,10 @@ export class Debouncer {
 
 }
 
+export const normalize_name = (name: string) => {
+  return name.replaceAll(' ', '_')
+}
+
 export enum FACTIONS {
   Guildless,
   Syndacite,

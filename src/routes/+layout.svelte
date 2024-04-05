@@ -9,7 +9,7 @@
   import { Button } from '@/shadcn/components/ui/button'
   import * as DropdownMenu from '@/shadcn/components/ui/dropdown-menu'
   import { Toaster } from '@/shadcn/components/ui/sonner'
-  import * as Command from '@/shadcn/components/ui/command'
+  import Command from '@/components/command.svelte'
 
   // types
   import type { Action } from 'svelte/action'
@@ -18,27 +18,19 @@
   // icons
   import Search from 'lucide-svelte/icons/search'
   import CircleUser from 'lucide-svelte/icons/circle-user'
-  import Package2 from 'lucide-svelte/icons/package-2'
   import Menu from 'lucide-svelte/icons/menu'
   import { Gear, SignIn, SignOut, Question, ChartPieSlice } from 'phosphor-svelte'
-  import { applyAction, enhance } from '$app/forms'
-  import type { SubmitFunction } from './$types'
-  import { afterNavigate } from '$app/navigation'
+  import { setContext } from 'svelte'
+  import { writable } from 'svelte/store'
 
   interface Props {
     data: PageData
     form: ActionData
   }
 
-  let { data, form }: Props = $props()
-  $inspect(form)
-
-  let open = $state(false)
-  let formEl: HTMLFormElement | undefined = $state()
-  let value: string = $state('')
-
-  let characters: NonNullable<typeof form>['results'] = $state([])
-  let guilds: NonNullable<typeof form>['results'] = $state([])
+  let { data }: Props = $props()
+  let cmd = writable(false)
+  setContext('cmd', cmd)
 
   const progress = $state(tweened(0, { easing: cubicOut }))
   $effect(() => {
@@ -58,51 +50,14 @@
       },
     }
   }
-  let cmdInput: HTMLInputElement | undefined = $state()
-  const handleSubmit = (async ({ formData }) => {
-    if (value) formData.set('q', value)
-    return async ({ result, update }) => {
-      if (result.type === 'success') {
-        const { data } = result
-        if (data) {
-          characters = data.results.filter((res) => res.type === 'character')
-          guilds = data.results.filter((res) => res.type === 'guild')
-        }
-      }
-    }
-  }) satisfies SubmitFunction
-
-  let timer: ReturnType<typeof setTimeout> | undefined = $state()
-  function debounce<T extends (...args: Parameters<T>) => ReturnType<T>>(callback: T, delay: number) {
-    return new Promise<ReturnType<T> | Error>((resolve, reject) => {
-      clearTimeout(timer)
-      timer = setTimeout(() => {
-        try {
-          //@ts-expect-error
-          resolve(callback())
-        } catch (err) {
-          if (err instanceof Error) {
-            reject(err)
-          }
-          reject(new Error(`An error has occurred: ${err}`))
-        }
-      }, delay)
-    })
-  }
 </script>
 
 <svelte:head>
   <script async src="https://nwdb.info/embed.js"></script>
 </svelte:head>
-<svelte:window
-  onkeydown={(e) => {
-    if (e.key === '/') {
-      e.preventDefault()
-      open = true
-    }
-  }}
-/>
+
 <Toaster />
+<Command />
 
 {#if !!$navigating}
   <div class="absolute left-0 top-0 z-[9999] h-1 bg-red-500" use:nav></div>
@@ -137,7 +92,9 @@
     <div class="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
       <Button
         variant="outline"
-        onclick={() => (open = true)}
+        onclick={() => {
+          $cmd = true
+        }}
         class="ml-auto flex flex-nowrap place-items-center justify-start gap-2 px-2 contain-paint sm:w-[300px] md:w-[200px] lg:w-[300px]"
       >
         <Search class="pointer-events-none shrink-0" />
@@ -169,11 +126,7 @@
             </DropdownMenu.Item>
           {/if}
           <DropdownMenu.Item>
-            <a
-              href="https://discord.gg/2QCFwyE9Yr"
-              target="_blank"
-              class="flex place-items-center gap-2 whitespace-nowrap"
-            >
+            <a href="/support" class="flex place-items-center gap-2 whitespace-nowrap">
               <Question />
               <div>Support</div>
             </a>
@@ -203,58 +156,6 @@
     <slot />
   </div>
 </div>
-<form
-  class="ml-auto flex-1 sm:flex-initial"
-  method="post"
-  action="/?/search"
-  use:enhance={handleSubmit}
-  bind:this={formEl}
->
-  <Command.Dialog label="Search" bind:open class="">
-    <Command.Input
-      placeholder="Search players, companies..."
-      class="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
-      name="q"
-      bind:value
-      autofocus
-      oninput={() =>
-        debounce(() => {
-          if (value.length) formEl?.requestSubmit()
-          else {
-            characters = []
-            guilds = []
-          }
-        }, 500)}
-      bind:el={cmdInput}
-    />
-    <Command.List>
-      <Command.Empty>No results found</Command.Empty>
-      <Command.Group heading="Characters" alwaysRender={false}>
-        {#if characters?.length}
-          {#each characters as character (character.id)}
-            <Command.Item onSelect={() => (open = false)}>
-              <a href="/character/{character.id}" class="size-full">
-                {character.name}
-              </a>
-            </Command.Item>
-          {/each}
-        {/if}
-      </Command.Group>
-      <Command.Separator />
-      <Command.Group heading="Guilds">
-        {#if guilds?.length}
-          {#each guilds as guild (guild.id)}
-            <Command.Item onSelect={() => (open = false)}>
-              <a href="/company/{guild.id}" class="size-full">
-                {guild.name}
-              </a>
-            </Command.Item>
-          {/each}
-        {/if}
-      </Command.Group>
-    </Command.List>
-  </Command.Dialog>
-</form>
 
 {#snippet logo()}
   <a href="/" class="flex flex-nowrap items-center gap-2 text-lg font-semibold md:text-base">

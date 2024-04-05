@@ -13,7 +13,7 @@
     Loading
   {:then guild}
     {#if guild}
-      <Card {guild} />
+      <Card {guild} variant="lg" />
     {/if}
   {/await}
 </div>

@@ -36,12 +36,7 @@ export const load = (async ({ request, locals, fetch, url, params: { season, typ
 
 
   const api = `https://api.nwlb.info/json/${id}/${season}?size=100000&eid=true`
-  const data = fetch(api).then(async (res) => {
-    if (!res.ok) return error(res.status)
-    const json = res.json() as Promise<LeaderboardAPIBoardItem[]>
-    return json
-  })
-
+  const data = fetch(api).then(res => res.json() as Promise<LeaderboardAPIBoardItem[]>)
   data.catch((e) => {
     console.log(e)
   })

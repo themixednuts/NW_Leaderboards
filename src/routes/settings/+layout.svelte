@@ -26,8 +26,8 @@
         },
         {
           icon: Buildings,
-          link: '/settings/company',
-          label: 'Company',
+          link: '/settings/companies',
+          label: 'Companies',
         },
       ],
     },

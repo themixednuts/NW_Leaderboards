@@ -2,6 +2,7 @@
   import { Tooltip } from 'bits-ui'
   import type { getCharacterById, getCompanyById } from '@/server/db/gamedata/helpers'
   import { cn } from '@/shadcn/utils'
+  import { normalize_name } from '@/utils'
 
   type CharacterProps = Awaited<ReturnType<typeof getCharacterById>> & {
     type: 'character'
@@ -71,7 +72,7 @@
           />
         {/if}
       </div>
-      <a href="/{data.type === 'guild' ? 'company' : 'character'}/{data.id}">
+      <a href="/{data.type === 'guild' ? 'company' : 'character'}/{normalize_name(data.name)}">
         {data.name}
       </a>
     </div>
@@ -134,7 +135,7 @@
         {/if}
       </div>
       <div class="col-start-2">
-        <a href="/{data.type === 'guild' ? 'company' : 'character'}/data.id">
+        <a href="/{data.type === 'guild' ? 'company' : 'character'}/{normalize_name(data.name)}">
           {data.name}
         </a>
       </div>

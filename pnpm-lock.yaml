@@ -35,7 +35,7 @@ dependencies:
     version: 1.2.2
   '@vercel/edge-config':
     specifier: ^1.1.0
-    version: 1.1.0(typescript@5.5.0-dev.20240404)
+    version: 1.1.0(typescript@5.5.0-dev.20240405)
   bits-ui:
     specifier: ^0.21.2
     version: 0.21.2(svelte@5.0.0-next.94)
@@ -181,7 +181,7 @@ devDependencies:
     version: 2.6.2
   typescript:
     specifier: next
-    version: 5.5.0-dev.20240404
+    version: 5.5.0-dev.20240405
   vite:
     specifier: ^5.2.8
     version: 5.2.8
@@ -1683,7 +1683,7 @@ packages:
     resolution: {integrity: sha512-NRIBwfcS0bUoUbRWlNGetqjvLSwgYH/BqKqDN7vK1g32p7dN96k0712COgaz6VFizAm9b0g6IG6hR6+hc0KCPg==}
     dev: false
 
-  /@vercel/edge-config@1.1.0(typescript@5.5.0-dev.20240404):
+  /@vercel/edge-config@1.1.0(typescript@5.5.0-dev.20240405):
     resolution: {integrity: sha512-es/4BzzKfyUilL5E1knR42MZHJqHMRfqitrnv18gVZZUha9ywrX3qNoCrPsNMJ1HS8xAAz/FJEyel7YFIDfKoQ==}
     engines: {node: '>=14.6'}
     peerDependencies:
@@ -1693,7 +1693,7 @@ packages:
         optional: true
     dependencies:
       '@vercel/edge-config-fs': 0.1.0
-      ts-essentials: 9.4.1(typescript@5.5.0-dev.20240404)
+      ts-essentials: 9.4.1(typescript@5.5.0-dev.20240405)
     transitivePeerDependencies:
       - typescript
     dev: false
@@ -1862,7 +1862,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.23.0
-      caniuse-lite: 1.0.30001605
+      caniuse-lite: 1.0.30001606
       fraction.js: 4.3.7
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -1950,7 +1950,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001605
+      caniuse-lite: 1.0.30001606
       electron-to-chromium: 1.4.728
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.23.0)
@@ -1998,8 +1998,8 @@ packages:
     dev: false
     optional: true
 
-  /caniuse-lite@1.0.30001605:
-    resolution: {integrity: sha512-nXwGlFWo34uliI9z3n6Qc0wZaf7zaZWA1CPZ169La5mV3I/gem7bst0vr5XQH5TJXZIMfDeZyOrZnSlVzKxxHQ==}
+  /caniuse-lite@1.0.30001606:
+    resolution: {integrity: sha512-LPbwnW4vfpJId225pwjZJOgX1m9sGfbw/RKJvw/t0QhYOOaTXHvkjVGFGPpvwEzufrjvTlsULnVTxdy4/6cqkg==}
     dev: true
 
   /chalk@5.3.0:
@@ -4280,7 +4280,7 @@ packages:
     engines: {node: '>=14.13.1'}
     dev: false
 
-  /ts-essentials@9.4.1(typescript@5.5.0-dev.20240404):
+  /ts-essentials@9.4.1(typescript@5.5.0-dev.20240405):
     resolution: {integrity: sha512-oke0rI2EN9pzHsesdmrOrnqv1eQODmJpd/noJjwj2ZPC3Z4N2wbjrOEqnsEgmvlO2+4fBb0a794DCna2elEVIQ==}
     peerDependencies:
       typescript: '>=4.1.0'
@@ -4288,7 +4288,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      typescript: 5.5.0-dev.20240404
+      typescript: 5.5.0-dev.20240405
     dev: false
 
   /ts-interface-checker@0.1.13:
@@ -4319,8 +4319,8 @@ packages:
     hasBin: true
     dev: true
 
-  /typescript@5.5.0-dev.20240404:
-    resolution: {integrity: sha512-Knb9Yx0JJHc0mmqXLEPPKNSwOvPQrtYZEDLQY7Wns7LckkQl82AZ+OGTPG/ofwqx2QeDCHCtKjutZPy1UEiwKA==}
+  /typescript@5.5.0-dev.20240405:
+    resolution: {integrity: sha512-gMeTgpfC2KDhKDbOu7niDwLmSA+Jgbl5lGunCrVnmvoxh3FbTRjAzZ1IRrqB+cph3wWLeCdy8bxQoff1uHLXMg==}
     engines: {node: '>=14.17'}
     hasBin: true
 

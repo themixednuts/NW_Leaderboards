@@ -2,4 +2,6 @@
   let { data } = $props()
 </script>
 
-Profile
+<div class="flex w-full flex-col place-content-center place-items-center text-lg uppercase">
+  Profile View in progress
+</div>
