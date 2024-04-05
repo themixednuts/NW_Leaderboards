@@ -29,7 +29,7 @@ export const handleError = (async ({ error, event, status, message }) => {
   console.log(status, error)
 
   return {
-    message: 'whoa',
+    message,
     errorId,
   }
 }) satisfies HandleServerError
