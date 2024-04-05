@@ -24,6 +24,7 @@ export const load = (async ({ fetch, url, params: { season, type, first, second,
   const id = type === 'faction' ? leaderboard.FactionLeaderboardDefinitionId : leaderboard.LeaderboardDefinitionId
   if (!id) error(400, 'Leaderboard ID not found')
   const link = `/lb/api/leaderboard/${id}/${season}/1`
+  console.log(url.host)
   const json = fetch(link, {
     headers: {
       host: url.host,
