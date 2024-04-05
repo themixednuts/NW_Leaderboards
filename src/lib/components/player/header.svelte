@@ -49,8 +49,14 @@
 <div class="grid min-w-min grid-cols-[minmax(0,1fr),minmax(0,2fr)] grid-rows-[minmax(0,1fr)] gap-2 overflow-clip p-2">
   <div class="relative col-start-1 row-start-1 min-w-min">
     <div
-      class=" grid aspect-square max-w-24 grid-cols-[minmax(0,1fr)] grid-rows-[minmax(0,1fr)] place-content-center place-items-center overflow-clip rounded-[50%] border-2 border-faction-background-1-dark"
-      class:border-faction-background-1-dark={character.factionId === 1}
+      class={cn(
+        'grid aspect-square max-w-24 grid-cols-[minmax(0,1fr)] grid-rows-[minmax(0,1fr)] place-content-center place-items-center overflow-clip rounded-[50%] border-2',
+        {
+          'border-faction-background-1-dark': character.factionId === 1,
+          'border-faction-background-2-dark': character.factionId === 2,
+          'border-faction-background-3-dark': character.factionId === 3,
+        },
+      )}
     >
       {#if character.backgroundImagePath && character.foregroundImagePath}
         <img
@@ -58,7 +64,6 @@
           src="/{character.backgroundImagePath?.toLowerCase().replace('.dds', '.png')}"
           alt=""
           class={cn('col-start-1 row-start-1 min-w-0 rounded-[50%]')}
-          style="background: {character.backgroundColor};"
         />
         <img
           loading="lazy"

@@ -1,6 +1,10 @@
 import type { WorldsData } from "@/utils"
 import type { LayoutServerLoad } from "./$types"
 import type { Actions } from "@sveltejs/kit"
+import { client } from '@/server/db/gamedata/client'
+import { dev } from "$app/environment"
+
+if (dev) await client.sync()
 
 export const load = (async ({ locals }) => {
   const worlds = fetch('https://gt-servers.nwdb.info/server-status/d97f9hg7132dhasei12j93hdasr18j_gt').then(res => res.json() as Promise<WorldsData>)

@@ -1,6 +1,6 @@
 import { handle as authjs } from '$lib/server/db/users/auth'
 import type { users } from '@/server/db/users/schema'
-import { redirect, type Handle } from '@sveltejs/kit'
+import { redirect, type Handle, type HandleServerError } from '@sveltejs/kit'
 import { sequence } from '@sveltejs/kit/hooks'
 
 const authorization = (async ({ event, resolve }) => {
@@ -23,3 +23,13 @@ declare module "@auth/core/types" {
     role: typeof users.$inferSelect.role
   }
 }
+
+export const handleError = (async ({ error, event, status, message }) => {
+  const errorId = crypto.randomUUID()
+  console.log(status, error)
+
+  return {
+    message: 'whoa',
+    errorId,
+  }
+}) satisfies HandleServerError

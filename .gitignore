@@ -8,3 +8,7 @@ dev.db
 dev.db-shm
 dev.db-wal
 output
+replica.db
+replica.db-shm
+replica.db-wal
+replica.db-client_wal_index

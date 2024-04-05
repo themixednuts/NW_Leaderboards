@@ -1,12 +1,7 @@
 <script lang="ts">
   import { resolveRoute } from '$app/paths'
   import { FirstLevelCategory } from '$lib/leaderboard/types'
-  import {
-    sort_leaderboards,
-    match_leaderboard,
-    normalize_leaderboard_string,
-    FACTION_IMAGE_PATHS,
-  } from '$lib/leaderboard/utils'
+  import { match_leaderboard, normalize_leaderboard_string, FACTION_IMAGE_PATHS } from '$lib/leaderboard/utils'
   import type { PageData } from './$types.js'
   import { cn } from '@/shadcn/utils.js'
 
@@ -18,7 +13,7 @@
   let seasons = $derived(data.seasons)
   let leaderboards = $derived(data.leaderboards)
 
-  let currentIndex = $state(0)
+  let index = $state(0)
   let banners = $derived([
     {
       label: FirstLevelCategory.MutatedExpeditions,
@@ -26,7 +21,7 @@
     },
     {
       label: FirstLevelCategory.FactionWar,
-      src: FACTION_IMAGE_PATHS[currentIndex],
+      src: FACTION_IMAGE_PATHS[index],
     },
     {
       label: FirstLevelCategory.VsEnvironment,
@@ -47,7 +42,7 @@
 
   $effect(() => {
     const interval = setInterval(() => {
-      currentIndex = (currentIndex + 1) % FACTION_IMAGE_PATHS.length
+      index = (index + 1) % FACTION_IMAGE_PATHS.length
     }, 15000)
 
     return () => {
@@ -55,7 +50,7 @@
     }
   })
 
-  // $inspect(leaderboards)
+  $inspect(leaderboards?.length)
 </script>
 
 <div

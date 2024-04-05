@@ -5,7 +5,7 @@ export const load = (async ({ locals, params: { id } }) => {
   const session = await locals.auth()
 
   const character = getCharacterById(id, session?.user)
-
+  character.catch(e => console.log(e))
   return {
     character,
   }

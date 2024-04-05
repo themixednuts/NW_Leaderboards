@@ -17,6 +17,7 @@
   }
 
   let { table, leaderboard }: Props = $props()
+  $inspect(table)
 
   let type = $derived($page.params.type)
 

@@ -74,7 +74,7 @@
       <Table.Caption>Public Members</Table.Caption>
       <Table.Header>
         <Table.Row>
-          <Table.Head></Table.Head>
+          <Table.Head class="w-16"></Table.Head>
           <Table.Head>Name</Table.Head>
           <Table.Head>Rank</Table.Head>
           <Table.Head>Level</Table.Head>
@@ -83,7 +83,16 @@
       <Table.Body>
         {#each guild.characters as character}
           <Table.Row>
-            <Table.Cell class="grid size-8">
+            <Table.Cell
+              class={cn(
+                'grid size-12 grid-cols-1 grid-rows-1 place-content-start place-items-center p-0 contain-paint',
+                {
+                  // 'border-faction-background-1-dark': character.factionId === 1,
+                  // 'border-faction-background-2-dark': character.factionId === 2,
+                  // 'border-faction-background-3-dark': character.factionId === 3,
+                },
+              )}
+            >
               <img
                 src="/{character.backgroundImagePath?.toLowerCase().replace('dds', 'png')}"
                 alt=""

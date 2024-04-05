@@ -15,5 +15,7 @@
     {#if character}
       <Card {character} />
     {/if}
+  {:catch e}
+    {e}
   {/await}
 </div>

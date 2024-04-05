@@ -2,13 +2,6 @@ import type { LayoutServerLoad } from './$types'
 import { get_valid_seasons } from '$lib/server/db/utils'
 import { leaderboard_datatable, match_leaderboard } from '$lib/leaderboard/utils'
 import { FirstLevelCategory } from '$lib/leaderboard/types'
-import type { Config } from '@sveltejs/adapter-vercel'
-import { BYPASS_TOKEN } from '$env/static/private'
-
-export const config: Config = {
-  runtime: 'nodejs20.x',
-}
-
 
 const leaderboard_results = await leaderboard_datatable()
 

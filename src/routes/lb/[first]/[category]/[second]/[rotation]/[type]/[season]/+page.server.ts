@@ -1,18 +1,8 @@
 import { match_leaderboard, type LeaderboardAPIBoardItem } from '$lib/leaderboard/utils'
 import { error } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
-import type { Config } from '@sveltejs/adapter-vercel'
-import { BYPASS_TOKEN } from '$env/static/private'
 
-export const config: Config = {
-  runtime: 'nodejs20.x',
-  // isr: {
-  //     expiration: 60,
-  //     bypassToken: BYPASS_TOKEN,
-  // }
-}
-
-export const load = (async ({ params: { season, type, first, second, category, rotation }, parent, url: { searchParams }, locals }) => {
+export const load = (async ({ fetch, url, params: { season, type, first, second, category, rotation }, parent, url: { searchParams } }) => {
   const { leaderboards } = await parent()
   const displayName = searchParams.get('q')
   const leaderboard = leaderboards.find(lb => match_leaderboard(lb, {
@@ -33,17 +23,13 @@ export const load = (async ({ params: { season, type, first, second, category, r
 
   const id = type === 'faction' ? leaderboard.FactionLeaderboardDefinitionId : leaderboard.LeaderboardDefinitionId
   if (!id) error(400, 'Leaderboard ID not found')
-
-  const api = `https://api.nwlb.info/json/${id}/${season}?size=1000&eid=true`
-  const json = fetch(api).then(async (res) => {
-    if (!res.ok) return error(res.status)
-    const json = res.json() as Promise<LeaderboardAPIBoardItem[]>
-    return json
-  })
-
-  json.catch((e) => {
-    console.log(e)
-  })
+  const link = `/lb/api/leaderboard/${id}/${season}/1`
+  const json = fetch(link, {
+    headers: {
+      host: url.host,
+    }
+  }).then(res => res.json() as Promise<LeaderboardAPIBoardItem[]>)
+  json.catch(e => console.log(e))
 
   return {
     json,
