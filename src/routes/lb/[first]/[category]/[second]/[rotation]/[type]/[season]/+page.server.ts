@@ -25,9 +25,9 @@ export const load = (async ({ fetch, url, params: { season, type, first, second,
   if (!id) error(400, 'Leaderboard ID not found')
   const link = `/lb/api/leaderboard/${id}/${season}/1`
   const json = fetch(link, {
-    headers: {
-      host: url.host,
-    }
+    // headers: {
+    //   host: url.host,
+    // }
   }).then(res => res.json() as Promise<LeaderboardAPIBoardItem[]>)
   json.catch(e => console.log(e))
 
