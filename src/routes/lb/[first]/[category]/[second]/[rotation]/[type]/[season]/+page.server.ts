@@ -6,6 +6,7 @@ export const load = (async ({ request, locals, fetch, url, params: { season, typ
   const { leaderboards } = await parent()
 
   const displayName = searchParams.get('q')
+  const page = searchParams.get('p')
   const leaderboard = leaderboards.find(lb => match_leaderboard(lb, {
     //@ts-expect-error
     FirstLevelCategory: first,
@@ -20,10 +21,18 @@ export const load = (async ({ request, locals, fetch, url, params: { season, typ
     //@ts-expect-error
     DisplayName: displayName,
   }))
-  if (!leaderboard) error(400, `This category is not tracked by ${type}`)
+
+  if (!leaderboard) {
+    console.log('No leaderboard found')
+
+    return error(400, `This category is not tracked by ${type}`)
+  }
 
   const id = type === 'faction' ? leaderboard.FactionLeaderboardDefinitionId : leaderboard.LeaderboardDefinitionId
-  if (!id) error(400, 'Leaderboard ID not found')
+  if (!id) {
+    console.log('No leaderboard id found')
+    return error(400, 'Leaderboard ID not found')
+  }
   // const link = `/lb/api/leaderboard/${id}/${season}/1`
 
   // console.log('page.server.ts', request.headers, url)

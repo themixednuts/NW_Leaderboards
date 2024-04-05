@@ -95,7 +95,7 @@
           {/each}
         {/if}
       </Command.Group>
-      <Command.Separator />
+      <Command.Separator alwaysRender />
       <Command.Group heading="Guilds">
         {#if guilds?.length}
           {#each guilds as guild (guild.id)}
