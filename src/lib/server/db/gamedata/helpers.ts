@@ -2,6 +2,7 @@ import type { User } from "@auth/core/types"
 import { db } from "./client"
 import { characters, guilds } from "./schema"
 import { p_character_by_id, p_character_by_name, p_characters_by_user, p_guild_by_id, p_guild_with_members_by_id, p_guild_with_members_by_name, p_guilds_with_members_by_user } from "./statements"
+import { eq } from "drizzle-orm"
 
 // HELPER FUNCTIONS
 export const getCharactersByUser = async (user?: User) => {
@@ -22,13 +23,9 @@ export const getCharacterByName = async (name: typeof characters.$inferSelect.na
   return p_character_by_name.get({ name, userId, role })
 }
 
-export const updateCharacterVisibility = async (character: typeof characters.$inferInsert) => {
-  return db.insert(characters).values(character).onConflictDoUpdate({
-    target: characters.id,
-    set: {
-      visibility: character.visibility
-    }
-  }).returning()
+export const updateCharacterVisibility = async (character: { name: typeof characters.$inferInsert.name, visibility?: typeof characters.$inferInsert.visibility }) => {
+  const { name, visibility } = character
+  return db.update(characters).set({ visibility }).where(eq(characters.name, name)).returning().get()
 }
 
 export const getCompaniesWithMembersByUser = async (user?: User) => {

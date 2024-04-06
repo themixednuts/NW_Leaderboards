@@ -29,11 +29,15 @@ export const p_character_by_id = db.query.characters.findFirst({
   columns: {
     userId: false,
     id: false,
+    submittedAt: false,
+    guildId: false
   },
   with: {
     guild: {
       columns: {
-        id: false
+        id: false,
+        guildMasterId: false,
+        submittedAt: false
       }
     }
   },
@@ -61,11 +65,15 @@ export const p_character_by_name = db.query.characters.findFirst({
   columns: {
     userId: false,
     id: false,
+    guildId: false,
+    submittedAt: false
   },
   with: {
     guild: {
       columns: {
-        id: false
+        id: false,
+        guildMasterId: false,
+        submittedAt: false
       }
     }
   },

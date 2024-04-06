@@ -1,7 +1,7 @@
 <script lang="ts">
   import * as Command from '@/shadcn/components/ui/command'
   import type { ActionData, SubmitFunction } from '../../routes/$types'
-  import { applyAction, enhance } from '$app/forms'
+  import { enhance } from '$app/forms'
   import { page } from '$app/stores'
   import { getContext } from 'svelte'
   import type { Writable } from 'svelte/store'

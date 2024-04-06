@@ -1,7 +1,7 @@
 <script lang="ts">
   import '../app.pcss'
 
-  import { navigating } from '$app/stores'
+  import { navigating, page } from '$app/stores'
   import { tweened } from 'svelte/motion'
   import { cubicOut } from 'svelte/easing'
   import { signIn, signOut } from '@auth/sveltekit/client'
@@ -22,6 +22,8 @@
   import { Gear, SignIn, SignOut, Question, ChartPieSlice } from 'phosphor-svelte'
   import { setContext } from 'svelte'
   import { writable } from 'svelte/store'
+  import SuperDebug from 'sveltekit-superforms'
+  import { dev } from '$app/environment'
 
   interface Props {
     data: PageData
@@ -29,6 +31,7 @@
   }
 
   let { data }: Props = $props()
+
   let cmd = writable(false)
   setContext('cmd', cmd)
 
@@ -50,13 +53,14 @@
       },
     }
   }
+  $inspect($navigating)
 </script>
 
 <svelte:head>
   <script async src="https://nwdb.info/embed.js"></script>
 </svelte:head>
 
-<Toaster />
+<Toaster position="top-right" closeButton />
 <Command />
 
 {#if !!$navigating}
@@ -82,12 +86,14 @@
           <span class="sr-only">Toggle navigation menu</span>
         </Button>
       </Sheet.Trigger>
+      <!-- 
       <Sheet.Content side="left">
         <nav class="grid gap-6 text-lg font-medium">
           {@render logo()}
           <a href="/lb" class="text-muted-foreground transition-colors hover:text-foreground">Leaderboards</a>
         </nav>
-      </Sheet.Content>
+      </Sheet.Content> 
+      -->
     </Sheet.Root>
     <div class="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
       <Button
@@ -152,9 +158,20 @@
       </DropdownMenu.Root>
     </div>
   </header>
-  <div class="container flex max-h-fit min-w-min grow overflow-auto py-2">
+  <main class="container flex max-h-fit min-w-min grow overflow-auto py-2">
     <slot />
+  </main>
+  <!--
+  <div class="sticky bottom-10 left-10 flex w-screen min-w-fit max-w-xl items-center">
+    <SuperDebug
+      data={{ leaderboards: $page.data.leaderboards.length, status: $page.status, navigating: $navigating }}
+      promise
+      display={dev}
+      theme="vscode"
+      collapsible
+    />
   </div>
+  -->
 </div>
 
 {#snippet logo()}

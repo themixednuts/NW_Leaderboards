@@ -1,17 +1,17 @@
 <script lang="ts">
-  import { page } from '$app/stores'
-  import type { getCharacterById, getCharactersByUser } from '@/server/db/gamedata/helpers'
+  import type { getCharacterById } from '@/server/db/gamedata/helpers'
   import { cn } from '@/shadcn/utils'
   import { type WorldsData, steamAppIdMap, normalize_name } from '@/utils'
-  import { DotsThree, Eye, EyeClosed, EyeSlash } from 'phosphor-svelte'
+  import { Eye, EyeClosed, EyeSlash } from 'phosphor-svelte'
   import * as DropdownMenu from '@/shadcn/components/ui/dropdown-menu'
-  import * as Form from '@/shadcn/components/ui/form'
-  import { applyAction, enhance } from '$app/forms'
   import { toast } from 'svelte-sonner'
-  import type { SubmitFunction } from '../../../routes/settings/characters/$types'
   import * as Card from '@/shadcn/components/ui/card'
   import { Skeleton } from '@/shadcn/components/ui/skeleton'
-  import { normalize_leaderboard_id } from '@/leaderboard/utils'
+  import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms'
+  import { page } from '$app/stores'
+  import { zodClient } from 'sveltekit-superforms/adapters'
+  import { characters, visibilitySchema } from '$lib/schemas/gamedata'
+  import { Input } from '@/shadcn/components/ui/input'
 
   interface Props {
     character: NonNullable<Awaited<ReturnType<typeof getCharacterById>>>
@@ -19,32 +19,39 @@
 
   let { character }: Props = $props()
 
-  let vis = $state(character.visibility)
-  let formEl: HTMLFormElement | undefined = $state()
+  let form = $state(
+    superForm(
+      $page.data.visibilityForm as SuperValidated<
+        Infer<typeof visibilitySchema>,
+        { update: { name: typeof characters.$inferSelect.name; visibility: typeof characters.$inferSelect.visibility } }
+      >,
+      {
+        validators: zodClient(visibilitySchema),
+        invalidateAll: false,
+        onError: ({ result: { status, error } }) => {
+          if (status) toast.error(status.toString(), { description: error.message })
+        },
+        onUpdated: ({ form: { valid, message } }) => {
+          if (valid && message) {
+            toast.success('Updated Visility', {
+              description: `Visibility for ${message.update.name} changed to ${message.update.visibility}`,
+            })
+            if (message.update.name === character.name) visibility = message.update.visibility
+          }
+          if (!valid) {
+            toast.error('Failed to update', {
+              description: `Visibility for ${character.name} failed. Reverted back to ${character.visibility}`,
+            })
+            visibility = character.visibility
+          }
+        },
+      },
+    ),
+  )
 
-  const handleForm = (({ formData }) => {
-    formData.set('visibility', vis)
-    formData.set('character', JSON.stringify(character))
+  let visibility = $state(character.visibility)
 
-    return async ({ result }) => {
-      if (result.type === 'success') {
-        toast.success('Updated Visility', {
-          description: `Visibility for ${result.data?.upsert[0].name} changed to ${result.data?.upsert[0].visibility}`,
-        })
-      }
-      if (result.type === 'failure') {
-        toast.error('Failed to update', {
-          description: `Visibility for ${character.name} failed. Reverted back to ${character.visibility}`,
-        })
-      }
-      applyAction(result)
-    }
-  }) satisfies SubmitFunction
-
-  function submit(value: 'private' | 'public' | 'guild') {
-    vis = value
-    if (formEl) formEl.requestSubmit()
-  }
+  let { enhance } = form
 </script>
 
 <div class="grid min-w-min grid-cols-[minmax(0,1fr),minmax(0,2fr)] grid-rows-[minmax(0,1fr)] gap-2 overflow-clip p-2">
@@ -131,9 +138,9 @@
       <DropdownMenu.Trigger
         class="col-start-2 row-start-1 flex min-h-8 min-w-8 max-w-10 place-content-center place-items-center self-start justify-self-end border-2"
       >
-        {#if vis === 'public'}
+        {#if visibility === 'public'}
           <Eye class=" size-full p-1" />
-        {:else if vis === 'private'}
+        {:else if visibility === 'private'}
           <EyeClosed />
         {:else}
           <EyeSlash />
@@ -141,14 +148,21 @@
       </DropdownMenu.Trigger>
       <DropdownMenu.Content side="right" align="start">
         <DropdownMenu.Label>Visibility</DropdownMenu.Label>
-        <DropdownMenu.RadioGroup bind:value={vis} onValueChange={(val) => {
-          submit(val as 'private')
-        }}>
-          <DropdownMenu.RadioItem value="public">Public</DropdownMenu.RadioItem>
-          <DropdownMenu.RadioItem value="guild">Guild</DropdownMenu.RadioItem>
-          <DropdownMenu.RadioItem value="private">Private</DropdownMenu.RadioItem>
-        </DropdownMenu.RadioGroup>
-        <form method="post" action="/settings/characters?/visibility" use:enhance={handleForm} bind:this={formEl} />
+        <form method="post" action="/settings/characters?/visibility" use:enhance>
+          <DropdownMenu.RadioGroup bind:value={visibility}>
+            <button class="flex size-full">
+              <DropdownMenu.RadioItem value="public" class="w-full">Public</DropdownMenu.RadioItem>
+            </button>
+            <button class="flex size-full">
+              <DropdownMenu.RadioItem value="guild" class="w-full">Guild</DropdownMenu.RadioItem>
+            </button>
+            <button class="flex size-full">
+              <DropdownMenu.RadioItem value="private" class="w-full">Private</DropdownMenu.RadioItem>
+            </button>
+            <Input name="visibility" value={visibility} type="hidden" />
+            <Input name="name" value={character.name} type="hidden" />
+          </DropdownMenu.RadioGroup>
+        </form>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
   {/if}

@@ -5,9 +5,11 @@ import * as schema from '$lib/server/db/gamedata/schema'
 import { dev } from '$app/environment'
 
 export const client = createClient({
-  url: dev ? 'file:replica.db' : TURSO_GAMEDATA_URL,
+  // url: dev ? 'file:replica.db' : TURSO_GAMEDATA_URL,
+  // authToken: TURSO_GAMEDATA_AUTH,
+  // syncUrl: dev ? TURSO_GAMEDATA_URL : undefined
+  url: TURSO_GAMEDATA_URL,
   authToken: TURSO_GAMEDATA_AUTH,
-  syncUrl: dev ? TURSO_GAMEDATA_URL : undefined
 })
 
 export const db = drizzle(client, { schema })

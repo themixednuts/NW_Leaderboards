@@ -11,7 +11,9 @@
     "format": "prettier --write --config ./.prettierrc --ignore-path ./.prettierignore \"**/*.{js,ts,svelte}\"",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "lb": "bun ./scripts/leaderboard-types"
+    "lb": "bun ./scripts/leaderboard-types",
+    "studio:gamedata": "bunx drizzle-kit studio --config=./scripts/gamedata/drizzle.config.ts",
+    "studio": "bunx drizzle-kit studio"
   },
   "devDependencies": {
     "@sveltejs/enhanced-img": "^0.1.9",

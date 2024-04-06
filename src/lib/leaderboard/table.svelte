@@ -147,7 +147,11 @@
               {@const players = table[i].entityId?.split('_')}
               <Table.Row>
                 <Table.Cell>{ranks[i]}</Table.Cell>
-                <Table.Cell class={cn('grid grid-cols-1 gap-1', { 'grid-cols-2': (players?.length || 0) > 1 })}>
+                <Table.Cell
+                  class={cn('grid grid-cols-1 gap-1', {
+                    'grid-cols-[repeat(2,minmax(min-content,1fr))]': (players?.length || 0) > 1,
+                  })}
+                >
                   {#if players}
                     {#each players as player}
                       <Player id={player} type={type === 'character' ? 'character' : 'guild'} />

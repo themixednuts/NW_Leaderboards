@@ -40,8 +40,6 @@
   <Form.Button type="submit" class="">Submit</Form.Button>
 </form>
 
-{#if dev}
-  <div class="absolute bottom-10 w-full min-w-fit max-w-xl">
-    <SuperDebug data={$formData} />
-  </div>
-{/if}
+<div class="absolute bottom-10 w-full min-w-fit max-w-xl">
+  <SuperDebug data={$formData} display={dev} theme="vscode" />
+</div>

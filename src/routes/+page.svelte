@@ -1,6 +1,3 @@
-<script>
-</script>
-
 <svelte:head>
   <title>NW Stats - Home Page</title>
   <meta content="New World Stats" property="og:title" />

@@ -1,4 +1,4 @@
-import { match_leaderboard, type LeaderboardAPIBoardItem } from '$lib/leaderboard/utils'
+import { leaderboard_datatable, match_leaderboard, type LeaderboardAPIBoardItem } from '$lib/leaderboard/utils'
 import { error } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
 
@@ -44,7 +44,7 @@ export const load = (async ({ request, locals, fetch, url, params: { season, typ
   // json.catch(e => console.log(e))
 
 
-  const api = `https://api.nwlb.info/json/${id}/${season}?size=100000&eid=true`
+  const api = `https://api.nwlb.info/json/${id}/${season}?size=10000&eid=true`
   const data = fetch(api).then(res => res.json() as Promise<LeaderboardAPIBoardItem[]>)
   data.catch((e) => {
     console.log(e)

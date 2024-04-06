@@ -1,8 +1,10 @@
 import type { WorldsData } from "@/utils"
 import type { LayoutServerLoad } from "./$types"
-import type { Actions } from "@sveltejs/kit"
 import { client } from '@/server/db/gamedata/client'
 import { dev } from "$app/environment"
+import { superValidate } from 'sveltekit-superforms'
+import { zod } from 'sveltekit-superforms/adapters'
+import { visibilitySchema } from "$lib/schemas/gamedata"
 
 // if (dev) await client.sync()
 
@@ -12,6 +14,8 @@ export const load = (async ({ locals }) => {
 
   return {
     session: await locals.auth(),
+    visibilityForm: await superValidate(zod(visibilitySchema)),
+    // searchForm: await superValidate(zod()),
     worlds
   }
 }) satisfies LayoutServerLoad

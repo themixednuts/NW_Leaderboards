@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { getCharacterById, getCharactersByUser } from '@/server/db/gamedata/helpers'
+  import type { getCharacterById } from '@/server/db/gamedata/helpers'
   import * as Card from '@/shadcn/components/ui/card'
   // import Item from '../equipment/item.svelte'
   import { cn } from '@/shadcn/utils'
