@@ -86,14 +86,12 @@
           <span class="sr-only">Toggle navigation menu</span>
         </Button>
       </Sheet.Trigger>
-      <!-- 
       <Sheet.Content side="left">
         <nav class="grid gap-6 text-lg font-medium">
           {@render logo()}
           <a href="/lb" class="text-muted-foreground transition-colors hover:text-foreground">Leaderboards</a>
         </nav>
-      </Sheet.Content> 
-      -->
+      </Sheet.Content>
     </Sheet.Root>
     <div class="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
       <Button
@@ -158,7 +156,7 @@
       </DropdownMenu.Root>
     </div>
   </header>
-  <main class="container flex max-h-fit min-w-min grow overflow-auto py-2">
+  <main class="container flex max-h-fit min-w-min grow overflow-auto p-2">
     <slot />
   </main>
   <!--
