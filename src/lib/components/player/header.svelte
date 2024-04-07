@@ -28,6 +28,7 @@
       {
         validators: zodClient(visibilitySchema),
         invalidateAll: false,
+        id: character.name,
         onError: ({ result: { status, error } }) => {
           if (status) toast.error(status.toString(), { description: error.message })
         },
@@ -36,7 +37,7 @@
             toast.success('Updated Visility', {
               description: `Visibility for ${message.update.name} changed to ${message.update.visibility}`,
             })
-            if (message.update.name === character.name) visibility = message.update.visibility
+            visibility = message.update.visibility
           }
           if (!valid) {
             toast.error('Failed to update', {
