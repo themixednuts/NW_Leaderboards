@@ -54,9 +54,9 @@
       <Card.Title class="drop-shadow">
         {guild.name}
       </Card.Title>
-      {#if guild.guildMaster}
+      {#if guild.guildmaster}
         <Card.Description class="drop-shadow">
-          Governor: {guild.guildMaster.name}
+          Governor: {guild.guildmaster.name}
         </Card.Description>
       {/if}
     </div>

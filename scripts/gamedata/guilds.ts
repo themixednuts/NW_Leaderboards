@@ -38,7 +38,7 @@ for await (const path of glob.scan(guildDataDir)) {
     const normalized = guildsarr.map(guild => ({
       id: guild.guildId.replace(/\{|\}/g, ''),
       name: guild.guildName,
-      guildMasterId: guild.guildMasterCharacterIdString,
+      guildmasterId: guild.guildMasterCharacterIdString,
       factionId: guild.faction,
       foregroundImagePath: guild.crestData.foregroundImagePath,
       backgroundImagePath: guild.crestData.backgroundImagePath,

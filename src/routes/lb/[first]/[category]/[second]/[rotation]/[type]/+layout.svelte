@@ -17,6 +17,7 @@
   import ScrollArea from '@/shadcn/components/ui/scroll-area/scroll-area.svelte'
   import { cn } from '@/shadcn/utils.js'
   import type { LayoutData } from './$types.js'
+  import { toast } from 'svelte-sonner'
 
   interface Props {
     data: LayoutData
@@ -70,6 +71,14 @@
 
     if ($page.params.first !== 'factionwar') clearInterval(interval)
     return () => clearInterval(interval)
+  })
+
+  $effect(() => {
+    if (!data.session?.user)
+      toast.info('Want your character name shown?', {
+        description:
+          'Login and upload your game.log file to claim a character and change it to public for others to see!',
+      })
   })
 </script>
 

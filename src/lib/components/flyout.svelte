@@ -149,8 +149,8 @@
       <div class="col-start-2 row-start-2 text-xs">
         {#if data.type === 'character'}
           {data.guild?.name}
-        {:else if data.type === 'guild' && data.guildMaster}
-          Guild Master: {data.guildMaster?.name}
+        {:else if data.type === 'guild' && data.guildmaster}
+          Guild Master: {data.guildmaster?.name}
         {/if}
       </div>
     </div>

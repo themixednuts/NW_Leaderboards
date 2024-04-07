@@ -36,7 +36,7 @@ export const p_character_by_id = db.query.characters.findFirst({
     guild: {
       columns: {
         id: false,
-        guildMasterId: false,
+        guildmasterId: false,
         submittedAt: false
       }
     }
@@ -72,7 +72,7 @@ export const p_character_by_name = db.query.characters.findFirst({
     guild: {
       columns: {
         id: false,
-        guildMasterId: false,
+        guildmasterId: false,
         submittedAt: false
       }
     }
@@ -142,7 +142,7 @@ export const p_guild_with_members_by_id = db.query.guilds.findFirst({
         inArray(sql.placeholder('role'), ['admin', 'maintainer'])
       )
     },
-    guildMaster: {
+    guildmaster: {
       columns: {
         userId: false,
         id: false,
@@ -171,7 +171,7 @@ export const p_guild_with_members_by_name = db.query.guilds.findFirst({
         inArray(sql.placeholder('role'), ['admin', 'maintainer'])
       )
     },
-    guildMaster: {
+    guildmaster: {
       columns: {
         userId: false,
         id: false,
@@ -186,7 +186,7 @@ export const p_guild_by_id = db.query.guilds.findFirst({
     id: false
   },
   with: {
-    guildMaster: {
+    guildmaster: {
       columns: {
         userId: false,
         id: false,
