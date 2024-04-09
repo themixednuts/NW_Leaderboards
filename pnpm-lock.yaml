@@ -170,6 +170,9 @@ devDependencies:
   svelte-check:
     specifier: ^3.6.9
     version: 3.6.9(postcss@8.4.38)(svelte@5.0.0-next.95)
+  svelte-headless-table:
+    specifier: ^0.18.2
+    version: 0.18.2(svelte@5.0.0-next.95)
   tailwindcss:
     specifier: ^3.4.3
     version: 3.4.3
@@ -3994,6 +3997,17 @@ packages:
       svelte: 5.0.0-next.95
     dev: false
 
+  /svelte-headless-table@0.18.2(svelte@5.0.0-next.95):
+    resolution: {integrity: sha512-dnDTaXW5CNzRUjHVbc/Hb0Zv80zU4VcIUnAja6OuZriXvim1AqcWYQCHPRzBGwqj1m3YEHHNvspSzY0o5HzA0A==}
+    peerDependencies:
+      svelte: ^4.0.0
+    dependencies:
+      svelte: 5.0.0-next.95
+      svelte-keyed: 2.0.0(svelte@5.0.0-next.95)
+      svelte-render: 2.0.1(svelte@5.0.0-next.95)
+      svelte-subscribe: 2.0.1(svelte@5.0.0-next.95)
+    dev: true
+
   /svelte-hmr@0.15.3(svelte@5.0.0-next.95):
     resolution: {integrity: sha512-41snaPswvSf8TJUhlkoJBekRrABDXDMdpNpT2tfHIv4JuhgvHqLMhEPGtaQn0BmbNSTkuz2Ed20DF2eHw0SmBQ==}
     engines: {node: ^12.20 || ^14.13.1 || >= 16}
@@ -4001,6 +4015,14 @@ packages:
       svelte: ^3.19.0 || ^4.0.0
     dependencies:
       svelte: 5.0.0-next.95
+
+  /svelte-keyed@2.0.0(svelte@5.0.0-next.95):
+    resolution: {integrity: sha512-7TeEn+QbJC2OJrHiuM0T8vMBkms3DNpTE+Ir+NtnVBnBMA78aL4f1ft9t0Hn/pBbD/TnIXi4YfjFRAgtN+DZ5g==}
+    peerDependencies:
+      svelte: ^4.0.0
+    dependencies:
+      svelte: 5.0.0-next.95
+    dev: true
 
   /svelte-parse-markup@0.1.2(svelte@5.0.0-next.95):
     resolution: {integrity: sha512-DycY7DJr7VqofiJ63ut1/NEG92HrWWL56VWITn/cJCu+LlZhMoBkBXT4opUitPEEwbq1nMQbv4vTKUfbOqIW1g==}
@@ -4058,6 +4080,15 @@ packages:
       typescript: 5.4.4
     dev: true
 
+  /svelte-render@2.0.1(svelte@5.0.0-next.95):
+    resolution: {integrity: sha512-RpB0SurwXm4xhjvHHtjeqMmvd645FURb79GFOotScOSqnKK5vpqBgoBPGC0pp+E/eZgDSQ9rRAdn/+N4ys1mXQ==}
+    peerDependencies:
+      svelte: ^4.0.0
+    dependencies:
+      svelte: 5.0.0-next.95
+      svelte-subscribe: 2.0.1(svelte@5.0.0-next.95)
+    dev: true
+
   /svelte-sonner@0.3.21(svelte@5.0.0-next.95):
     resolution: {integrity: sha512-OodylZ4ZwX4XNnpujEGzUiX66aIwve4QulI7qNmKIw49LIfAxV1LTQaJ6Xj5KsNqWz72NsO1txxV3im3021vEg==}
     peerDependencies:
@@ -4065,6 +4096,14 @@ packages:
     dependencies:
       svelte: 5.0.0-next.95
     dev: false
+
+  /svelte-subscribe@2.0.1(svelte@5.0.0-next.95):
+    resolution: {integrity: sha512-eKXIjLxB4C7eQWPqKEdxcGfNXm2g/qJ67zmEZK/GigCZMfrTR3m7DPY93R6MX+5uoqM1FRYxl8LZ1oy4URWi2A==}
+    peerDependencies:
+      svelte: ^4.0.0
+    dependencies:
+      svelte: 5.0.0-next.95
+    dev: true
 
   /svelte@5.0.0-next.95:
     resolution: {integrity: sha512-Ro0WJnILxQg1edGbukRRYDZK9OYThqBL1HQVt7WnkkocbiZvD8mXcsj3FQxKPtZ3lmQFqYYyn2HE3D0zfLZXTg==}
