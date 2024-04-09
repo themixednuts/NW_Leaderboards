@@ -68,6 +68,23 @@ export const load = (async ({ locals, fetch, url, params: { season, type, first,
 
   const api = `https://api.nwlb.info/json/${id}/${season}?size=10000&eid=true`
   const json = fetch(api).then(res => res.json() as Promise<LeaderboardAPIBoardItem[]>)
+    .then(data => {
+      let rank = 2
+      let currentRank = 2
+      const mapped = data.map((entry, idx, arr) => {
+        if (idx === 0) return entry
+        if (arr[idx - 1].value !== arr[idx].value) {
+          rank = currentRank
+        }
+        currentRank++
+        return {
+          ...entry,
+          rank
+        }
+      })
+      return mapped
+    })
+
     .then(async (items) => {
       if (!search) return items
       const res = await searchCompaniesAndCharactersByName(search, session?.user, 30)
