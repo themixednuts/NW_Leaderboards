@@ -12,6 +12,7 @@
   import { zodClient } from 'sveltekit-superforms/adapters'
   import { characters, visibilitySchema } from '$lib/schemas/gamedata'
   import { Input } from '@/shadcn/components/ui/input'
+  import Icon from './icon.svelte'
 
   interface Props {
     character: NonNullable<Awaited<ReturnType<typeof getCharacterById>>>
@@ -57,39 +58,7 @@
 
 <div class="grid min-w-min grid-cols-[minmax(0,1fr),minmax(0,2fr)] grid-rows-[minmax(0,1fr)] gap-2 overflow-clip p-2">
   <div class="relative col-start-1 row-start-1 min-w-min">
-    <div
-      class={cn(
-        'grid aspect-square max-w-24 grid-cols-[minmax(0,1fr)] grid-rows-[minmax(0,1fr)] place-content-center place-items-center overflow-clip rounded-[50%] border-2',
-        {
-          'border-faction-background-1-dark': character.factionId === 1,
-          'border-faction-background-2-dark': character.factionId === 2,
-          'border-faction-background-3-dark': character.factionId === 3,
-        },
-      )}
-    >
-      {#if character.backgroundImagePath && character.foregroundImagePath}
-        <img
-          loading="lazy"
-          src="/{character.backgroundImagePath?.toLowerCase().replace('.dds', '.png')}"
-          alt=""
-          class={cn('col-start-1 row-start-1 min-w-0 rounded-[50%]')}
-        />
-        <img
-          loading="lazy"
-          src="/{character.midgroundImagePath?.toLowerCase().replace('.dds', '.png')}"
-          alt=""
-          class="col-start-1 row-start-1 min-w-0 rounded-[50%]"
-        />
-        <img
-          loading="lazy"
-          src="/{character.foregroundImagePath?.toLowerCase().replace('.dds', '.png')}"
-          alt=""
-          class="col-start-1 row-start-1 min-w-0 rounded-[50%]"
-        />
-      {:else}
-        <img loading="lazy" src={$page.data.session?.user?.image} alt="" class="col-start-1 row-start-1 min-w-0" />
-      {/if}
-    </div>
+    <Icon {character} />
     {#if character.level}
       <div
         class="absolute bottom-[0rem] left-3 rounded-full text-lg drop-shadow-lg backdrop-blur before:absolute before:left-1/2 before:-z-10 before:h-full before:w-[150%] before:-translate-x-1/2 before:rotate-45 before:border-2 before:border-stone-500 before:bg-black before:shadow-lg before:backdrop-blur"
@@ -115,7 +84,7 @@
     </div>
     {#if character.guild}
       <Card.Description>
-        <a href="/company/{normalize_name(character.guild.name)}" class="text-xs">
+        <a href="/company/{normalize_name(character.guild.name)}/members" class="text-xs">
           Company: {character.guild.name}
         </a>
       </Card.Description>

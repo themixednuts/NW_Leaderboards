@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Card from '@/components/company/card.svelte'
+  import CompanyHeader from '@/components/company/header.svelte'
   import type { PageData } from './$types'
   import { normalize_name } from '@/utils'
 
@@ -14,9 +14,11 @@
     loading
   {:then companies}
     {#each companies as guild}
-      <a href="/company/{normalize_name(guild.name)}" class="border-x-2">
-        <Card {guild} />
-      </a>
+      {#if guild}
+        <a href="/company/{normalize_name(guild.name)}/members" class="">
+          <CompanyHeader {guild} />
+        </a>
+      {/if}
     {/each}
   {/await}
 </div>

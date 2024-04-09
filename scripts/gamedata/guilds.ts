@@ -1,9 +1,10 @@
-import { getTableColumns, isNotNull, or, sql } from "drizzle-orm"
+import { getTableColumns, isNotNull, or, Query, sql } from "drizzle-orm"
 import { guilds } from "../../src/lib/server/db/gamedata/schema"
-import { db } from "./client"
+import { client, db } from "./client"
 import { file, Glob } from 'bun'
+import { InArgs } from "@libsql/client/."
 
-const glob = new Glob('**/*.json')
+const GLOB = new Glob('**/*.json')
 
 export interface GuildData {
   crestData: CrestData
@@ -21,12 +22,14 @@ export interface CrestData {
   foregroundImagePath: string
 }
 
-const guildDataDir = "/media/gamedisk/Games/Steam/steamapps/common/New World/logs/guildsdata"
-const stmts = []
-for await (const path of glob.scan(guildDataDir)) {
+const GUILD_DATA_DIR = "/media/gamedisk/Games/Steam/steamapps/common/New World/logs/guildsdata"
+const BATCH_SIZE = 1000
+
+const stmts: Query[] = []
+for await (const path of GLOB.scan(GUILD_DATA_DIR)) {
   console.log('Parsing: ', path)
   const s = performance.now()
-  const file_handle = file(`${guildDataDir}/${path}`)
+  const file_handle = file(`${GUILD_DATA_DIR}/${path}`)
   const text = await file_handle.text()
 
   const lines = text.split('\n')
@@ -75,9 +78,21 @@ for await (const path of glob.scan(guildDataDir)) {
           isNotNull(sql.raw(`EXCLUDED.${columnNames.numClaims.name}`)),
           isNotNull(sql.raw(`EXCLUDED.${columnNames.numPlayers.name}`)),
         )
-      })
-    await stmt
+      }).toSQL()
+    stmts.push(stmt)
   }
 
   console.log('\nParsed: ', path, ' ', performance.now() - s, 'ms')
 }
+
+const tx = await client.transaction('write')
+console.log('\nExecuting statements...')
+for (const [idx, stmt] of stmts.entries()) {
+  const { rowsAffected } = await tx.execute({
+    sql: stmt.sql,
+    args: stmt.params as InArgs
+  })
+  console.write(`\r${idx + 1} / ${stmts.length} -> Affected Rows: ${rowsAffected}`)
+}
+await tx.commit()
+console.log('\nExecuted statements.')

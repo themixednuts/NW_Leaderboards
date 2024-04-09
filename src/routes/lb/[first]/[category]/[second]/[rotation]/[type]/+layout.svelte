@@ -138,7 +138,7 @@
                 <DropdownMenu.Item>
                   <a
                     href={`/lb/${first}/${category}/${second}/${rotation}/${type}/${season.id}`}
-                    class="self rounded-none"
+                    class="self size-full rounded-none"
                   >
                     {season.label}
                   </a>

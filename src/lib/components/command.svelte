@@ -100,7 +100,7 @@
         {#if guilds?.length}
           {#each guilds as guild (guild.id)}
             <Command.Item onSelect={() => ($cmd = false)}>
-              <a href="/company/{normalize_name(guild.name)}" class="size-full">
+              <a href="/company/{normalize_name(guild.name)}/members" class="size-full">
                 {guild.name}
               </a>
             </Command.Item>

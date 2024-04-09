@@ -1,7 +1,8 @@
-import { getTableColumns, isNotNull, or, sql } from "drizzle-orm"
+import { getTableColumns, isNotNull, or, Query, sql } from "drizzle-orm"
 import { characters } from "../../src/lib/server/db/gamedata/schema"
-import { db } from "./client"
+import { db, client } from "./client"
 import { file, Glob } from 'bun'
+import { InArgs } from "@libsql/client/."
 
 const glob = new Glob('**/*.json')
 
@@ -24,6 +25,7 @@ export interface PlayerIcon {
 }
 
 const playerData = "/media/gamedisk/Games/Steam/steamapps/common/New World/logs/playerdata"
+const stmts: Query[] = []
 for await (const path of glob.scan(playerData)) {
   console.log('Parsing: ', path)
   const s = performance.now()
@@ -54,7 +56,7 @@ for await (const path of glob.scan(playerData)) {
         worldId: player.playerWorldId,
       }))
       const columnNames = getTableColumns(characters)
-      await db.insert(characters).values(normalized)
+      const stmt = db.insert(characters).values(normalized)
         .onConflictDoUpdate({
           target: characters.id,
           set: {
@@ -70,7 +72,6 @@ for await (const path of glob.scan(playerData)) {
             midgroundColor: sql.raw(`COALESCE(EXCLUDED.${columnNames.midgroundColor.name}, characters.${columnNames.midgroundColor.name})`),
             worldId: sql.raw(`COALESCE(EXCLUDED.${columnNames.worldId.name},characters.${columnNames.worldId.name})`),
             steamAppId: sql.raw(`COALESCE(EXCLUDED.${columnNames.steamAppId.name}, characters.${columnNames.steamAppId.name})`),
-            updatedAt: sql`CURRENT_TIMESTAMP`
           },
           where: or(
             isNotNull(sql.raw(`EXCLUDED.${columnNames.name.name}`)),
@@ -85,7 +86,9 @@ for await (const path of glob.scan(playerData)) {
             isNotNull(sql.raw(`EXCLUDED.${columnNames.midgroundColor.name}`)),
             isNotNull(sql.raw(`EXCLUDED.${columnNames.worldId.name}`)),
           )
-        })
+        }).toSQL()
+      stmts.push(stmt)
+
     } catch (e) {
       console.log(e)
       break
@@ -93,3 +96,14 @@ for await (const path of glob.scan(playerData)) {
   }
   console.log('Parsed: ', path, ' ', performance.now() - s, 'ms')
 }
+const tx = await client.transaction('write')
+console.log('\nExecuting statements...')
+for (const [idx, stmt] of stmts.entries()) {
+  const { rowsAffected } = await tx.execute({
+    sql: stmt.sql,
+    args: stmt.params as InArgs
+  })
+  console.write(`\r${idx + 1} / ${stmts.length} -> Affected Rows: ${rowsAffected}`)
+}
+await tx.commit()
+console.log('\nExecuted statements.')

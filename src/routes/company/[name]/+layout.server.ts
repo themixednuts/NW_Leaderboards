@@ -1,6 +1,6 @@
 
 import { getCompanyWithMembersByName } from "@/server/db/gamedata/helpers";
-import type { PageServerLoad } from "./$types";
+import type { LayoutServerLoad } from "./$types";
 
 export const load = (async ({ locals, params: { name } }) => {
   const session = await locals.auth()
@@ -10,4 +10,4 @@ export const load = (async ({ locals, params: { name } }) => {
     company
   }
 
-}) satisfies PageServerLoad
+}) satisfies LayoutServerLoad

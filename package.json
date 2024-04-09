@@ -13,7 +13,8 @@
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "lb": "bun ./scripts/leaderboard-types",
     "studio:gamedata": "bunx drizzle-kit studio --config=./scripts/gamedata/drizzle.config.ts",
-    "studio": "bunx drizzle-kit studio"
+    "studio": "bunx drizzle-kit studio",
+    "entities": "bun ./scripts/entities.ts"
   },
   "devDependencies": {
     "@sveltejs/enhanced-img": "^0.1.9",
@@ -29,6 +30,7 @@
     "postcss": "^8.4.38",
     "svelte": "next",
     "svelte-check": "^3.6.9",
+    "svelte-headless-table": "^0.18.2",
     "tailwindcss": "^3.4.3",
     "tailwindcss-contain": "^0.1.1",
     "tinybench": "^2.6.0",
@@ -63,6 +65,7 @@
     "mode-watcher": "^0.3.0",
     "optional": "^0.1.4",
     "papaparse": "^5.4.1",
+    "postgres": "^3.4.4",
     "prettier": "^3.2.5",
     "prettier-plugin-svelte": "^3.2.2",
     "prettier-plugin-tailwindcss": "^0.5.13",
@@ -71,7 +74,7 @@
     "simple-statistics": "^7.8.3",
     "svelte-easy-crop": "^2.0.3",
     "svelte-sonner": "^0.3.21",
-    "sveltekit-superforms": "^2.12.2",
+    "sveltekit-superforms": "^2.12.3",
     "tailwind-gradient-mask-image": "^1.2.0",
     "tailwind-merge": "^2.2.2",
     "tailwind-variants": "^0.2.1",

@@ -214,3 +214,21 @@ export const p_visible_characters_guilds = db.query.characters.findMany({
   }
 }).prepare()
 
+
+export const p_guild_data_by_name = db.query.guilds.findFirst({
+  columns: {
+    guildmasterId: false,
+    id: false
+  },
+  with: {
+    guildmaster: {
+      columns: {
+        name: true
+      },
+      // extras: {
+      //   userIsGuildMaster: inArray()
+      // }
+    }
+  },
+  where: eq(guilds.name, sql.placeholder('name'))
+})
