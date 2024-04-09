@@ -143,6 +143,7 @@
           return goto(url, {
             keepFocus: true,
             noScroll: true,
+            invalidateAll: false,
           })
         }}
         oninput={(e) => {
@@ -153,6 +154,7 @@
             return goto(url, {
               keepFocus: true,
               noScroll: true,
+              invalidateAll: false,
             })
           }
         }}
