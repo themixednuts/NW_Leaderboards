@@ -41,13 +41,33 @@ export const load = (async ({ locals, fetch, url, params: { season, type, first,
   const start = (Number(page) - 1) * pageSize
   const end = Number(page) * pageSize
 
-  const api = `/lb/api/leaderboard/${id}/${season}/${page}`
-  const json = fetch(api, {
-    headers: {
-      'x-forwarded-host': url.host
-    }
-  })
-    .then(res => res.json() as Promise<LeaderboardAPIBoardItem[]>)
+  // const api = `/lb/api/leaderboard/${id}/${season}/${page}`
+  // const json = fetch(api, {
+  //   headers: {
+  //     'x-forwarded-host': url.host
+  //   }
+  // })
+  //   .then(res => res.json() as Promise<LeaderboardAPIBoardItem[]>)
+  //   .then(async (items) => {
+  //     if (!search) return items
+  //     const res = await searchCompaniesAndCharactersByName(search, session?.user)
+  //     return items.filter(entry => res.some(q => entry.entityId?.split('_').includes(q.id)))
+  //   })
+  //   .then(items => ({
+  //     data: items.slice(start, end).map(entry => {
+  //       if (type === 'character' && entry.entityId) return {
+  //         ...entry,
+  //         entityId: entry.entityId.split('_').map(id => getCharacterById(id, session?.user).then(character => ({ ...character, type: 'character' }))),
+  //       }
+  //       if (type === 'company' && entry.entityId) return {
+  //         ...entry,
+  //         entityId: entry.entityId.split('_').map(id => getCompanyById(id.replace(/\{|\}/g, ''), session?.user).then(company => ({ ...company, type: 'company' }))),
+  //       }
+  //     }), total: Math.ceil(items.length / pageSize)
+  //   }))
+
+  const api = `https://api.nwlb.info/json/${id}/${season}?size=10000&eid=true`
+  const json = fetch(api).then(res => res.json() as Promise<LeaderboardAPIBoardItem[]>)
     .then(async (items) => {
       if (!search) return items
       const res = await searchCompaniesAndCharactersByName(search, session?.user)
@@ -65,13 +85,10 @@ export const load = (async ({ locals, fetch, url, params: { season, type, first,
         }
       }), total: Math.ceil(items.length / pageSize)
     }))
-  json.catch(e => console.log(e))
 
-  // const api = `https://api.nwlb.info/json/${id}/${season}?size=10000&eid=true`
-  // const data = fetch(api).then(res => res.json() as Promise<LeaderboardAPIBoardItem[]>)
-  // data.catch((e) => {
-  //   console.log(e)
-  // })
+  json.catch((e) => {
+    console.log(e)
+  })
 
   return {
     json,
