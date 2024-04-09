@@ -9,6 +9,7 @@ export const load = (async ({ locals, fetch, url, params: { season, type, first,
 
   const displayName = searchParams.get('q')
   const search = searchParams.get('search')
+  console.log('search', search)
 
   const pageSize = 10
   const leaderboard = leaderboards.find(lb => match_leaderboard(lb, {
@@ -69,8 +70,10 @@ export const load = (async ({ locals, fetch, url, params: { season, type, first,
   const api = `https://api.nwlb.info/json/${id}/${season}?size=10000&eid=true`
   const json = fetch(api).then(res => res.json() as Promise<LeaderboardAPIBoardItem[]>)
     .then(async (items) => {
+      console.log(search)
       if (!search) return items
-      const res = await searchCompaniesAndCharactersByName(search, session?.user)
+      const res = await searchCompaniesAndCharactersByName(search, session?.user, 30)
+      console.log(search, res)
       return items.filter(entry => res.some(q => entry.entityId?.split('_').includes(q.id)))
     })
     .then(items => ({

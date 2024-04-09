@@ -283,4 +283,4 @@ export const p_search = union(
       )
     ),
   db.select({ id: guilds.id, name: guilds.name, type: sql<string>`'company'` }).from(guilds).where(like(guilds.name, sql`'%' || ${sql.placeholder('name')} || '%'`)),
-).limit(10).prepare()
+).limit(sql.placeholder('limit')).prepare()

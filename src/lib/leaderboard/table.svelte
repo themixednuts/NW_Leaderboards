@@ -143,8 +143,18 @@
           return goto(url, {
             keepFocus: true,
             noScroll: true,
-            invalidateAll: true,
           })
+        }}
+        oninput={(e) => {
+          e.preventDefault()
+          const url = new URL($page.url)
+          if (!e.currentTarget.value.length) {
+            url.searchParams.delete('search')
+            return goto(url, {
+              keepFocus: true,
+              noScroll: true,
+            })
+          }
         }}
         bind:el={input}
       />

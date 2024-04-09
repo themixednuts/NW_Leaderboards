@@ -56,8 +56,8 @@ export const getCompanyById = async (id: typeof guilds.$inferSelect.id, user?: U
   return p_company_by_id.get({ userId, role, id })
 }
 
-export const searchCompaniesAndCharactersByName = async (name: typeof guilds.$inferSelect.name, user?: User) => {
+export const searchCompaniesAndCharactersByName = async (name: typeof guilds.$inferSelect.name, user?: User, limit: number = 10) => {
   const role = user?.role ?? null
   const userId = user?.id ?? null
-  return p_search.all({ name, userId, role })
+  return p_search.all({ name, userId, role, limit })
 }
