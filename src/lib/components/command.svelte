@@ -12,7 +12,7 @@
   let value: string = $state('')
 
   let characters: NonNullable<typeof form>['results'] = $state([])
-  let guilds: NonNullable<typeof form>['results'] = $state([])
+  let companies: NonNullable<typeof form>['results'] = $state([])
 
   let cmd: Writable<boolean> = getContext('cmd')
 
@@ -24,7 +24,7 @@
         const { data } = result
         if (data) {
           characters = data.results.filter((res) => res.type === 'character')
-          guilds = data.results.filter((res) => res.type === 'guild')
+          companies = data.results.filter((res) => res.type === 'company')
         }
       }
     }
@@ -77,7 +77,7 @@
           if (value.length) formEl?.requestSubmit()
           else {
             characters = []
-            guilds = []
+            companies = []
           }
         }, 500)}
       bind:el={cmdInput}
@@ -96,9 +96,9 @@
         {/if}
       </Command.Group>
       <Command.Separator alwaysRender />
-      <Command.Group heading="Guilds">
-        {#if guilds?.length}
-          {#each guilds as guild (guild.id)}
+      <Command.Group heading="Companies">
+        {#if companies?.length}
+          {#each companies as guild (guild.id)}
             <Command.Item onSelect={() => ($cmd = false)}>
               <a href="/company/{normalize_name(guild.name)}/members" class="size-full">
                 {guild.name}

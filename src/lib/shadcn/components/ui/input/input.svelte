@@ -3,10 +3,10 @@
   import { cn } from '$lib/shadcn/utils.js'
   import type { InputEvents } from './index.js'
 
-  type $$Props = HTMLInputAttributes & { files?: FileList }
+  type $$Props = HTMLInputAttributes & { files?: FileList; el?: HTMLInputElement | undefined }
   type $$Events = InputEvents
 
-  let { class: className, files = $bindable(), value = $bindable(), ...restProps }: $$Props = $props()
+  let { class: className, files = $bindable(), value = $bindable(), el = $bindable(), ...restProps }: $$Props = $props()
 </script>
 
 {#if restProps.type === 'file'}
@@ -17,6 +17,7 @@
     )}
     type="file"
     bind:files
+    bind:this={el}
     {...restProps}
   />
 {:else}
@@ -26,6 +27,7 @@
       className,
     )}
     bind:value
+    bind:this={el}
     {...restProps}
   />
 {/if}

@@ -12,17 +12,22 @@ export const config = {
   runtime: 'nodejs20.x'
 } satisfies Config
 
-export const GET = (async ({ request, params: { id, season, page }, url, fetch }) => {
+export const GET = (async ({ params: { id, season, page }, fetch }) => {
   const api = `https://api.nwlb.info/json/${id}/${season}?size=100000&eid=true`
-  const data = fetch(api).then(async (res) => {
-    if (!res.ok) return error(res.status)
-    const json = res.json() as Promise<LeaderboardAPIBoardItem[]>
-    return json
+  const res = await fetch(api)
+  const data: LeaderboardAPIBoardItem[] = await res.json()
+  let rank = 2
+  let currentRank = 2
+  const mapped = data.map((entry, idx, arr) => {
+    if (idx === 0) return entry
+    if (arr[idx - 1].value !== arr[idx].value) {
+      rank = currentRank
+    }
+    currentRank++
+    return {
+      ...entry,
+      rank
+    }
   })
-
-  data.catch((e) => {
-    console.log(e)
-  })
-
-  return json(await data)
+  return json(mapped)
 }) satisfies RequestHandler

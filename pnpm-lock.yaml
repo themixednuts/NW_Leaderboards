@@ -68,7 +68,7 @@ dependencies:
     version: 0.5.1(drizzle-orm@0.30.7)(zod@3.22.4)
   formsnap:
     specifier: ^1.0.0
-    version: 1.0.0(svelte@5.0.0-next.95)(sveltekit-superforms@2.12.3)
+    version: 1.0.0(svelte@5.0.0-next.95)(sveltekit-superforms@2.12.4)
   jsdom:
     specifier: latest
     version: 24.0.0
@@ -112,8 +112,8 @@ dependencies:
     specifier: ^0.3.21
     version: 0.3.21(svelte@5.0.0-next.95)
   sveltekit-superforms:
-    specifier: ^2.12.3
-    version: 2.12.3(@sveltejs/kit@2.5.5)(@types/json-schema@7.0.15)(esbuild-runner@2.2.2)(esbuild@0.20.2)(svelte@5.0.0-next.95)
+    specifier: ^2.12.4
+    version: 2.12.4(@sveltejs/kit@2.5.5)(@types/json-schema@7.0.15)(esbuild-runner@2.2.2)(esbuild@0.20.2)(svelte@5.0.0-next.95)
   tailwind-gradient-mask-image:
     specifier: ^1.2.0
     version: 1.2.0
@@ -1615,7 +1615,7 @@ packages:
   /@types/jsdom@21.1.6:
     resolution: {integrity: sha512-/7kkMsC+/kMs7gAYmmBR9P0vGTnOoLhQhyhQJSlXGI5bzTHp6xdo0TtKWQAsz6pmSAeVqKSbqeyP6hytqr9FDw==}
     dependencies:
-      '@types/node': 20.12.5
+      '@types/node': 20.12.6
       '@types/tough-cookie': 4.0.5
       parse5: 7.1.2
     dev: true
@@ -1628,7 +1628,7 @@ packages:
   /@types/node-fetch@2.6.11:
     resolution: {integrity: sha512-24xFj9R5+rfQJLRyM56qh+wnVSYhyXC2tkoBndtY0U+vubqNsYXGjufB2nn8Q6gt0LrARwL6UBtMCSVCwl4B1g==}
     dependencies:
-      '@types/node': 20.12.5
+      '@types/node': 20.12.6
       form-data: 4.0.0
     dev: false
 
@@ -1637,15 +1637,15 @@ packages:
     dependencies:
       undici-types: 5.26.5
 
-  /@types/node@20.12.5:
-    resolution: {integrity: sha512-BD+BjQ9LS/D8ST9p5uqBxghlN+S42iuNxjsUGjeZobe/ciXzk2qb1B6IXc6AnRLS+yFJRpN2IPEHMzwspfDJNw==}
+  /@types/node@20.12.6:
+    resolution: {integrity: sha512-3KurE8taB8GCvZBPngVbp0lk5CKi8M9f9k1rsADh0Evdz5SzJ+Q+Hx9uHoFGsLnLnd1xmkDQr2hVhlA0Mn0lKQ==}
     dependencies:
       undici-types: 5.26.5
 
   /@types/papaparse@5.3.14:
     resolution: {integrity: sha512-LxJ4iEFcpqc6METwp9f6BV6VVc43m6MfH0VqFosHvrUgfXiFe6ww7R3itkOQ+TCK6Y+Iv/+RnnvtRZnkc5Kc9g==}
     dependencies:
-      '@types/node': 20.12.5
+      '@types/node': 20.12.6
     dev: true
 
   /@types/pug@2.0.10:
@@ -2681,7 +2681,7 @@ packages:
       fetch-blob: 3.2.0
     dev: false
 
-  /formsnap@1.0.0(svelte@5.0.0-next.95)(sveltekit-superforms@2.12.3):
+  /formsnap@1.0.0(svelte@5.0.0-next.95)(sveltekit-superforms@2.12.4):
     resolution: {integrity: sha512-NQEbkCS1tKGnn6gBojIuNutxImmq/9bUk9JQ5kW8WOY37QNFtJxYr/SbX8ONWuiVLaczSvGSWXIv3hNu19arqQ==}
     peerDependencies:
       svelte: ^4.0.0
@@ -2689,7 +2689,7 @@ packages:
     dependencies:
       nanoid: 5.0.7
       svelte: 5.0.0-next.95
-      sveltekit-superforms: 2.12.3(@sveltejs/kit@2.5.5)(@types/json-schema@7.0.15)(esbuild-runner@2.2.2)(esbuild@0.20.2)(svelte@5.0.0-next.95)
+      sveltekit-superforms: 2.12.4(@sveltejs/kit@2.5.5)(@types/json-schema@7.0.15)(esbuild-runner@2.2.2)(esbuild@0.20.2)(svelte@5.0.0-next.95)
     dev: false
 
   /fraction.js@4.3.7:
@@ -4123,8 +4123,8 @@ packages:
       magic-string: 0.30.9
       zimmerframe: 1.1.2
 
-  /sveltekit-superforms@2.12.3(@sveltejs/kit@2.5.5)(@types/json-schema@7.0.15)(esbuild-runner@2.2.2)(esbuild@0.20.2)(svelte@5.0.0-next.95):
-    resolution: {integrity: sha512-6470Q9bE+I2rECs1qo28HcaRrwdiMgsfPAyltDhxB7Z6EaxU6FRG56YrrKLViQXaINY0n2CohQGHVSIKg0CpCQ==}
+  /sveltekit-superforms@2.12.4(@sveltejs/kit@2.5.5)(@types/json-schema@7.0.15)(esbuild-runner@2.2.2)(esbuild@0.20.2)(svelte@5.0.0-next.95):
+    resolution: {integrity: sha512-0LILJfTpOZj8UhEfcuVZwuyDR63EGTjBq/TwHJn38PcC6KHGZ0bXu8DVHxslGUffEi9EHgeyshoJk7x3EoJVhQ==}
     peerDependencies:
       '@sveltejs/kit': 1.x || 2.x
       svelte: 3.x || 4.x || >=5.0.0-next.51

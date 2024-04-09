@@ -117,7 +117,7 @@
             {#each rotations as rotation}
               <DropdownMenu.Item>
                 <a
-                  href={`/lb/${first}/${category}/${second}/${rotation.toLowerCase()}/${type}/${season}`}
+                  href={`/lb/${first}/${category}/${second}/${rotation.toLowerCase()}/${type}/${season}/1`}
                   class="rounded-none capitalize"
                 >
                   {rotation}
@@ -137,7 +137,7 @@
               {#each seasons as season}
                 <DropdownMenu.Item>
                   <a
-                    href={`/lb/${first}/${category}/${second}/${rotation}/${type}/${season.id}`}
+                    href={`/lb/${first}/${category}/${second}/${rotation}/${type}/${season.id}/1`}
                     class="self size-full rounded-none"
                   >
                     {season.label}
@@ -158,7 +158,7 @@
             ),
             'ring ring-inset ring-ring': type === 'faction',
           })}
-          href={`/lb/${first}/${category}/${second}/${rotation}/faction/${season}`}
+          href={`/lb/${first}/${category}/${second}/${rotation}/faction/${season}/1`}
         >
           Faction
         </Button>
@@ -170,7 +170,7 @@
             ),
             'ring ring-inset ring-ring': type === 'company',
           })}
-          href={`/lb/${first}/${category}/${second}/${rotation}/company/${season}`}
+          href={`/lb/${first}/${category}/${second}/${rotation}/company/${season}/1`}
         >
           Company
         </Button>
@@ -182,7 +182,7 @@
             ),
             'ring ring-inset ring-ring': type === 'character',
           })}
-          href={`/lb/${first}/${category}/${second}/${rotation}/character/${season}`}
+          href={`/lb/${first}/${category}/${second}/${rotation}/character/${season}/1`}
         >
           Character
         </Button>
@@ -213,7 +213,7 @@
                 {#each lbs as leaderboard}
                   <DropdownMenu.Item>
                     <a
-                      href={`/lb/${first}/${category}/${second}/${rotation}/${type}/${season}?q=${normalize_leaderboard_string(leaderboard, 'DisplayName')}`}
+                      href={`/lb/${first}/${category}/${second}/${rotation}/${type}/${season}/1?q=${normalize_leaderboard_string(leaderboard, 'DisplayName')}`}
                       class="rounded-none"
                     >
                       {leaderboard.DisplayName}
@@ -270,7 +270,7 @@
                         }),
                       },
                     )}
-                    href={`/lb/${first}/${normalize_string(cat)}/${normalize_leaderboard_string(lb, 'SecondLevelCategory')}/${normalize_leaderboard_string(lb, 'Rotation')}/${type}/${season}`}
+                    href={`/lb/${first}/${normalize_string(cat)}/${normalize_leaderboard_string(lb, 'SecondLevelCategory')}/${normalize_leaderboard_string(lb, 'Rotation')}/${type}/${season}/1`}
                   >
                     {secondlevelcategory}
                   </Button>

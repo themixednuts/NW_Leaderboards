@@ -3,15 +3,10 @@
   import type { getCharacterById, getCompanyById } from '@/server/db/gamedata/helpers'
   import { cn } from '@/shadcn/utils'
   import { normalize_name } from '@/utils'
-
-  type CharacterProps = Awaited<ReturnType<typeof getCharacterById>> & {
-    type: 'character'
-  }
-
-  type CompanyProps = Awaited<ReturnType<typeof getCompanyById>> & { type: 'guild' }
+  import type { PageData } from '../../routes/lb/[first]/[category]/[second]/[rotation]/[type]/[season]/[page]/$types'
 
   interface Props {
-    data: CharacterProps | CompanyProps
+    data: Awaited<NonNullable<Awaited<PageData['json']>['data'][number]>['entityId'][number]>
   }
 
   let { data }: Props = $props()
@@ -30,7 +25,9 @@
         class:border-faction-background-1-dark={data.factionId === 1}
         class:border-faction-background-2-dark={data.factionId === 2}
         class:border-faction-background-3-dark={data.factionId === 3}
-        style={data.type === 'guild' ? `mask-image: url('/${data.backgroundImagePath?.replace('dds', 'png')}');` : ''}
+        style={data.type === 'company'
+          ? `mask-image: url('/${data.backgroundImagePath?.toLowerCase().replace('dds', 'png')}');`
+          : ''}
       >
         {#if data.type === 'character'}
           <img
@@ -56,23 +53,21 @@
             class={cn(
               ` col-start-1 row-start-1 size-6 mask-size-contain mask-repeat-no-repeat mask-position-center mask-composite-add mask-mode-luminance`,
             )}
-            style="background: {data.backgroundColor}; mask-image: url('/{data.backgroundImagePath?.replace(
-              'dds',
-              'png',
-            )}');"
+            style="background: {data.backgroundColor}; mask-image: url('/{data.backgroundImagePath
+              ?.toLowerCase()
+              .replace('dds', 'png')}');"
           />
           <div
             class={cn(
               ` col-start-1 row-start-1 size-6 mask-size-contain mask-repeat-no-repeat mask-position-center mask-composite-add mask-mode-luminance`,
             )}
-            style="background: {data.foregroundColor}; mask-image: url('/{data.foregroundImagePath?.replace(
-              'dds',
-              'png',
-            )}');"
+            style="background: {data.foregroundColor}; mask-image: url('/{data.foregroundImagePath
+              ?.toLowerCase()
+              .replace('dds', 'png')}');"
           />
         {/if}
       </div>
-      <a href="/{data.type === 'guild' ? 'company' : 'character'}/{normalize_name(data.name)}">
+      <a href="/{data.type}/{normalize_name(data.name)}/{data.type === 'company' ? 'members' : ''}">
         {data.name}
       </a>
     </div>
@@ -91,7 +86,9 @@
         class:border-faction-background-1-dark={data.factionId === 1}
         class:border-faction-background-2-dark={data.factionId === 2}
         class:border-faction-background-3-dark={data.factionId === 3}
-        style={data.type === 'guild' ? `mask-image: url('/${data.backgroundImagePath?.replace('dds', 'png')}');` : ''}
+        style={data.type === 'company'
+          ? `mask-image: url('/${data.backgroundImagePath?.toLowerCase().replace('dds', 'png')}');`
+          : ''}
       >
         {#if data.type === 'character'}
           <img
@@ -118,24 +115,22 @@
             class={cn(
               `col-start-1 row-start-1 size-16 mask-size-contain mask-repeat-no-repeat mask-position-center mask-composite-add mask-mode-luminance`,
             )}
-            style="background: {data.backgroundColor}; mask-image: url('/{data.backgroundImagePath?.replace(
-              'dds',
-              'png',
-            )}');"
+            style="background: {data.backgroundColor}; mask-image: url('/{data.backgroundImagePath
+              ?.toLowerCase()
+              .replace('dds', 'png')}');"
           />
           <div
             class={cn(
               ` col-start-1 row-start-1 size-16 mask-size-contain mask-repeat-no-repeat mask-position-center mask-composite-add mask-mode-luminance`,
             )}
-            style="background: {data.foregroundColor}; mask-image: url('/{data.foregroundImagePath?.replace(
-              'dds',
-              'png',
-            )}');"
+            style="background: {data.foregroundColor}; mask-image: url('/{data.foregroundImagePath
+              ?.toLowerCase()
+              .replace('dds', 'png')}');"
           />
         {/if}
       </div>
       <div class="col-start-2">
-        <a href="/{data.type === 'guild' ? 'company' : 'character'}/{normalize_name(data.name)}">
+        <a href="/{data.type}/{normalize_name(data.name)}">
           {data.name}
         </a>
       </div>
@@ -149,7 +144,7 @@
       <div class="col-start-2 row-start-2 text-xs">
         {#if data.type === 'character'}
           {data.guild?.name}
-        {:else if data.type === 'guild' && data.guildmaster}
+        {:else if data.type === 'company' && data.guildmaster}
           Guild Master: {data.guildmaster?.name}
         {/if}
       </div>

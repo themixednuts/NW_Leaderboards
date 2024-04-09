@@ -1,7 +1,7 @@
 import type { User } from "@auth/core/types"
 import { db } from "./client"
 import { characters, guilds } from "./schema"
-import { p_character_by_id, p_character_by_name, p_characters_by_user, p_guild_by_id, p_guild_with_members_by_id, p_guild_with_members_by_name, p_guilds_with_members_by_user } from "./statements"
+import { p_character_by_id, p_character_by_name, p_characters_by_user, p_company_by_id, p_guild_with_members_by_id, p_guild_with_members_by_name, p_guilds_with_members_by_user, p_search } from "./statements"
 import { eq } from "drizzle-orm"
 
 // HELPER FUNCTIONS
@@ -53,5 +53,11 @@ export const getCompanyById = async (id: typeof guilds.$inferSelect.id, user?: U
   const role = user?.role ?? null
   const userId = user?.id ?? null
 
-  return p_guild_by_id.get({ userId, role, id })
+  return p_company_by_id.get({ userId, role, id })
+}
+
+export const searchCompaniesAndCharactersByName = async (name: typeof guilds.$inferSelect.name, user?: User) => {
+  const role = user?.role ?? null
+  const userId = user?.id ?? null
+  return p_search.all({ name, userId, role })
 }

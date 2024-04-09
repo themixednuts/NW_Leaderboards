@@ -246,13 +246,21 @@ export interface WorldsData {
   servers: { worldId: string, worldName: string, region: string, isRTA: boolean, isFS: boolean }[]
 }
 
-export class Debouncer {
-  private timer = $state()
-
-  constructor() {
-
-  }
-
+export function debounce<T extends (...args: Parameters<T>) => ReturnType<T>>(timer: ReturnType<typeof setTimeout> | undefined, callback: T, delay: number) {
+  return new Promise<ReturnType<T> | Error>((resolve, reject) => {
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      try {
+        //@ts-expect-error
+        resolve(callback())
+      } catch (err) {
+        if (err instanceof Error) {
+          reject(err)
+        }
+        reject(new Error(`An error has occurred: ${err}`))
+      }
+    }, delay)
+  })
 }
 
 export const normalize_name = (name: string) => {

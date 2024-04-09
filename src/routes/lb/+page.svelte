@@ -65,7 +65,7 @@
     {#if leaderboard && seasons}
       {@const type = match_leaderboard(leaderboard, { FactionLeaderboard: true }) ? 'faction' : 'character'}
       <a
-        href={resolveRoute('/lb/[first]/[category]/[second]/[rotation]/[type]/[season]', {
+        href={resolveRoute('/lb/[first]/[category]/[second]/[rotation]/[type]/[season]/1', {
           type,
           rotation: normalize_leaderboard_string(leaderboard, 'Rotation'),
           first: normalize_leaderboard_string(leaderboard, 'FirstLevelCategory'),

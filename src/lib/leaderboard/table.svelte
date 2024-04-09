@@ -1,334 +1,203 @@
 <script lang="ts">
-  import { replaceLynshineSrc, appendPngToSrc, FACTIONS } from '$lib/utils'
+  import { replaceLynshineSrc, appendPngToSrc, FACTIONS, debounce } from '$lib/utils'
   import type { LeaderboardAPIBoardItem } from '$lib/leaderboard/utils'
   import type { LeaderboardData } from '$lib/leaderboard/types'
-  import Player from './player.svelte'
+  import Players from './players.svelte'
   import { page } from '$app/stores'
   import * as Table from '@/shadcn/components/ui/table'
   import { Button } from '@/shadcn/components/ui/button'
   import { ScrollArea } from '@/shadcn/components/ui/scroll-area'
-  import { Question } from 'phosphor-svelte'
+  import { FunnelSimple, Question, SortAscending, SortDescending } from 'phosphor-svelte'
   import * as Tooltip from '@/shadcn/components/ui/tooltip'
   import { cn } from '@/shadcn/utils'
+  import { addPagination, addSortBy, addTableFilter } from 'svelte-headless-table/plugins'
+  import { Input } from '@/shadcn/components/ui/input'
+  import { enhance } from '$app/forms'
+  import type { SubmitFunction } from '../../routes/$types'
+  import type { getCharacterById } from '@/server/db/gamedata/helpers'
+  import type { PageData } from '../../routes/lb/[first]/[category]/[second]/[rotation]/[type]/[season]/[page]/$types'
+  import { resolveRoute } from '$app/paths'
+  import { goto } from '$app/navigation'
+  import type { HTMLTdAttributes } from 'svelte/elements'
 
   type Props = {
-    table: LeaderboardAPIBoardItem[]
+    table: { data: NonNullable<Awaited<PageData['json']>['data']>; total: number }
     leaderboard: LeaderboardData
   }
 
   let { table, leaderboard }: Props = $props()
   $inspect(table)
 
+  interface Headers {
+    label: Omit<keyof NonNullable<(typeof table)['data']>, 'entityId' | 'faction'>
+    sort?: string | null
+  }
   let type = $derived($page.params.type)
+  const headers: Headers[] = $derived([
+    {
+      label: 'Rank',
+      sort: $page.url.searchParams.get('rank'),
+    },
+    {
+      label: type,
+      sort: $page.url.searchParams.get('type'),
+    },
+    {
+      label: leaderboard.ValueString,
+      sort: $page.url.searchParams.get('value'),
+    },
+    {
+      label: 'Server',
+      sort: $page.url.searchParams.get('server'),
+    },
+  ])
 
-  let pageSize = $state(Math.ceil(table.length / 10))
-  let pageSizeArray = $derived(Array.from({ length: pageSize }, (_, i) => i + 1))
+  let value = $state($page.url.searchParams.get('search') ?? '')
+  let input: HTMLInputElement | undefined = $state()
+  let formEl: HTMLFormElement | undefined = $state()
 
-  let currentPage = $state(1)
-  let itemsPerPage = $state(10)
-
-  let pageArrayIndex: (number | null)[] = $state([])
-
-  const ranks = $derived(calculateRanks(table))
-
-  function calculateRanks(data: LeaderboardAPIBoardItem[]) {
-    let rank = 1
-    let currentRank = 1
-    let ranks = []
-
-    for (let i = 0; i < data.length; i++) {
-      if (i !== 0 && data[i - 1].value !== data[i].value) {
-        rank = currentRank
-      }
-      ranks.push(rank)
-      currentRank++
-    }
-
-    return ranks
-  }
-
-  $effect(() => {
-    const arr = Array(itemsPerPage).fill(0)
-    for (let i = 0; i < arr.length; i++) {
-      arr[i] = i
-    }
-    pageArrayIndex = arr
-  })
-
-  function handleClickEvent(e: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement }) {
-    if (e.button !== 0) return // Only handle left click (0)
-    currentPage = parseInt(e.currentTarget.innerText)
-    displayPage(currentPage)
-  }
-
-  function displayPage(pageNumber: number) {
-    const startIndex = (pageNumber - 1) * itemsPerPage
-    // const endIndex = startIndex + itemsPerPage
-    for (let i = 0; i < itemsPerPage; i++) {
-      const index = startIndex + i
-      if (index < table.length) {
-        pageArrayIndex[i] = index
-      } else {
-        pageArrayIndex[i] = null
+  let timer: ReturnType<typeof setTimeout> | undefined = $state()
+  const handleSubmit = (async ({ formData }) => {
+    // if (value) formData.set('q', value)
+    return async ({ result, update }) => {
+      if (result.type === 'success') {
+        const { data: dataResult } = result
+        if (dataResult) {
+          console.log(dataResult)
+        }
       }
     }
-  }
-
-  function secondsToTimeFormat(seconds: number) {
-    const minutes = Math.floor(seconds / 60)
-    const remainingSeconds = seconds % 60
-    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`
-  }
-
-  function getDateAndTime(date: string) {
-    let dateObject: Date
-    const unixTimeStampPattern = /^[0-9]+$/
-    if (unixTimeStampPattern.test(date)) dateObject = new Date(+date * 1000)
-    else dateObject = new Date(date)
-    const dateOptions = {
-      year: '2-digit',
-      month: 'numeric',
-      day: 'numeric',
-    } as const
-
-    const timeOptions = {
-      hour: 'numeric',
-      minute: 'numeric',
-    } as const
-    return `${dateObject.toLocaleDateString('en-US', dateOptions)} ${dateObject.toLocaleTimeString(
-      'en-US',
-      timeOptions,
-    )}`
-  }
+  }) satisfies SubmitFunction
 </script>
 
-<div class="grid min-w-fit grid-cols-1 grid-rows-[auto,1fr,auto] overflow-y-auto contain-paint">
+<div class="grid min-w-fit grid-cols-1 grid-rows-[min-content,min-content,1fr] overflow-y-auto contain-paint">
   {#if leaderboard}
-    <div
-      class="relative flex w-full min-w-fit flex-col place-content-center place-items-start whitespace-nowrap py-4 pl-2 text-sm uppercase sm:text-xl md:text-2xl xl:text-4xl"
-    >
-      <div class="flex *:aspect-square *:h-min">
-        {@html replaceLynshineSrc(leaderboard.Category)}, {leaderboard.DisplayName}
+    <div class="flex items-center">
+      <div
+        class="relative flex w-full min-w-fit flex-col place-content-center place-items-start whitespace-nowrap py-4 pl-2 text-sm uppercase sm:text-xl md:text-2xl xl:text-4xl"
+      >
+        <div class="flex *:aspect-square *:h-min">
+          {@html replaceLynshineSrc(leaderboard.Category)}, {leaderboard.DisplayName}
+        </div>
+        <div class="flex place-content-center place-items-center text-sm">
+          {leaderboard.SecondLevelCategory}
+          {#if leaderboard.CategoryDescription}
+            <Tooltip.Root openDelay={0} disableHoverableContent={true}>
+              <Tooltip.Trigger>
+                <Question class="ml-1" />
+              </Tooltip.Trigger>
+              <Tooltip.Content class="flex place-content-center place-items-center gap-2">
+                {@html appendPngToSrc(leaderboard.CategoryDescription)}
+              </Tooltip.Content>
+            </Tooltip.Root>
+          {/if}
+          {#if leaderboard.CategoryAdditionalHeader}
+            <div class="flex place-content-center place-items-center gap-1 pl-2 text-sm">
+              {@html appendPngToSrc(leaderboard.CategoryAdditionalHeader)
+                .replace(/\{(COLOR)\}/i, 'gold')
+                .replace('scale="2.0"', 'class="size-6 text-yellow-500"')}
+            </div>
+          {/if}
+        </div>
       </div>
-      <div class="flex place-content-center place-items-center text-sm">
-        {leaderboard.SecondLevelCategory}
-        {#if leaderboard.CategoryDescription}
-          <Tooltip.Root openDelay={0} disableHoverableContent={true}>
-            <Tooltip.Trigger>
-              <Question class="ml-1" />
-            </Tooltip.Trigger>
-            <Tooltip.Content class="flex place-content-center place-items-center gap-2">
-              {@html appendPngToSrc(leaderboard.CategoryDescription)}
-            </Tooltip.Content>
-          </Tooltip.Root>
-        {/if}
-        {#if leaderboard.CategoryAdditionalHeader}
-          <div class="flex place-content-center place-items-center gap-1 pl-2 text-sm">
-            {@html appendPngToSrc(leaderboard.CategoryAdditionalHeader)
-              .replace(/\{(COLOR)\}/i, 'gold')
-              .replace('scale="2.0"', 'class="size-6 text-yellow-500"')}
-          </div>
-        {/if}
+      <div class="flex select-none items-center justify-end space-x-4 p-4">
+        <Button
+          href={$page.url.pathname.replace(/\/([^\/]+)\/?$/, `/${String(Number($page.params.page) - 1)}`)}
+          variant="outline"
+          size="sm"
+          class={cn('', {
+            'pointer-events-none opacity-60': Number($page.params.page) <= 1,
+          })}
+        >
+          Previous
+        </Button>
+        <div class="whitespace-nowrap text-sm">
+          {$page.params.page} / {table.total}
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          href={$page.url.pathname.replace(/\/([^\/]+)\/?$/, `/${String(Number($page.params.page) + 1)}`)}
+          class={cn('', {
+            'pointer-events-none opacity-60': Number($page.params.page) >= table.total,
+          })}
+        >
+          Next
+        </Button>
       </div>
     </div>
+    <!-- <form class="flex-1 sm:flex-initial" method="post" action="/?/search" use:enhance={handleSubmit} bind:this={formEl}> -->
+    <div class="flex items-center py-4 pl-2">
+      <Input
+        class="max-w-sm rounded-xl"
+        placeholder="Filter characters..."
+        type="search"
+        bind:value
+        name="q"
+        autofocus
+        onchange={(e) => {
+          e.preventDefault()
+          const url = new URL($page.url)
+          if (e.currentTarget.value.length) url.searchParams.set('search', e.currentTarget.value)
+          else url.searchParams.delete('search')
+          return goto(url, {
+            keepFocus: true,
+            noScroll: true,
+            invalidateAll: true,
+          })
+        }}
+        bind:el={input}
+      />
+    </div>
+    <!-- </form> -->
     <ScrollArea class="relative flex min-w-fit flex-col overflow-auto">
-      <Table.Root class="relative">
-        <Table.Header class="sticky top-0">
-          <Table.Row class="">
-            <Table.Head class="w-16">Rank</Table.Head>
-            <Table.Head class="capitalize">{type}</Table.Head>
-            <Table.Head class="w-20">{leaderboard.ValueString}</Table.Head>
-            <Table.Head class="w-24">Server</Table.Head>
+      <Table.Root>
+        <Table.Caption>Public Members</Table.Caption>
+        <Table.Header>
+          <Table.Row>
+            {#each headers as header}
+              <Table.Head>
+                <div class="flex items-center">
+                  <div class="capitalize">
+                    {header.label}
+                  </div>
+                  <Button variant="ghost" size="icon" class="">
+                    {#if header.sort === 'desc'}
+                      <SortDescending class={'ml-2 h-4 w-4'} />
+                    {:else if header.sort === 'asc'}
+                      <SortAscending class={'ml-2 h-4 w-4'} />
+                    {:else}
+                      <FunnelSimple class={'ml-2 h-4 w-4'} />
+                    {/if}
+                  </Button>
+                </div>
+              </Table.Head>
+            {/each}
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {#each pageArrayIndex as i}
-            {#if i != null && table[i]}
-              {@const players = table[i].entityId?.split('_')}
+          {#each table.data as row, _}
+            {#if row}
               <Table.Row>
-                <Table.Cell>{ranks[i]}</Table.Cell>
-                <Table.Cell
-                  class={cn('grid grid-cols-1 gap-1', {
-                    'grid-cols-[repeat(2,minmax(min-content,1fr))]': (players?.length || 0) > 1,
-                  })}
-                >
-                  {#if players}
-                    {#each players as player}
-                      <Player id={player} type={type === 'character' ? 'character' : 'guild'} />
-                    {/each}
-                  {:else}
-                    {FACTIONS[table[i].faction?.replace('Faction', '') as unknown as keyof typeof FACTIONS]}
-                  {/if}
+                <Table.Cell>
+                  {row?.rank}
                 </Table.Cell>
                 <Table.Cell>
-                  {leaderboard.ValueString === 'Time'
-                    ? secondsToTimeFormat(table[i].value)
-                    : table[i].value.toLocaleString()}
+                  <svelte:component this={Players} players={row.entityId} />
                 </Table.Cell>
-                <Table.Cell>{table[i].server}</Table.Cell>
+                <Table.Cell>
+                  {row?.value}
+                </Table.Cell>
+                <Table.Cell>
+                  {row?.server}
+                </Table.Cell>
               </Table.Row>
             {/if}
           {/each}
         </Table.Body>
+        <Table.Footer class="w-full whitespace-nowrap bg-transparent"></Table.Footer>
       </Table.Root>
     </ScrollArea>
-
-    <div class="join flex min-w-fit justify-center place-self-center rounded-none py-2">
-      {#if pageSize > 5}
-        {@const page = pageSizeArray[0]}
-        <!-- Page 1 -->
-        <!-- class:active={currentPage === pageSizeArray[0]} -->
-        <Button
-          variant="secondary"
-          class={cn({
-            'bg-primary': currentPage === page,
-          })}
-          onclick={(e: Parameters<typeof handleClickEvent>[0]) => handleClickEvent(e)}
-        >
-          {page}
-        </Button>
-        <!-- Page 2 or currentPage - 1 -->
-        {#if currentPage - 1 > 2 && currentPage - 1 <= pageSize - 3}
-          {@const page = currentPage - 1}
-          <!-- class:active={currentPage === currentPage - 1} -->
-          <Button
-            variant="secondary"
-            class={cn({
-              'bg-primary': currentPage === page,
-            })}
-            onclick={(e: Parameters<typeof handleClickEvent>[0]) => handleClickEvent(e)}
-          >
-            {page}
-          </Button>
-        {:else if currentPage - 1 >= pageSize - 3}
-          {@const page = pageSize - 3}
-          <!-- class:active={currentPage === pageSize - 3} -->
-          <Button
-            variant="secondary"
-            class={cn({
-              'bg-primary': currentPage === page,
-            })}
-            onclick={(e: Parameters<typeof handleClickEvent>[0]) => handleClickEvent(e)}
-          >
-            {page}
-          </Button>
-        {:else}
-          {@const page = pageSizeArray[1]}
-          <!-- class:active={currentPage === pageSizeArray[1]} -->
-          <Button
-            variant="secondary"
-            class={cn({
-              'bg-primary': currentPage === page,
-            })}
-            onclick={(e: Parameters<typeof handleClickEvent>[0]) => handleClickEvent(e)}
-          >
-            {page}
-          </Button>
-        {/if}
-        <!-- Page 3 or currentPage -->
-        {#if currentPage > 3 && currentPage < pageSize - 1}
-          {@const page = currentPage}
-          <!-- class:active={currentPage === currentPage} -->
-          <Button
-            variant="secondary"
-            class={cn({
-              'bg-primary': currentPage === page,
-            })}
-            onclick={(e: Parameters<typeof handleClickEvent>[0]) => handleClickEvent(e)}
-          >
-            {page}
-          </Button>
-        {:else if currentPage >= 1 && currentPage < 4}
-          {@const page = pageSizeArray[2]}
-          <!-- class:active={currentPage === pageSizeArray[2]} -->
-
-          <Button
-            variant="secondary"
-            class={cn({
-              'bg-primary': currentPage === page,
-            })}
-            onclick={(e: Parameters<typeof handleClickEvent>[0]) => handleClickEvent(e)}
-          >
-            {page}
-          </Button>
-        {:else}
-          {@const page = pageSize - 2}
-          <!-- class:active={currentPage === pageSize - 2} -->
-          <Button
-            variant="secondary"
-            class={cn({
-              'bg-primary': currentPage === page,
-            })}
-            onclick={(e: Parameters<typeof handleClickEvent>[0]) => handleClickEvent(e)}
-          >
-            {page}
-          </Button>
-        {/if}
-        <!-- Page 4 or Page 5 or currentPage + 1 -->
-        {#if currentPage + 1 < pageSize - 1 && currentPage + 1 > pageSizeArray[2]}
-          {@const page = currentPage + 1}
-          <!-- class:active={currentPage === currentPage + 1} -->
-          <Button
-            variant="secondary"
-            class={cn({
-              'bg-primary': currentPage === page,
-            })}
-            onclick={(e: Parameters<typeof handleClickEvent>[0]) => handleClickEvent(e)}
-          >
-            {page}
-          </Button>
-        {:else if currentPage + 1 <= pageSizeArray[2]}
-          {@const page = pageSizeArray[3]}
-          <!-- class:active={currentPage === pageSizeArray[3]} -->
-          <Button
-            variant="secondary"
-            class={cn({
-              'bg-primary': currentPage === page,
-            })}
-            onclick={(e: Parameters<typeof handleClickEvent>[0]) => handleClickEvent(e)}
-          >
-            {page}
-          </Button>
-        {:else}
-          {@const page = pageSize - 1}
-          <!-- class:active={currentPage === pageSize - 1} -->
-          <Button
-            variant="secondary"
-            class={cn({
-              'bg-primary': currentPage === page,
-            })}
-            onclick={(e: Parameters<typeof handleClickEvent>[0]) => handleClickEvent(e)}
-          >
-            {pageSize - 1}
-          </Button>
-        {/if}
-        <!-- Page 6 or last page -->
-        <!-- class:active={currentPage === pageSize} -->
-        <Button
-          variant="secondary"
-          class={cn({
-            'bg-primary': currentPage === pageSize,
-          })}
-          onclick={(e: Parameters<typeof handleClickEvent>[0]) => handleClickEvent(e)}
-        >
-          {pageSize}
-        </Button>
-      {:else}
-        {#each pageSizeArray as i}
-          {@const page = i}
-          <!-- class:active={currentPage === i}  -->
-          <Button
-            variant="secondary"
-            class={cn({
-              'bg-primary': currentPage === page,
-            })}
-            onclick={(e: Parameters<typeof handleClickEvent>[0]) => handleClickEvent(e)}
-          >
-            {page}
-          </Button>
-        {/each}
-      {/if}
-    </div>
   {:else}
     <div>No Table</div>
   {/if}
