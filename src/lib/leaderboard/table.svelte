@@ -36,21 +36,23 @@
   const headers: Headers[] = $derived([
     {
       label: 'rank',
-      sort: $page.url.searchParams.get('rank'),
+      // sort: $page.url.searchParams.get('sort') === 'rank' ? 'asc' : 'desc',
     },
     {
       label: type,
-      sort: $page.url.searchParams.get('type'),
+      // sort: $page.url.searchParams.get('sort') === 'faction' ? 'asc' : 'desc',
     },
     {
       label: leaderboard.ValueString,
-      sort: $page.url.searchParams.get('value'),
+      // sort: $page.url.searchParams.get('sort') === 'rank' ? 'asc' : 'desc',
     },
     {
-      label: 'Server',
-      sort: $page.url.searchParams.get('server'),
+      label: 'server',
+      // sort: $page.url.searchParams.get('sort') === 'rank' ? 'asc' : 'desc',
     },
   ])
+
+  let url = $derived(new URL($page.url))
 
   let value = $state($page.url.searchParams.get('search') ?? '')
   let input: HTMLInputElement | undefined = $state()
@@ -174,17 +176,31 @@
                   'w-full': i === 1,
                 })}
               >
-                <div class="flex items-center">
+                <div class="flex size-full items-center gap-2">
                   {header.label}
-                  <Button variant="ghost" size="icon" class="">
-                    {#if header.sort === 'desc'}
-                      <SortDescending class={'ml-2 h-4 w-4'} />
-                    {:else if header.sort === 'asc'}
-                      <SortAscending class={'ml-2 h-4 w-4'} />
-                    {:else}
-                      <FunnelSimple class={'ml-2 h-4 w-4'} />
-                    {/if}
-                  </Button>
+                  {#if header.label !== 'character' && header.label !== 'company'}
+                    {@const sort = url.searchParams.get('sort')}
+                    {@const lbl = i === 2 ? 'value' : header.label.toLowerCase()}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      class="size-full max-w-fit px-4"
+                      onclick={() => {
+                        if (sort === `${lbl}_desc`) url.searchParams.delete('sort')
+                        else if (!sort || sort !== lbl) url.searchParams.set('sort', lbl)
+                        else url.searchParams.set('sort', `${lbl}_desc`)
+                        goto(url)
+                      }}
+                    >
+                      {#if sort === `${lbl}_desc`}
+                        <SortDescending class={'pointer-events-none size-4'} />
+                      {:else if sort === `${lbl}`}
+                        <SortAscending class={'pointer-events-none size-4'} />
+                      {:else}
+                        <FunnelSimple class={'pointer-events-none size-4'} />
+                      {/if}
+                    </Button>
+                  {/if}
                 </div>
               </Table.Head>
             {/each}

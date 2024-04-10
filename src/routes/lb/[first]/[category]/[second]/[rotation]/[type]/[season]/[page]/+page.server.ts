@@ -3,6 +3,23 @@ import { error } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
 import { getCharacterById, getCompanyById, searchCompaniesAndCharactersByName } from '@/server/db/gamedata/helpers'
 
+const SORT_BY = {
+  'rank': (a: LeaderboardAPIBoardItem, b: LeaderboardAPIBoardItem) => a.rank - b.rank,
+  'rank_desc': (a: LeaderboardAPIBoardItem, b: LeaderboardAPIBoardItem) => b.rank - a.rank,
+  // 'entity': (a: LeaderboardAPIBoardItem, b: LeaderboardAPIBoardItem) => a.entityId,
+  // 'entity_desc': (a: LeaderboardAPIBoardItem, b: LeaderboardAPIBoardItem) => { },
+  'value': (a: LeaderboardAPIBoardItem, b: LeaderboardAPIBoardItem) => a.value - b.value,
+  'value_desc': (a: LeaderboardAPIBoardItem, b: LeaderboardAPIBoardItem) => b.value - a.value,
+  'server': (a: LeaderboardAPIBoardItem, b: LeaderboardAPIBoardItem) => a.server.localeCompare(b.server),
+  'server_desc': (a: LeaderboardAPIBoardItem, b: LeaderboardAPIBoardItem) => b.server.localeCompare(a.server),
+  'faction': (a: LeaderboardAPIBoardItem, b: LeaderboardAPIBoardItem) => b.faction?.localeCompare(a.faction) || 0,
+  'faction_desc': (a: LeaderboardAPIBoardItem, b: LeaderboardAPIBoardItem) => a.faction?.localeCompare(b.faction) || 0
+}
+
+function isSortBy(key: string): key is keyof typeof SORT_BY {
+  return key in SORT_BY
+}
+
 export const load = (async ({ locals, fetch, url, params: { season, type, first, second, category, rotation, page }, parent, url: { searchParams } }) => {
   const session = await locals.auth()
   const { leaderboards } = await parent()
@@ -68,11 +85,14 @@ export const load = (async ({ locals, fetch, url, params: { season, type, first,
   //   }))
 
   const api = `https://api.nwlb.info/json/${id}/${season}?size=10000&eid=true`
-  const json = fetch(api).then(res => res.json() as Promise<LeaderboardAPIBoardItem[]>)
+  const json = fetch(api).then(res => {
+    if (res.ok) return res.json() as Promise<LeaderboardAPIBoardItem[]>
+    error(res.status)
+  })
     .then(data => {
       let rank = 2
       let currentRank = 2
-      const mapped = data.map((entry, idx, arr) => {
+      const mapped = data?.map((entry, idx, arr) => {
         if (idx === 0) return entry
         if (arr[idx - 1].value !== arr[idx].value) {
           rank = currentRank
@@ -83,6 +103,7 @@ export const load = (async ({ locals, fetch, url, params: { season, type, first,
           rank
         }
       })
+      if (sort && sort.length && isSortBy(sort)) mapped.sort(SORT_BY[sort])
       return mapped
     })
     .then(async (items) => {
