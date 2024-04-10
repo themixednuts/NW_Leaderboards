@@ -111,7 +111,7 @@
         >
           Previous
         </Button>
-        <div class="whitespace-nowrap text-sm">
+        <div class="min-w-14 whitespace-nowrap text-right text-sm">
           {$page.params.page} / {table.total}
         </div>
         <Button
@@ -134,7 +134,6 @@
         type="search"
         bind:value
         name="q"
-        autofocus
         onchange={(e) => {
           e.preventDefault()
           const url = new URL($page.url)
@@ -143,7 +142,7 @@
           return goto(url, {
             keepFocus: true,
             noScroll: true,
-            invalidateAll: false,
+            invalidateAll: true,
           })
         }}
         oninput={(e) => {
@@ -154,7 +153,7 @@
             return goto(url, {
               keepFocus: true,
               noScroll: true,
-              invalidateAll: false,
+              invalidateAll: true,
             })
           }
         }}
