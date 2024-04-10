@@ -9,6 +9,7 @@ export const load = (async ({ locals, fetch, url, params: { season, type, first,
 
   const displayName = searchParams.get('q')
   const search = searchParams.get('search')
+  const sort = searchParams.get('sort')
 
   const pageSize = 10
   const leaderboard = leaderboards.find(lb => match_leaderboard(lb, {
@@ -84,7 +85,6 @@ export const load = (async ({ locals, fetch, url, params: { season, type, first,
       })
       return mapped
     })
-
     .then(async (items) => {
       if (!search) return items
       const res = await searchCompaniesAndCharactersByName(search, session?.user, 30)

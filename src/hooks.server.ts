@@ -10,6 +10,7 @@ const authorization = (async ({ event, resolve }) => {
   if (session?.user?.id && url.pathname.startsWith('/signin')) redirect(303, '/')
 
   if ((url.pathname.startsWith('/logs') || url.pathname.startsWith('/settings')) && !session) redirect(303, '/signin')
+
   return resolve(event)
 }) satisfies Handle
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { replaceLynshineSrc, appendPngToSrc, FACTIONS, debounce } from '$lib/utils'
+  import { replaceLynshineSrc, appendPngToSrc, FACTIONS, debounce, secondsToTimeFormat } from '$lib/utils'
   import type { LeaderboardAPIBoardItem } from '$lib/leaderboard/utils'
   import type { LeaderboardData } from '$lib/leaderboard/types'
   import Players from './players.svelte'
@@ -35,7 +35,7 @@
   let type = $derived($page.params.type)
   const headers: Headers[] = $derived([
     {
-      label: 'Rank',
+      label: 'rank',
       sort: $page.url.searchParams.get('rank'),
     },
     {
@@ -167,12 +167,16 @@
         <Table.Caption>Public Members</Table.Caption>
         <Table.Header>
           <Table.Row>
-            {#each headers as header}
-              <Table.Head>
+            {#each headers as header, i}
+              <Table.Head
+                class={cn('capitalize', {
+                  'w-6': header.label === 'rank',
+                  'w-10': header.label !== 'rank',
+                  'w-full': i === 1,
+                })}
+              >
                 <div class="flex items-center">
-                  <div class="capitalize">
-                    {header.label}
-                  </div>
+                  {header.label}
                   <Button variant="ghost" size="icon" class="">
                     {#if header.sort === 'desc'}
                       <SortDescending class={'ml-2 h-4 w-4'} />
@@ -198,7 +202,7 @@
                   <svelte:component this={Players} players={row.entityId} />
                 </Table.Cell>
                 <Table.Cell>
-                  {row?.value}
+                  {leaderboard.ValueString === 'Time' ? secondsToTimeFormat(row.value) : row.value}
                 </Table.Cell>
                 <Table.Cell>
                   {row?.server}
