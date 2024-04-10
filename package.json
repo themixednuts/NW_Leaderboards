@@ -80,8 +80,5 @@
     "tailwind-variants": "^0.2.1",
     "vaul-svelte": "latest",
     "zod": "latest"
-  },
-  "resolutions": {
-    "string-width": "latest"
   }
 }
