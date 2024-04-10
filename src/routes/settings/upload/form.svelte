@@ -1,13 +1,15 @@
 <script lang="ts">
   import * as Form from '@/shadcn/components/ui/form/index'
   import { Input } from '@/shadcn/components/ui/input'
-  import SuperDebug, { fileProxy, superForm, type Infer, type SuperValidated } from 'sveltekit-superforms'
+  import SuperDebug, { fileProxy, superForm } from 'sveltekit-superforms'
   import { zodClient } from 'sveltekit-superforms/adapters'
-  import { gameLogFormSchema, type GameLogFormSchema } from './schema'
+  import { gameLogFormSchema } from './schema'
   import { dev } from '$app/environment'
+  import { toast } from 'svelte-sonner'
+  import type { PageData } from './$types'
 
   interface Props {
-    data: SuperValidated<Infer<GameLogFormSchema>>
+    data: PageData['form']
   }
 
   let { data }: Props = $props()
@@ -15,6 +17,19 @@
   let form = superForm(data, {
     validators: zodClient(gameLogFormSchema),
     invalidateAll: false,
+    onUpdated: ({ form }) => {
+      if (form.valid) {
+        if (form.message?.upsert)
+          form.message.upsert.forEach((character) => {
+            toast.success('Successfully Uploaded', { description: character.name })
+          })
+      }
+      if (!form.valid) {
+        toast.error('Error', {
+          description: form.message?.message,
+        })
+      }
+    },
   })
 
   let formData = form.form

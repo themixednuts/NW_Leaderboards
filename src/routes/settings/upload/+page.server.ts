@@ -3,13 +3,18 @@ import type { PageServerLoad } from './$types'
 import { db } from '$lib/server/db/gamedata/client'
 import { characters } from '$lib/server/db/gamedata/schema'
 import { sql } from 'drizzle-orm'
-import { fail, message, setError, superValidate, withFiles } from 'sveltekit-superforms'
+import { fail, message, setError, superValidate, withFiles, type Infer } from 'sveltekit-superforms'
 import { zod } from 'sveltekit-superforms/adapters'
 import { gameLogFormSchema } from './schema'
 
+interface Message {
+  type: string
+  message?: string
+  upsert?: { name: string }[]
+}
 export const load = (async () => {
   return {
-    form: await superValidate(zod(gameLogFormSchema))
+    form: await superValidate<Infer<typeof gameLogFormSchema>, Message>(zod(gameLogFormSchema))
   }
 }) satisfies PageServerLoad
 
@@ -64,6 +69,11 @@ export const actions = {
       }
     }
 
+    if (!characters_arr.length) return message(form, {
+      type: 'gamelog',
+      message: 'No characters found!'
+    }, { status: 400 })
+
     const upsert = await db.insert(characters).values(characters_arr).onConflictDoUpdate({
       target: characters.id,
       set: {
@@ -77,7 +87,8 @@ export const actions = {
     })
       .returning({ name: characters.name })
 
-    return message<{ type: 'gamelog', upsert: typeof upsert }>(form, {
+
+    return message(form, {
       type: 'gamelog',
       upsert
     })
