@@ -22,7 +22,7 @@
   <div class="flex flex-wrap gap-4">
     {#if characters}
       {#each characters as character, i (character.name)}
-        <Card {character} class="min-h-0 max-w-96" />
+        <Card {character} class="min-w-max max-w-96" />
       {/each}
     {/if}
   </div>
