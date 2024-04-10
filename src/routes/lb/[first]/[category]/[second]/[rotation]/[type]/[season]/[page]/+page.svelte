@@ -3,7 +3,6 @@
   import Table from '$lib/leaderboard/table.svelte'
   import { CircleNotch } from 'phosphor-svelte'
   import type { PageData } from './$types.js'
-  import { onMount } from 'svelte'
 
   interface Props {
     data: PageData
@@ -12,6 +11,7 @@
 
   let json: Awaited<(typeof data)['json']> | undefined = $state()
 
+  //@ts-expect-error
   $effect(async () => {
     json = await data.json
   })

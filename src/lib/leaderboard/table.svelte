@@ -198,7 +198,11 @@
                   {row?.rank}
                 </Table.Cell>
                 <Table.Cell>
-                  <svelte:component this={Players} players={row.entityId} />
+                  {#if row?.entityId}
+                    <svelte:component this={Players} players={row.entityId} />
+                  {:else}
+                    {FACTIONS[row.faction?.replace('Faction', '') as unknown as keyof typeof FACTIONS]}
+                  {/if}
                 </Table.Cell>
                 <Table.Cell>
                   {leaderboard.ValueString === 'Time' ? secondsToTimeFormat(row.value) : row.value}

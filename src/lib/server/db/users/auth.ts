@@ -11,12 +11,12 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Discord({
     clientId: DISCORD_ID,
     clientSecret: DISCORD_SECRET,
-    profile(profile) {
-      return {
-        ...profile,
-        role: 'user',
-      }
-    },
+    // profile(profile) {
+    //   return {
+    //     ...profile,
+    //     role: 'user',
+    //   }
+    // },
   })],
   adapter: DrizzleAdapter(db),
   callbacks: {

@@ -86,7 +86,7 @@ export const load = (async ({ locals, fetch, url, params: { season, type, first,
       return mapped
     })
     .then(async (items) => {
-      if (!search) return items
+      if (!search || type === 'faction') return items
       const res = await searchCompaniesAndCharactersByName(search, session?.user, 30)
       return items.filter(entry => res.some(q => entry.entityId?.split('_').includes(q.id)))
     })
@@ -100,6 +100,7 @@ export const load = (async ({ locals, fetch, url, params: { season, type, first,
           ...entry,
           entityId: entry.entityId.split('_').map(id => getCompanyById(id.replace(/\{|\}/g, ''), session?.user).then(company => ({ ...company, type: 'company' }))),
         }
+        return entry
       }), total: Math.ceil(items.length / pageSize)
     }))
 
