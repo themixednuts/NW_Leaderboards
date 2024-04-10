@@ -53,7 +53,6 @@
       },
     }
   }
-  $inspect($navigating)
 </script>
 
 <svelte:head>

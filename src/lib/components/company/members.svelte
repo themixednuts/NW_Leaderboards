@@ -48,8 +48,19 @@
   const { filterValue } = pluginStates.filter
 </script>
 
-<div class="flex items-center py-4">
+<div class="flex w-full items-center gap-2 py-4">
   <Input class="max-w-sm rounded-xl" placeholder="Filter characters..." type="text" bind:value={$filterValue} />
+  <div class="flex grow select-none items-center justify-end space-x-4 py-4">
+    <Button variant="outline" size="sm" on:click={() => ($pageIndex = $pageIndex - 1)} disabled={!$hasPreviousPage}>
+      Previous
+    </Button>
+    <div class="whitespace-nowrap text-sm">
+      {$pageIndex + 1} / {$pageCount}
+    </div>
+    <Button variant="outline" size="sm" disabled={!$hasNextPage} on:click={() => ($pageIndex = $pageIndex + 1)}>
+      Next
+    </Button>
+  </div>
 </div>
 <Table.Root {...$tableAttrs}>
   <Table.Caption>Public Members</Table.Caption>
@@ -109,14 +120,3 @@
     Updated: {updatedAt.toDateString()}
   </Table.Footer>
 </Table.Root>
-<div class="flex items-center justify-end space-x-4 py-4">
-  <Button variant="outline" size="sm" on:click={() => ($pageIndex = $pageIndex - 1)} disabled={!$hasPreviousPage}>
-    Previous
-  </Button>
-  <div class="whitespace-nowrap text-sm">
-    {$pageIndex + 1} / {$pageCount}
-  </div>
-  <Button variant="outline" size="sm" disabled={!$hasNextPage} on:click={() => ($pageIndex = $pageIndex + 1)}>
-    Next
-  </Button>
-</div>
