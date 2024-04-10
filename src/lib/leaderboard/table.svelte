@@ -104,7 +104,8 @@
       </div>
       <div class="flex select-none items-center justify-end space-x-4 p-4">
         <Button
-          href={$page.url.pathname.replace(/\/([^\/]+)\/?$/, `/${String(Number($page.params.page) - 1)}`)}
+          href={$page.url.pathname.replace(/\/([^\/]+)\/?$/, `/${String(Number($page.params.page) - 1)}`) +
+            $page.url.search}
           variant="outline"
           size="sm"
           class={cn('', {
@@ -119,7 +120,8 @@
         <Button
           variant="outline"
           size="sm"
-          href={$page.url.pathname.replace(/\/([^\/]+)\/?$/, `/${String(Number($page.params.page) + 1)}`)}
+          href={$page.url.pathname.replace(/\/([^\/]+)\/?$/, `/${String(Number($page.params.page) + 1)}`) +
+            $page.url.search}
           class={cn('', {
             'pointer-events-none opacity-60': Number($page.params.page) >= table.total,
           })}
@@ -207,7 +209,7 @@
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {#each table.data as row, _}
+          {#each table.data as row, _ (row.entityId ?? row.faction)}
             {#if row}
               <Table.Row>
                 <Table.Cell>
