@@ -19,7 +19,7 @@
 </script>
 
 <ScrollArea>
-  <div class="flex gap-4">
+  <div class="flex flex-wrap gap-4">
     {#if characters}
       {#each characters as character, i (character.name)}
         <Card {character} class="min-h-0 max-w-96" />

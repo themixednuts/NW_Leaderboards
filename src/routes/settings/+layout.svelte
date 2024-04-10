@@ -44,8 +44,8 @@
   ]
 </script>
 
-<div class="flex grow flex-wrap gap-4">
-  <div class="flex h-min w-full max-w-xs flex-col gap-2 border-2 p-2 sm:h-full">
+<div class="flex grow flex-wrap gap-4 sm:flex-nowrap">
+  <div class="flex h-min w-full flex-col gap-2 border-2 p-2 sm:h-full md:max-w-xs">
     {#each options as option}
       <div class="text-sm">
         {option.group}
