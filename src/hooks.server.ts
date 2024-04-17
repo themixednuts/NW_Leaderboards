@@ -9,7 +9,9 @@ const authorization = (async ({ event, resolve }) => {
 
   if (session?.user?.id && url.pathname.startsWith('/signin')) redirect(303, '/')
 
-  if ((url.pathname.startsWith('/logs') || url.pathname.startsWith('/settings')) && !session) redirect(303, '/signin')
+  if (url.pathname.startsWith('/settings') && !session) redirect(303, '/signin')
+
+  if (url.pathname.startsWith('/reports') && session?.user?.role !== 'admin' && session?.user?.role !== 'maintainer') redirect(303, '/')
 
   return resolve(event)
 }) satisfies Handle

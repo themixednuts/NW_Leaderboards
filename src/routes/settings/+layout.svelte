@@ -36,8 +36,14 @@
       items: [
         {
           icon: FileArrowUp,
-          link: '/settings/upload',
-          label: 'Upload',
+          link: '/settings/upload/game',
+          label: 'Game Log',
+        },
+        {
+          icon: FileArrowUp,
+          link: '/settings/upload/combat',
+          label: 'Combat Log',
+          roles: ['maintainer', 'admin'],
         },
       ],
     },
@@ -52,16 +58,18 @@
       </div>
       <!-- <hr class="p-2" /> -->
       {#each option.items as item}
-        <div
-          class={cn(' flex w-full place-items-center gap-2 border-transparent', {
-            'border-r-4 border-r-blue-bright': $page.url?.pathname.includes(item.link),
-          })}
-        >
-          <Button variant="secondary" href={item.link} class="h-12 w-full justify-start gap-2">
-            <svelte:component this={item.icon} />
-            {item.label}
-          </Button>
-        </div>
+        {#if !item.roles || item.roles.includes(data.session?.user.role)}
+          <div
+            class={cn(' flex w-full place-items-center gap-2 border-transparent', {
+              'border-r-4 border-r-blue-bright': $page.url?.pathname.includes(item.link),
+            })}
+          >
+            <Button variant="secondary" href={item.link} class="h-12 w-full justify-start gap-2">
+              <svelte:component this={item.icon} />
+              {item.label}
+            </Button>
+          </div>
+        {/if}
       {/each}
     {/each}
   </div>

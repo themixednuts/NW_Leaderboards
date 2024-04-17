@@ -1,3 +1,5 @@
+import type { LogEvent } from "./events.types"
+
 export function replaceLynshineSrc(src?: string) {
   if (!src) return src
   const lowersrc = src.toLowerCase()
@@ -278,4 +280,144 @@ export function secondsToTimeFormat(seconds: number) {
   const minutes = Math.floor(seconds / 60)
   const remainingSeconds = seconds % 60
   return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`
+}
+export function* lines(text: string) {
+  const lines = text.split('\n')
+  for (const line of lines) {
+    yield line
+  }
+}
+export const getRelativeEventTime = (currentTime: number, firstTime: number) => {
+
+  const elapsedMilliseconds = currentTime - firstTime
+  const minutes = Math.floor(elapsedMilliseconds / (60 * 1000))
+  const seconds = Math.floor((elapsedMilliseconds % (60 * 1000)) / 1000)
+  const milliseconds = Math.floor(elapsedMilliseconds % 1000)
+
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}:${String(milliseconds).padStart(3, '0')}`
+
+}
+
+export function translateEvent(event: LogEvent) {
+
+  if (event.type === 'position') {
+    switch (event.subtype) {
+      case 'waypoint': return `${event.data.playerName} placed waypoint at (${event.data.value?.x}, ${event.data.value?.y})`
+      case 'world': return `${event.data.playerName} moved to (${event.data.value?.x}, ${event.data.value?.y}, ${event.data.value?.z})`
+      case 'camera': return `${event.data.playerName}'s camera moved to (${event.data.value?.x}, ${event.data.value?.y}, ${event.data.value?.z})`
+
+    }
+  }
+  else if (event.type === 'group') {
+    switch (event.subtype) {
+      case 'added': return `${event.data.playerName} was added to group ${event.data.groupId}, group member ${event.data.groupMember}`
+      case 'removed': return `${event.data.playerName} was removed from group ${event.data.groupId}`
+      case 'new': return `Group created -> ${event.data.groupId}`
+      case 'disband': return `Group disbanded -> ${event.data.groupId}`
+      case 'role': return `${event.data.playerName}'s role changed to ${event.data.newRole}`
+    }
+  }
+  else if (event.type === 'health') {
+    switch (event.subtype) {
+      case 'percent': return `${event.data.playerName}'s health percentage changed to ${event.data.healthPercent}%`
+      case 'value': return `${event.data.playerName}'s health changed to ${event.data.value}`
+      case 'max': return `${event.data.playerName}'s max health changed to ${event.data.value}`
+    }
+  }
+  else if (event.type === 'statuseffect') {
+    switch (event.subtype) {
+      case 'stacksize': return `${event.data.playerName}'s ${event.data.id.replaceAll('_', ' ')} stack at ${event.data.stackSize}`
+      case 'active': return `${event.data.playerName} gained ${event.data.id.replaceAll('_', ' ')}`
+      case 'inactive': return `${event.data.playerName} lost ${event.data.id.replaceAll('_', ' ')}`
+    }
+  }
+  else if (event.type === 'gamemode') {
+    switch (event.subtype) {
+      case 'entered': return `Entered game mode ${event.data.gameModeName}`
+      case 'exited': return `Exited game mode ${event.data.gameModeName}`
+      case 'inbossfight': return `In boss fight is ${event.data.inBossFight}`
+    }
+  }
+  // else if (event.type === 'territory') {
+  //     switch (event.subtype) {
+  //         case 'entered': return `Entered zone ${event.data.territoryName}`
+  //         case 'exited': return `Exited zone ${event.data.territoryName}`
+  //     }
+  // }
+  else if (event.type === 'raid') {
+    switch (event.subtype) {
+      case 'disband': return `Raid disbanded`
+      case 'maxgroups': return `Raid's max group amount is ${event.data.maxGroup}`
+      case 'new': return `Raid created -> ${event.data.raidId}`
+      // case 'membercount': return `Raid's member count is ${event.data.memberCount}`
+    }
+  }
+  else if (event.type === 'damage') {
+    switch (event.subtype) {
+      case 'outgoing': return `${event.data.playerName} dealt ${Object.entries(event.data.damage).map(([damageType, damageData]) => `${damageType}: ${Math.floor(damageData.damage)} (${Math.floor(damageData.mitigatedDamage)})`).join(' , ')} damage to ${event.data.marker?.playerName || event.data.marker?.npcName || ''}`
+      case 'incoming': return `${event.data.playerName} received ${Object.entries(event.data.damage).map(([damageType, damageData]) => `${damageType}: ${Math.floor(damageData.damage)} (${Math.floor(damageData.mitigatedDamage)})`).join(' , ')} damage from ${event.data.marker?.playerName || event.data.marker?.npcName || ''}`
+    }
+  }
+  else if (event.type === 'healing') {
+    switch (event.subtype) {
+      case 'incoming': return `${event.data.playerName} received ${event.data.amount} heals`
+    }
+  }
+  else if (event.type === 'paperdoll') {
+    switch (event.subtype) {
+      case 'powerlevel': return `Power Level changed to ${event.data.playerPowerLevel}`
+      case 'equipload': return `Equip Load changed to ${event.data.equipLoad / 10}`
+      case 'equiploadcategory': return `Equip Load Category changed to ${event.data.equipLoadCategory}`
+      case 'itemunequipped': return `Unequipped item from ${event.data.equipSlot}`
+      case 'initialize': return `Paperdoll initialize slot ${event.data.slotId} ${event.data.equipSlot ?? ''} ${event.data.itemName ? 'with ' + event.data.itemName : ''} ${event.data.gearscore || ''}`
+    }
+  }
+  else if (event.type === 'equipment') {
+    switch (event.subtype) {
+      case 'activeweapon': return `${event.data.playerName} active weapon changed to ${event.data.activeWeaponSlot}`
+    }
+  }
+  else if (event.type === 'stamina') {
+    switch (event.subtype) {
+      case 'value': return `${event.data.playerName}'s stamina changed to ${event.data.value}`
+      case 'max': return `${event.data.playerName}'s max stamina changed to ${event.data.value}`
+    }
+  }
+  else if (event.type === 'mana') {
+    switch (event.subtype) {
+      case 'value': return `${event.data.playerName}'s mana changed to ${event.data.value}`
+      case 'max': return `${event.data.playerName}'s max mana changed to ${event.data.value}`
+    }
+  }
+  else if (event.type === 'grit') {
+    switch (event.subtype) {
+      case 'enter': return `${event.data.playerName || ''} gained grit`
+      case 'exit': return `${event.data.playerName || ''} lost grit`
+    }
+  }
+  else if (event.type === 'vitals') {
+    switch (event.subtype) {
+      case 'deathsdoor': return `${event.data.playerName}'s deaths door state changed to ${event.data.isDeathsDoor}`
+      case 'isDead': return `${event.data.playerName} ${event.data.isDead ? 'died' : 'is alive'}`
+    }
+  }
+  else if (event.type === 'ability') {
+    switch (event.subtype) {
+      case 'triggered': return `Ability ${event.data.name} triggered`
+    }
+
+  }
+  else if (event.type === 'heartrune') {
+    switch (event.subtype) {
+
+    }
+  }
+  else if (event.type === 'log') {
+    switch (event.subtype) {
+      case 'start': return `Log started`
+      case 'end': return `Log ended`
+    }
+  }
+  // case 'social' + 'online': return `${event.data.playerName}'s online state changed to ${event.data.isOnline}`
+  else return `${event.type} -> ${event.subtype}`
 }

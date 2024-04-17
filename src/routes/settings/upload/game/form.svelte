@@ -3,7 +3,7 @@
   import { Input } from '@/shadcn/components/ui/input'
   import SuperDebug, { fileProxy, superForm } from 'sveltekit-superforms'
   import { zodClient } from 'sveltekit-superforms/adapters'
-  import { gameLogFormSchema } from './schema'
+  import { formSchema } from './schema'
   import { dev } from '$app/environment'
   import { toast } from 'svelte-sonner'
   import type { PageData } from './$types'
@@ -15,7 +15,7 @@
   let { data }: Props = $props()
 
   let form = superForm(data, {
-    validators: zodClient(gameLogFormSchema),
+    validators: zodClient(formSchema),
     invalidateAll: false,
     onUpdated: ({ form }) => {
       if (form.valid) {
@@ -37,13 +37,7 @@
   let file = fileProxy(formData, 'file')
 </script>
 
-<form
-  action="?/gamelog"
-  method="post"
-  use:enhance
-  enctype="multipart/form-data"
-  class="flex items-center justify-center gap-2"
->
+<form method="post" use:enhance enctype="multipart/form-data" class="flex items-center justify-center gap-2">
   <Form.Field {form} name="file">
     <Form.Control let:attrs>
       <Form.Label>Upload Game.log</Form.Label>

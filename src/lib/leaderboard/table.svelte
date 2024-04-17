@@ -171,6 +171,8 @@
         <Table.Header>
           <Table.Row>
             {#each headers as header, i}
+              {@const sort = url.searchParams.get('sort')}
+              {@const lbl = i === 2 ? 'value' : header.label.toLowerCase()}
               <Table.Head
                 class={cn('capitalize', {
                   'w-6': header.label === 'rank',
@@ -179,14 +181,11 @@
                 })}
               >
                 <div class="flex size-full items-center gap-2">
-                  {header.label}
                   {#if header.label !== 'character' && header.label !== 'company'}
-                    {@const sort = url.searchParams.get('sort')}
-                    {@const lbl = i === 2 ? 'value' : header.label.toLowerCase()}
                     <Button
                       variant="ghost"
                       size="icon"
-                      class="size-full max-w-fit px-4"
+                      class="size-full max-w-fit gap-2 px-4 capitalize"
                       onclick={() => {
                         if (sort === `${lbl}_desc`) url.searchParams.delete('sort')
                         else if (!sort || sort !== lbl) url.searchParams.set('sort', lbl)
@@ -194,6 +193,7 @@
                         goto(url)
                       }}
                     >
+                      {header.label}
                       {#if sort === `${lbl}_desc`}
                         <SortDescending class={'pointer-events-none size-4'} />
                       {:else if sort === `${lbl}`}
@@ -202,6 +202,8 @@
                         <FunnelSimple class={'pointer-events-none size-4'} />
                       {/if}
                     </Button>
+                  {:else}
+                    {header.label}
                   {/if}
                 </div>
               </Table.Head>

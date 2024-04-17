@@ -1,11 +1,10 @@
-import type { Actions } from '@sveltejs/kit'
-import type { PageServerLoad } from './$types'
+import type { PageServerLoad, Actions, Action } from './$types'
 import { db } from '$lib/server/db/gamedata/client'
 import { characters } from '$lib/server/db/gamedata/schema'
 import { sql } from 'drizzle-orm'
 import { fail, message, setError, superValidate, withFiles, type Infer } from 'sveltekit-superforms'
 import { zod } from 'sveltekit-superforms/adapters'
-import { gameLogFormSchema } from './schema'
+import { formSchema, type FormSchema } from './schema'
 
 interface Message {
   type: string
@@ -14,13 +13,13 @@ interface Message {
 }
 export const load = (async () => {
   return {
-    form: await superValidate<Infer<typeof gameLogFormSchema>, Message>(zod(gameLogFormSchema))
+    form: await superValidate<Infer<FormSchema>, Message>(zod(formSchema))
   }
 }) satisfies PageServerLoad
 
 export const actions = {
-  gamelog: async (event) => {
-    const form = await superValidate(event, zod(gameLogFormSchema))
+  default: (async (event) => {
+    const form = await superValidate(event, zod(formSchema))
     if (!form.valid) return fail(400, { form })
 
     const session = await event.locals.auth()
@@ -93,7 +92,7 @@ export const actions = {
       upsert
     })
 
-  }
+  }) satisfies Action,
 } satisfies Actions
 
 function* lines(text: string) {
