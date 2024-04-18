@@ -1,4 +1,4 @@
-import { eq, getTableColumns, inArray, isNotNull, or, Query, sql } from "drizzle-orm"
+import { and, eq, getTableColumns, inArray, isNotNull, not, or, Query, sql } from "drizzle-orm"
 import { client, db } from "./client"
 import { file, Glob } from 'bun'
 import { InArgs } from "@libsql/client/."
@@ -76,6 +76,7 @@ for (const chunk of chunkArray(arr, BATCH_SIZE)) {
         backgroundColor: sql.raw(`COALESCE(EXCLUDED.${columnNames.backgroundColor.name},${columnNames.backgroundColor.name})`),
         numClaims: sql.raw(`COALESCE(EXCLUDED.${columnNames.numClaims.name},${columnNames.numClaims.name})`),
         numPlayers: sql.raw(`COALESCE(EXCLUDED.${columnNames.numPlayers.name},${columnNames.numPlayers.name})`),
+        guildmasterId: sql.raw(`COALESCE(EXCLUDED.${columnNames.guildmasterId.name},${columnNames.guildmasterId.name})`),
       }
     }).toSQL()
   stmts.push(stmt)
@@ -85,18 +86,34 @@ for (const chunk of chunkArray(arr, BATCH_SIZE)) {
     .where(inArray(characters.id, chunk.map(guild => guild.guildmasterId!)))
     .toSQL()
   stmts.push(stmt)
+  stmt = db.update(characters).set({
+    guildRank: 'settler'
+  })
+    .where(
+      and(
+        inArray(characters.guildId, chunk.map(guild => guild.id)),
+        not(
+          inArray(characters.id, chunk.map(guild => guild.guildmasterId!))
+        ),
+        eq(characters.guildRank, 'governor')
+      )
+    )
+    .toSQL()
+  stmts.push(stmt)
   ++i
 }
 
 const tx = await client.transaction('write')
+let affected = 0
 console.log('\nExecuting statements...')
 for (const [idx, stmt] of stmts.entries()) {
   const { rowsAffected } = await tx.execute({
     sql: stmt.sql,
     args: stmt.params as InArgs
   })
+  affected += rowsAffected
   console.write('\r' + ' '.repeat(process.stdout.columns))
-  console.write(`\r${(idx + 1).toString().padStart(stmts.length.toString().length)}/${stmts.length} -> Affected Rows: ${rowsAffected.toString().padStart(3)}`)
+  console.write(`\r${(idx + 1).toString().padStart(stmts.length.toString().length)}/${stmts.length} -> Affected Rows: ${affected.toString().padStart(6)}`)
 }
 await tx.commit()
 console.log('\nExecuted statements.')

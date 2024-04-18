@@ -2,9 +2,10 @@
   import { page } from '$app/stores'
   import type { getCharacterById } from '@/server/db/gamedata/helpers'
   import { cn } from '@/shadcn/utils'
+  import type { PageData } from '../../../routes/company/[name]/members/$types'
 
   interface Props {
-    character: NonNullable<Awaited<ReturnType<typeof getCharacterById>>>
+    character: NonNullable<Awaited<PageData['company']>>['characters'][number] & { ownedByUser?: boolean }
   }
   let { character }: Props = $props()
 </script>

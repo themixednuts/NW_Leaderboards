@@ -46,7 +46,7 @@
 </script>
 
 <div
-  class="relative z-10 row-start-1 overflow-visible border-2 border-orange-400 border-opacity-30 bg-search bg-cover bg-center bg-no-repeat p-2 focus-within:bg-search-hover hover:bg-search-hover"
+  class="bg-search focus-within:bg-search-hover hover:bg-search-hover relative z-10 row-start-1 overflow-visible border-2 border-orange-400 border-opacity-30 bg-cover bg-center bg-no-repeat p-2"
 >
   {#if !searching}
     <img
@@ -70,13 +70,20 @@
   />
   {#if items.length}
     <table
-      class="table absolute -left-0 top-12 w-full table-fixed border-2 border-slate-500 bg-dropdown bg-cover bg-no-repeat"
+      class="bg-dropdown absolute -left-0 top-12 table w-full table-fixed border-2 border-slate-500 bg-cover bg-no-repeat"
     >
-      <tbody class="min-h-96 block max-h-[30rem] overflow-auto">
+      <tbody class="block max-h-[30rem] min-h-96 overflow-auto">
         {#each items as item}
           <tr class="table border-2 border-slate-800 px-2">
             <td>
-              <a href="{link.replaceAll('$category', item.TradingCategory.toLowerCase()).replaceAll('$family', item.TradingFamily.toLowerCase()).replaceAll('$group', item.TradingGroup.toLowerCase()).replaceAll('$id', item.id)}" data-sveltekit-reload>
+              <a
+                href={link
+                  .replaceAll('$category', item.TradingCategory.toLowerCase())
+                  .replaceAll('$family', item.TradingFamily.toLowerCase())
+                  .replaceAll('$group', item.TradingGroup.toLowerCase())
+                  .replaceAll('$id', item.id)}
+                data-sveltekit-reload
+              >
                 {item.name}
               </a>
             </td>
