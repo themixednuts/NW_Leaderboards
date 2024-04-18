@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Buildings, FileArrowUp, User, Users, UsersThree } from 'phosphor-svelte'
+  import { Buildings, ChartLine, FileArrowUp, User, Users, UsersThree } from 'phosphor-svelte'
   import type { LayoutData } from './$types'
   import { cn } from '@/shadcn/utils'
   import { page } from '$app/stores'
@@ -28,6 +28,12 @@
           icon: Buildings,
           link: '/settings/companies',
           label: 'Companies',
+        },
+        {
+          icon: ChartLine,
+          link: '/settings/logs',
+          label: 'Logs',
+          roles: ['maintainer', 'admin'],
         },
       ],
     },
@@ -58,7 +64,7 @@
       </div>
       <!-- <hr class="p-2" /> -->
       {#each option.items as item}
-        {#if !item.roles || item.roles.includes(data.session?.user.role)}
+        {#if !item.roles || item.roles.includes(data?.session?.user?.role)}
           <div
             class={cn(' flex w-full place-items-center gap-2 border-transparent', {
               'border-r-4 border-r-blue-bright': $page.url?.pathname.includes(item.link),

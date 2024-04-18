@@ -1,8 +1,8 @@
-import { getTableColumns, isNotNull, or, Query, sql } from "drizzle-orm"
-import { guilds } from "../../src/lib/server/db/gamedata/schema"
+import { eq, getTableColumns, inArray, isNotNull, or, Query, sql } from "drizzle-orm"
 import { client, db } from "./client"
 import { file, Glob } from 'bun'
 import { InArgs } from "@libsql/client/."
+import { characters, guilds } from "../../src/lib/schemas/gamedata"
 
 const GLOB = new Glob('**/*.json')
 
@@ -23,9 +23,11 @@ export interface CrestData {
 }
 
 const GUILD_DATA_DIR = "/media/gamedisk/Games/Steam/steamapps/common/New World/logs/guildsdata"
-const BATCH_SIZE = 1000
+const BATCH_SIZE = 50
 
 const stmts: Query[] = []
+const arr: typeof guilds.$inferInsert[] = []
+
 for await (const path of GLOB.scan(GUILD_DATA_DIR)) {
   console.log('Parsing: ', path)
   const s = performance.now()
@@ -38,7 +40,7 @@ for await (const path of GLOB.scan(GUILD_DATA_DIR)) {
     console.write(`\r${path}: ${index} / ${lines.length - 1}`)
     if (!line.length) continue
     const guildsarr: GuildData[] = JSON.parse(line)
-    const normalized = guildsarr.map(guild => ({
+    guildsarr.forEach(guild => arr.push({
       id: guild.guildId.replace(/\{|\}/g, ''),
       name: guild.guildName,
       guildmasterId: guild.guildMasterCharacterIdString,
@@ -50,39 +52,40 @@ for await (const path of GLOB.scan(GUILD_DATA_DIR)) {
       numClaims: guild.numClaims,
       numPlayers: guild.numMembers,
     }))
-
-    const columnNames = getTableColumns(guilds)
-    const stmt = db.insert(guilds).values(normalized)
-      .onConflictDoUpdate({
-        target: guilds.id,
-        set: {
-          name: sql.raw(`COALESCE(EXCLUDED.${columnNames.name.name}, ${columnNames.name.name})`),
-          id: sql.raw(`COALESCE(EXCLUDED.${columnNames.id.name}, ${columnNames.id.name})`),
-          factionId: sql.raw(`COALESCE(EXCLUDED.${columnNames.factionId.name},${columnNames.factionId.name})`),
-          foregroundImagePath: sql.raw(`COALESCE(EXCLUDED.${columnNames.foregroundImagePath.name},${columnNames.foregroundImagePath.name})`),
-          backgroundImagePath: sql.raw(`COALESCE(EXCLUDED.${columnNames.backgroundImagePath.name},${columnNames.backgroundImagePath.name})`),
-          foregroundColor: sql.raw(`COALESCE(EXCLUDED.${columnNames.foregroundColor.name},${columnNames.foregroundColor.name})`),
-          backgroundColor: sql.raw(`COALESCE(EXCLUDED.${columnNames.backgroundColor.name},${columnNames.backgroundColor.name})`),
-          numClaims: sql.raw(`COALESCE(EXCLUDED.${columnNames.numClaims.name},${columnNames.numClaims.name})`),
-          numPlayers: sql.raw(`COALESCE(EXCLUDED.${columnNames.numPlayers.name},${columnNames.numPlayers.name})`),
-          updatedAt: sql`CURRENT_TIMESTAMP`
-        },
-        where: or(
-          isNotNull(sql.raw(`EXCLUDED.${columnNames.name.name}`)),
-          isNotNull(sql.raw(`EXCLUDED.${columnNames.id.name}`)),
-          isNotNull(sql.raw(`EXCLUDED.${columnNames.factionId.name}`)),
-          isNotNull(sql.raw(`EXCLUDED.${columnNames.foregroundImagePath.name}`)),
-          isNotNull(sql.raw(`EXCLUDED.${columnNames.backgroundImagePath.name}`)),
-          isNotNull(sql.raw(`EXCLUDED.${columnNames.foregroundColor.name}`)),
-          isNotNull(sql.raw(`EXCLUDED.${columnNames.backgroundColor.name}`)),
-          isNotNull(sql.raw(`EXCLUDED.${columnNames.numClaims.name}`)),
-          isNotNull(sql.raw(`EXCLUDED.${columnNames.numPlayers.name}`)),
-        )
-      }).toSQL()
-    stmts.push(stmt)
   }
-
   console.log('\nParsed: ', path, ' ', performance.now() - s, 'ms')
+}
+const columnNames = getTableColumns(guilds)
+
+console.log('Batching statements in sizes of', BATCH_SIZE, '...')
+let i = 1
+for (const chunk of chunkArray(arr, BATCH_SIZE)) {
+  console.write('\r' + ' '.repeat(process.stdout.columns))
+  const len = Math.ceil(arr.length / BATCH_SIZE)
+  console.write(`\rBatch ${(i).toString().padStart(len.toString().length)}/${len}`)
+  let stmt = db.insert(guilds).values(chunk)
+    .onConflictDoUpdate({
+      target: guilds.id,
+      set: {
+        name: sql.raw(`COALESCE(EXCLUDED.${columnNames.name.name}, ${columnNames.name.name})`),
+        id: sql.raw(`COALESCE(EXCLUDED.${columnNames.id.name}, ${columnNames.id.name})`),
+        factionId: sql.raw(`COALESCE(EXCLUDED.${columnNames.factionId.name},${columnNames.factionId.name})`),
+        foregroundImagePath: sql.raw(`COALESCE(EXCLUDED.${columnNames.foregroundImagePath.name},${columnNames.foregroundImagePath.name})`),
+        backgroundImagePath: sql.raw(`COALESCE(EXCLUDED.${columnNames.backgroundImagePath.name},${columnNames.backgroundImagePath.name})`),
+        foregroundColor: sql.raw(`COALESCE(EXCLUDED.${columnNames.foregroundColor.name},${columnNames.foregroundColor.name})`),
+        backgroundColor: sql.raw(`COALESCE(EXCLUDED.${columnNames.backgroundColor.name},${columnNames.backgroundColor.name})`),
+        numClaims: sql.raw(`COALESCE(EXCLUDED.${columnNames.numClaims.name},${columnNames.numClaims.name})`),
+        numPlayers: sql.raw(`COALESCE(EXCLUDED.${columnNames.numPlayers.name},${columnNames.numPlayers.name})`),
+      }
+    }).toSQL()
+  stmts.push(stmt)
+  stmt = db.update(characters).set({
+    guildRank: 'governor'
+  })
+    .where(inArray(characters.id, chunk.map(guild => guild.guildmasterId!)))
+    .toSQL()
+  stmts.push(stmt)
+  ++i
 }
 
 const tx = await client.transaction('write')
@@ -92,7 +95,15 @@ for (const [idx, stmt] of stmts.entries()) {
     sql: stmt.sql,
     args: stmt.params as InArgs
   })
-  console.write(`\r${idx + 1} / ${stmts.length} -> Affected Rows: ${rowsAffected}`)
+  console.write('\r' + ' '.repeat(process.stdout.columns))
+  console.write(`\r${(idx + 1).toString().padStart(stmts.length.toString().length)}/${stmts.length} -> Affected Rows: ${rowsAffected.toString().padStart(3)}`)
 }
 await tx.commit()
 console.log('\nExecuted statements.')
+
+
+function* chunkArray<T>(arr: T[], chunkSize: number): Generator<T[], void, void> {
+  for (let i = 0; i < arr.length; i += chunkSize) {
+    yield arr.slice(i, i + chunkSize);
+  }
+}

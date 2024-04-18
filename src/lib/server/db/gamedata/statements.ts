@@ -90,7 +90,6 @@ export const p_character_by_name = db.query.characters.findFirst({
         inArray(sql.placeholder('role'), ['admin', 'maintainer']),
       )
     )
-
   ),
   extras: {
     ownedByUser: inArray(characters.userId, [sql.placeholder('userId')]).as('owned_by_user'),
@@ -205,7 +204,10 @@ export const p_guild_with_members_by_name = db.query.guilds.findFirst({
           inArray(characters.guildId, db.select({ guildId: requestingCharacter.guildId }).from(requestingCharacter).where(eq(requestingCharacter.userId, sql.placeholder('userId'))))
         ),
         inArray(sql.placeholder('role'), ['admin', 'maintainer'])
-      )
+      ),
+      extras: {
+        isUsersCharacter: sql`${eq(characters.userId, sql.placeholder('userId'))}`.as('user_character'),
+      },
     },
     guildmaster: {
       columns: {
@@ -214,6 +216,7 @@ export const p_guild_with_members_by_name = db.query.guilds.findFirst({
       },
     }
   },
+
   where: eq(guilds.name, sql.placeholder('name')),
 }).prepare()
 

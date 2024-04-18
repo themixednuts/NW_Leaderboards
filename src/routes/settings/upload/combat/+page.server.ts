@@ -39,7 +39,7 @@ export const actions = {
       data: [] as LogEvent[],
       characterIds: new Map<string, InferInsertModel<typeof characters> & { eventAt: number }>(),
       groupIds: new Map<string, InferInsertModel<typeof groups> & { characterIds: Set<string> }>(),
-      paperdollSlots: new Map<number, InferInsertModel<typeof paperdolls>>()
+      paperdollSlots: new Map<number, InferInsertModel<typeof paperdolls>>(),
     }
 
     for (const line of lines(text.trim())) {
@@ -80,6 +80,8 @@ export const actions = {
           guildId,
           //@ts-expect-error
           productId,
+          //@ts-expect-error
+          gameModeId,
         } = obj.data
 
         if (productId) {

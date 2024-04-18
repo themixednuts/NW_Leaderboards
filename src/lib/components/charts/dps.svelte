@@ -161,11 +161,11 @@
         ].filter(filterByType),
       },
       options: {
-        parsing: false,
-        normalized: true,
+        // parsing: true,
+        // normalized: true,
         responsive: true,
         maintainAspectRatio: false,
-        interaction: { mode: 'index', axis: 'x', intersect: false },
+        interaction: { mode: 'x', axis: 'x', intersect: false },
         scales: {
           x: {
             type: 'time',
@@ -213,7 +213,7 @@
         },
         plugins: {
           tooltip: {
-            mode: 'index',
+            mode: 'x',
           },
 
           zoom: {

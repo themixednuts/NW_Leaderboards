@@ -1,4 +1,5 @@
-// Yes, run with bun, suck it
+console.log('starting?')
+// // Yes, run with bun, suck it
 import { write } from "bun"
 import { leaderboard_datatable } from "./lib/leaderboard"
 
@@ -30,7 +31,7 @@ const ids = await Promise.all(leaderboards.flatMap(async (leaderboard) => {
   const fetches = ids.filter(Boolean).map(id => seasons.map(season => fetch(`https://api.nwlb.info/json/${id}/${season}?size=10000&eid=true`).then(res => res.json() as Promise<LeaderboardItem[]>)))
   return Promise.all(fetches.flat()).then(res => res.flat())
 }))
-console.table(lbs)
+// console.table(lbs)
 console.log('\nFetched! -> ', performance.now() - s, 'ms')
 
 console.log('Processing Stats')
@@ -44,6 +45,7 @@ for (const datas of ids) {
     const s = m[data.server]
     const ids = data.entityId.split('_')
     for (const id of ids) {
+      if (id.includes('{')) continue
       s.push(id)
     }
   }
@@ -68,12 +70,12 @@ console.table({ ...distinctCount, total: Object.values(distinctCount).reduce((ac
 // COMMENT THIS SECTION OUT IF YOU DON'T WANT TO HANDLE DB
 // ---------------------------------------------------------------
 import { db, client } from './gamedata/client'
-import { characters } from "../src/lib/server/db/gamedata/schema"
+import { characters } from "../src/lib/schemas/gamedata"
 import { isNull } from "drizzle-orm"
 
 console.log('Syncing...')
 s = performance.now()
-await client.sync()
+// await client.sync()
 console.log('Synced.', performance.now() - s, 'ms')
 
 console.log("Getting missing characters.")

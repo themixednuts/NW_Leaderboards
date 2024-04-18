@@ -3,13 +3,15 @@
   import * as Table from '@/shadcn/components/ui/table'
   import { normalize_name } from '@/utils'
   import { Date } from 'svelte/reactivity'
-  import { createTable, Render, Subscribe } from 'svelte-headless-table'
+  import { createTable, Render, Subscribe, createRender } from 'svelte-headless-table'
   import { addPagination, addSortBy, addTableFilter } from 'svelte-headless-table/plugins'
   import { readable } from 'svelte/store'
   import { Button } from '@/shadcn/components/ui/button'
   import { Input } from '@/shadcn/components/ui/input'
   import { FunnelSimple, SortAscending, SortDescending } from 'phosphor-svelte'
   import Icon from '../player/icon.svelte'
+  import Actions from './actions.svelte'
+  import { cn } from '@/shadcn/utils'
   interface Props {
     guild: NonNullable<Awaited<ReturnType<typeof getCompanyWithMembersByName>>>
   }
@@ -30,11 +32,37 @@
       header: 'Name',
     }),
     table.column({
+      accessor: 'guildRank',
+      header: 'Rank',
+      plugins: {
+        filter: {
+          exclude: true,
+        },
+      },
+    }),
+    table.column({
       accessor: 'level',
       header: 'Level',
       plugins: {
         filter: {
           exclude: true,
+        },
+      },
+    }),
+    table.column({
+      accessor: (character) => character,
+      header: '',
+      cell: ({ value }) =>
+        createRender(Actions, {
+          character: value,
+          userRank: guild.characters.find((character) => character.isUsersCharacter)?.guildRank,
+        }),
+      plugins: {
+        filter: {
+          exclude: true,
+        },
+        sort: {
+          disable: true,
         },
       },
     }),
@@ -68,19 +96,27 @@
     {#each $headerRows as headerRow}
       <Subscribe rowAttrs={headerRow.attrs()}>
         <Table.Row>
-          {#each headerRow.cells as cell (cell.id)}
+          {#each headerRow.cells as cell, i (cell.id)}
             <Subscribe attrs={cell.attrs()} let:attrs props={cell.props()} let:props>
-              <Table.Head {...attrs}>
-                <Button variant="ghost" on:click={props.sort.toggle}>
-                  <Render of={cell.render()} />
-                  {#if $sortKeys.some((key) => key.id === cell.id && key.order === 'desc')}
-                    <SortDescending class={'ml-2 h-4 w-4'} />
-                  {:else if $sortKeys.some((key) => key.id === cell.id && key.order === 'asc')}
-                    <SortAscending class={'ml-2 h-4 w-4'} />
-                  {:else}
-                    <FunnelSimple class={'ml-2 h-4 w-4'} />
-                  {/if}
-                </Button>
+              <Table.Head
+                {...attrs}
+                class={cn('', {
+                  'w-8': headerRow.cells.length - 1 === i,
+                  'w-64': cell.id === 'name',
+                })}
+              >
+                {#if !props.sort.disabled}
+                  <Button variant="ghost" on:click={props.sort.toggle}>
+                    <Render of={cell.render()} />
+                    {#if $sortKeys.some((key) => key.id === cell.id && key.order === 'desc')}
+                      <SortDescending class={'ml-2 h-4 w-4'} />
+                    {:else if $sortKeys.some((key) => key.id === cell.id && key.order === 'asc')}
+                      <SortAscending class={'ml-2 h-4 w-4'} />
+                    {:else}
+                      <FunnelSimple class={'ml-2 h-4 w-4'} />
+                    {/if}
+                  </Button>
+                {/if}
               </Table.Head>
             </Subscribe>
           {/each}
@@ -94,7 +130,7 @@
         <Table.Row {...rowAttrs}>
           {#each row.cells as cell (cell.id)}
             <Subscribe attrs={cell.attrs()} let:attrs>
-              <Table.Cell {...attrs}>
+              <Table.Cell {...attrs} class="capitalize">
                 {#if cell.id === 'name' && cell.isData()}
                   <a href="/character/{normalize_name(cell.value as string)}">
                     <div class="flex items-center gap-2">

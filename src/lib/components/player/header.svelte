@@ -61,7 +61,7 @@
     <Icon {character} />
     {#if character.level}
       <div
-        class="absolute bottom-[0rem] left-3 rounded-full text-lg drop-shadow-lg backdrop-blur before:absolute before:left-1/2 before:-z-10 before:h-full before:w-[150%] before:-translate-x-1/2 before:rotate-45 before:border-2 before:border-stone-500 before:bg-black before:shadow-lg before:backdrop-blur"
+        class="absolute bottom-[0rem] left-3 rounded-full text-lg drop-shadow-lg backdrop-blur before:absolute before:left-1/2 before:-z-10 before:h-full before:w-[150%] before:min-w-7 before:-translate-x-1/2 before:rotate-45 before:border-2 before:border-stone-500 before:bg-black before:shadow-lg before:backdrop-blur"
       >
         {character.level}
       </div>

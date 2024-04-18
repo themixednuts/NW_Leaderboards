@@ -421,3 +421,10 @@ export function translateEvent(event: LogEvent) {
   // case 'social' + 'online': return `${event.data.playerName}'s online state changed to ${event.data.isOnline}`
   else return `${event.type} -> ${event.subtype}`
 }
+
+export enum GUILD_RANKS {
+  settler,
+  officer,
+  consul,
+  governor
+}
