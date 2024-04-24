@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "svelte.svelte-vscode",
+    "ardenivanov.svelte-intellisense",
+    "bradlc.vscode-tailwindcss",
+    "esbenp.prettier-vscode",
+    "inferrinizzard.prettier-sql-vscode",
+    "ms-vscode.vscode-typescript-next",
+    "usernamehw.errorlens",
+    "eamodio.gitlens"
+  ]
+}

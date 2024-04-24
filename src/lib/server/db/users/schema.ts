@@ -1,8 +1,8 @@
-import { integer, sqliteTable, text, primaryKey } from 'drizzle-orm/sqlite-core'
-import type { AdapterAccount } from '@auth/core/adapters'
+import { integer, sqliteTable, text, primaryKey, index } from 'drizzle-orm/sqlite-core'
+import { randomUUID } from 'crypto'
 
 export const users = sqliteTable('user', {
-  id: text('id').notNull().primaryKey(),
+  id: text('id').notNull().primaryKey().$defaultFn(() => randomUUID()),
   name: text('name'),
   email: text('email').notNull(),
   emailVerified: integer('emailVerified', { mode: 'timestamp_ms' }),
@@ -11,46 +11,49 @@ export const users = sqliteTable('user', {
 })
 
 export const accounts = sqliteTable(
-  'account',
+  "account",
   {
-    userId: text('userId')
+    userId: text("userId")
       .notNull()
-      .references(() => users.id, { onDelete: 'cascade' }),
-    type: text('type').$type<AdapterAccount['type']>().notNull(),
-    provider: text('provider').notNull(),
-    providerAccountId: text('providerAccountId').notNull(),
-    refresh_token: text('refresh_token'),
-    access_token: text('access_token'),
-    expires_at: integer('expires_at'),
-    token_type: text('token_type'),
-    scope: text('scope'),
-    id_token: text('id_token'),
-    session_state: text('session_state'),
+      .references(() => users.id, { onDelete: "cascade" }),
+    type: text("type").notNull(),
+    provider: text("provider").notNull(),
+    providerAccountId: text("providerAccountId").notNull(),
+    refresh_token: text("refresh_token"),
+    access_token: text("access_token"),
+    expires_at: integer("expires_at"),
+    token_type: text("token_type"),
+    scope: text("scope"),
+    id_token: text("id_token"),
+    session_state: text("session_state"),
   },
   (account) => ({
     compoundKey: primaryKey({
       columns: [account.provider, account.providerAccountId],
     }),
-  }),
+    userIdIdx: index('Account_userId_index').on(account.userId)
+  })
 )
 
-export const sessions = sqliteTable('session', {
-  sessionToken: text('sessionToken').notNull().primaryKey(),
-  userId: text('userId')
+export const sessions = sqliteTable("session", {
+  id: text("id").notNull().primaryKey().$defaultFn(() => randomUUID()),
+  sessionToken: text("sessionToken").notNull().unique(),
+  userId: text("userId")
     .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
-  expires: integer('expires', { mode: 'timestamp_ms' }).notNull(),
-})
+    .references(() => users.id, { onDelete: "cascade" }),
+  expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+}, (table) => ({
+  userIdIdx: index('Session_userId_index').on(table.userId)
+}))
 
 export const verificationTokens = sqliteTable(
-  'verificationToken',
+  "verificationToken",
   {
-    identifier: text('identifier').notNull(),
-    token: text('token').notNull(),
-    expires: integer('expires', { mode: 'timestamp_ms' }).notNull(),
+    identifier: text("identifier").notNull(),
+    token: text("token").notNull().unique(),
+    expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
   },
   (vt) => ({
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
-  }),
+  })
 )
-

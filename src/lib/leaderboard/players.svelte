@@ -2,16 +2,13 @@
   import { page } from '$app/stores'
   import { cn } from '@/shadcn/utils'
   import Player from './player.svelte'
-  import { FACTIONS } from '@/utils'
   import type { PageData } from '../../routes/lb/[first]/[category]/[second]/[rotation]/[type]/[season]/[page]/$types'
-
   interface Props {
-    players: NonNullable<Awaited<PageData['json']>['data'][number]>['entityId']
+    players: NonNullable<Exclude<Awaited<PageData['json']>['data'][number]['entityId'], string>>
   }
   let { players }: Props = $props()
 
   let type = $derived($page.params.type)
-  $inspect(players)
 </script>
 
 <div

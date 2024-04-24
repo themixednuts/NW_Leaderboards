@@ -1,5 +1,4 @@
 <script lang="ts">
-  import Dps from '$lib/components/charts/dps.svelte'
   import { Progress } from '$lib/shadcn/components/ui/progress'
   import * as Table from '$lib/shadcn/components/ui/table'
   import { onMount } from 'svelte'

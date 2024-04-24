@@ -34,16 +34,12 @@
     }),
   )
 
-  $inspect(eventsByCharacter)
-
   let total = $derived(
     eventsByCharacter?.reduce((acc, curr) => {
       if (Array.isArray(curr.data)) return curr.data.reduce((acc, curr) => acc + curr.damage, 0) + acc
       return acc + curr.data.amount
     }, 0),
   )
-
-  $inspect(total)
 
   function calculateDPS(data: LogEvent[], characterDamage: number, s: typeof start, e: typeof end): number {
     const endTime = e ? data.findLast((event) => event?.eventAt <= Number(e))?.eventAt! : data[data.length - 1]?.eventAt

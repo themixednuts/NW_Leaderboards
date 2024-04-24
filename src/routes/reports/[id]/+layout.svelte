@@ -2,7 +2,6 @@
   import { page } from '$app/stores'
 
   let { data } = $props()
-  // $inspect(data)
   function newUrl(view: 'events' | 'timeline' | 'table') {
     const url = new URL($page.url)
     const params = url.searchParams

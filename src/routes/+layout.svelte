@@ -20,7 +20,7 @@
   import CircleUser from 'lucide-svelte/icons/circle-user'
   import Menu from 'lucide-svelte/icons/menu'
   import { Gear, SignIn, SignOut, Question, ChartPieSlice } from 'phosphor-svelte'
-  import { setContext } from 'svelte'
+  import { setContext, type Snippet } from 'svelte'
   import { writable } from 'svelte/store'
   import SuperDebug from 'sveltekit-superforms'
   import { dev } from '$app/environment'
@@ -28,9 +28,10 @@
   interface Props {
     data: PageData
     form: ActionData
+    children: Snippet
   }
 
-  let { data }: Props = $props()
+  let { data, children }: Props = $props()
 
   let cmd = writable(false)
   setContext('cmd', cmd)
@@ -156,7 +157,7 @@
     </div>
   </header>
   <main class="container flex max-h-fit min-w-min grow overflow-auto p-2">
-    <slot />
+    {@render children()}
   </main>
   <!--
   <div class="sticky bottom-10 left-10 flex w-screen min-w-fit max-w-xl items-center">

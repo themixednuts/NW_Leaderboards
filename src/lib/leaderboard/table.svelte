@@ -1,6 +1,5 @@
 <script lang="ts">
   import { replaceLynshineSrc, appendPngToSrc, FACTIONS, debounce, secondsToTimeFormat } from '$lib/utils'
-  import type { LeaderboardAPIBoardItem } from '$lib/leaderboard/utils'
   import type { LeaderboardData } from '$lib/leaderboard/types'
   import Players from './players.svelte'
   import { page } from '$app/stores'
@@ -10,26 +9,21 @@
   import { FunnelSimple, Question, SortAscending, SortDescending } from 'phosphor-svelte'
   import * as Tooltip from '@/shadcn/components/ui/tooltip'
   import { cn } from '@/shadcn/utils'
-  import { addPagination, addSortBy, addTableFilter } from 'svelte-headless-table/plugins'
   import { Input } from '@/shadcn/components/ui/input'
-  import { enhance } from '$app/forms'
-  import type { SubmitFunction } from '../../routes/$types'
-  import type { getCharacterById } from '@/server/db/gamedata/helpers'
   import type { PageData } from '../../routes/lb/[first]/[category]/[second]/[rotation]/[type]/[season]/[page]/$types'
-  import { resolveRoute } from '$app/paths'
   import { goto } from '$app/navigation'
-  import type { HTMLTdAttributes } from 'svelte/elements'
+  import { CircleNotch } from 'phosphor-svelte'
+  import { Skeleton } from '@/shadcn/components/ui/skeleton'
 
   type Props = {
-    table: { data: NonNullable<Awaited<PageData['json']>['data']>; total: number }
+    json: PageData['json']
     leaderboard: LeaderboardData
   }
 
-  let { table, leaderboard }: Props = $props()
-  $inspect(table)
+  let { json, leaderboard }: Props = $props()
 
   interface Headers {
-    label: Omit<keyof NonNullable<(typeof table)['data']>, 'entityId' | 'faction'>
+    label: string
     sort?: string | null
   }
   let type = $derived($page.params.type)
@@ -53,23 +47,18 @@
   ])
 
   let url = $derived(new URL($page.url))
+  let total = $state(0)
+
+  async function updateTotal() {
+    const d = await json
+    total = d.total
+  }
+  $effect(() => {
+    updateTotal()
+  })
 
   let value = $state($page.url.searchParams.get('search') ?? '')
   let input: HTMLInputElement | undefined = $state()
-  let formEl: HTMLFormElement | undefined = $state()
-
-  let timer: ReturnType<typeof setTimeout> | undefined = $state()
-  const handleSubmit = (async ({ formData }) => {
-    // if (value) formData.set('q', value)
-    return async ({ result, update }) => {
-      if (result.type === 'success') {
-        const { data: dataResult } = result
-        if (dataResult) {
-          console.log(dataResult)
-        }
-      }
-    }
-  }) satisfies SubmitFunction
 </script>
 
 <div class="grid min-w-fit grid-cols-1 grid-rows-[min-content,min-content,1fr] overflow-y-auto contain-paint">
@@ -114,20 +103,22 @@
         >
           Previous
         </Button>
-        <div class="min-w-14 whitespace-nowrap text-right text-sm">
-          {$page.params.page} / {table.total}
+        <div class="flex min-w-14 whitespace-nowrap text-right text-sm">
+          {$page.params.page} / {total}
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          href={$page.url.pathname.replace(/\/([^\/]+)\/?$/, `/${String(Number($page.params.page) + 1)}`) +
-            $page.url.search}
-          class={cn('', {
-            'pointer-events-none opacity-60': Number($page.params.page) >= table.total,
-          })}
-        >
-          Next
-        </Button>
+        {#key total}
+          <Button
+            variant="outline"
+            size="sm"
+            href={$page.url.pathname.replace(/\/([^\/]+)\/?$/, `/${String(Number($page.params.page) + 1)}`) +
+              $page.url.search}
+            class={cn('', {
+              'pointer-events-none opacity-60': Number($page.params.page) >= total,
+            })}
+          >
+            Next
+          </Button>
+        {/key}
       </div>
     </div>
     <!-- <form class="flex-1 sm:flex-initial" method="post" action="/?/search" use:enhance={handleSubmit} bind:this={formEl}> -->
@@ -151,8 +142,8 @@
         }}
         oninput={(e) => {
           e.preventDefault()
-          const url = new URL($page.url)
           if (!e.currentTarget.value.length) {
+            const url = new URL($page.url)
             url.searchParams.delete('search')
             return goto(url, {
               keepFocus: true,
@@ -211,28 +202,73 @@
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {#each table.data as row, _ (row.entityId ?? row.faction)}
-            {#if row}
-              <Table.Row>
+          {#await json}
+            {#each { length: 10 } as _}
+              <Table.Row class="h-[3.5625rem]">
                 <Table.Cell>
-                  {row?.rank}
+                  <Skeleton class="h-4 w-6 rounded-full" />
                 </Table.Cell>
                 <Table.Cell>
-                  {#if row?.entityId}
-                    <svelte:component this={Players} players={row.entityId} />
+                  {#if leaderboard.FirstLevelCategory === 'Mutated Expeditions'}
+                    <div class={cn('grid grid-cols-[repeat(2,minmax(min-content,1fr))] gap-1', {})}>
+                      {#each { length: 5 } as _}
+                        <div class="flex place-items-center gap-2">
+                          <Skeleton class="size-6 rounded-full" />
+                          <Skeleton class="h-4 w-10 rounded-full" />
+                        </div>
+                      {/each}
+                    </div>
                   {:else}
-                    {FACTIONS[row.faction?.replace('Faction', '') as unknown as keyof typeof FACTIONS]}
+                    <div class="flex place-items-center gap-2">
+                      <Skeleton class="size-6 rounded-full" />
+                      <Skeleton class="h-4 w-10 rounded-full" />
+                    </div>
                   {/if}
                 </Table.Cell>
                 <Table.Cell>
-                  {leaderboard.ValueString === 'Time' ? secondsToTimeFormat(row.value) : row.value}
+                  <Skeleton class="h-4 w-6 rounded-full" />
                 </Table.Cell>
                 <Table.Cell>
-                  {row?.server}
+                  <Skeleton class="h-4 w-6 rounded-full" />
                 </Table.Cell>
               </Table.Row>
+            {/each}
+          {:then data}
+            {#if data}
+              {#await data.data}
+                <CircleNotch class="aspect-square size-12 animate-spin place-self-center" />
+              {:then table}
+                {#each table as row, _}
+                  {#if row}
+                    <Table.Row>
+                      <Table.Cell>
+                        {row?.rank}
+                      </Table.Cell>
+                      <Table.Cell>
+                        {#if row?.entityId && typeof row.entityId !== 'string'}
+                          {#await row.entityId}
+                            <CircleNotch class="aspect-square size-12 animate-spin self-center justify-self-center" />
+                          {:then players}
+                            <svelte:component this={Players} {players} />
+                          {/await}
+                        {:else if row.faction}
+                          {FACTIONS[row.faction.replace('Faction', '') as unknown as keyof typeof FACTIONS]}
+                        {/if}
+                      </Table.Cell>
+                      <Table.Cell>
+                        {leaderboard.ValueString === 'Time' ? secondsToTimeFormat(row.value) : row.value}
+                      </Table.Cell>
+                      <Table.Cell>
+                        {row?.server}
+                      </Table.Cell>
+                    </Table.Row>
+                  {/if}
+                {/each}
+              {/await}
+            {:else}
+              <h1 class="place-self-center text-3xl">No Data</h1>
             {/if}
-          {/each}
+          {/await}
         </Table.Body>
         <Table.Footer class="w-full whitespace-nowrap bg-transparent"></Table.Footer>
       </Table.Root>

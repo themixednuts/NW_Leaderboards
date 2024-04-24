@@ -14,7 +14,9 @@
     "lb": "bun ./scripts/leaderboard-types",
     "studio:gamedata": "bunx drizzle-kit studio --config=./scripts/gamedata/drizzle.config.ts",
     "studio": "bunx drizzle-kit studio",
-    "entities": "bun ./scripts/entities.ts"
+    "entities": "bun ./scripts/entities.ts",
+    "db:push": "bunx drizzle-kit push:sqlite",
+    "db:push:gamedata": "bunx drizzle-kit push:sqlite --config=./scripts/gamedata/drizzle.config.ts"
   },
   "devDependencies": {
     "@sveltejs/enhanced-img": "latest",
@@ -25,7 +27,7 @@
     "@types/jsdom": "^21.1.6",
     "@types/papaparse": "^5.3.14",
     "autoprefixer": "^10.4.19",
-    "drizzle-kit": "^0.20.14",
+    "drizzle-kit": "^0.20.16",
     "phosphor-svelte": "latest",
     "postcss": "^8.4.38",
     "svelte": "next",
@@ -76,7 +78,7 @@
     "svelte-sonner": "latest",
     "sveltekit-superforms": "latest",
     "tailwind-gradient-mask-image": "^1.2.0",
-    "tailwind-merge": "^2.2.2",
+    "tailwind-merge": "^2.3.0",
     "tailwind-variants": "^0.2.1",
     "vaul-svelte": "latest",
     "zod": "latest"

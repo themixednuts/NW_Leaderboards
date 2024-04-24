@@ -1,10 +1,12 @@
 <script lang="ts">
-  import { resolveRoute } from '$app/paths'
   import Flyout from '$lib/components/flyout.svelte'
   import { Skeleton } from '@/shadcn/components/ui/skeleton'
   import type { PageData } from '../../routes/lb/[first]/[category]/[second]/[rotation]/[type]/[season]/[page]/$types'
   type Props = {
-    player: NonNullable<Awaited<PageData['json']>['data'][number]>['entityId'][number]
+    player: NonNullable<
+      Exclude<Awaited<NonNullable<Awaited<PageData['json']>['data'][number]>['entityId']>, string>
+    >[number]
+
     type: string
   }
 

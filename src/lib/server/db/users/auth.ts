@@ -4,31 +4,18 @@ import Discord from '@auth/sveltekit/providers/discord'
 import { DrizzleAdapter } from '@auth/drizzle-adapter'
 import { db } from "./client"
 import { dev } from "$app/environment"
-import { users } from "./schema"
-import { eq } from "drizzle-orm"
+import { accounts, sessions, users, verificationTokens } from "./schema"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Discord({
     clientId: DISCORD_ID,
     clientSecret: DISCORD_SECRET,
-    // profile(profile) {
-    //   return {
-    //     ...profile,
-    //     role: 'user',
-    //   }
-    // },
   })],
-  adapter: DrizzleAdapter(db),
+  adapter: DrizzleAdapter(db, { usersTable: users, accountsTable: accounts, verificationTokensTable: verificationTokens, sessionsTable: sessions }),
   callbacks: {
     async session({ session, user }) {
-      session.user.role = (await db.select({ role: users.role }).from(users).where(eq(users.id, user.id)).get())?.role ?? 'user'
-      // console.log('session callback')
-      // console.log(user, session)
       return session
     },
-  },
-  pages: {
-    // signIn: '/sign'
   },
   useSecureCookies: dev ? false : true,
 })

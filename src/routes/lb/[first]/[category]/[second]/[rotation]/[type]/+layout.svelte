@@ -48,7 +48,6 @@
   )
 
   const rotations = $derived([...new Set(data.leaderboards?.map((lb) => lb.Rotation))])
-  $inspect(rotations)
 
   let group_by_category = $derived(
     leaderboard_group_by(
@@ -59,7 +58,6 @@
       ),
     ),
   )
-  $inspect(group_by_category)
 
   let currentIndex = 0
   let bannerImgSrc = $derived(currentImageBanner(getBannerMapKey(first || 'Mutated Expeditions'), currentIndex))

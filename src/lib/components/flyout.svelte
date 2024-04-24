@@ -6,11 +6,10 @@
   import type { PageData } from '../../routes/lb/[first]/[category]/[second]/[rotation]/[type]/[season]/[page]/$types'
 
   interface Props {
-    data: Awaited<NonNullable<Awaited<PageData['json']>['data'][number]>['entityId'][number]>
+    data: Awaited<NonNullable<Exclude<Awaited<Awaited<PageData['json']>['data'][number]['entityId']>, string>>[number]>
   }
 
   let { data }: Props = $props()
-  $inspect(data)
 </script>
 
 <Tooltip.Root openDelay={0} disableHoverableContent>
@@ -67,9 +66,11 @@
           />
         {/if}
       </div>
-      <a href="/{data.type}/{normalize_name(data.name)}/{data.type === 'company' ? 'members' : ''}">
-        {data.name}
-      </a>
+      {#if data.name}
+        <a href="/{data.type}/{normalize_name(data.name)}/{data.type === 'company' ? 'members' : ''}">
+          {data.name}
+        </a>
+      {/if}
     </div>
   </Tooltip.Trigger>
   <Tooltip.Content side="top" align="start" class="shadow-4xl shadow-transparent">
@@ -97,12 +98,14 @@
             alt="/"
             class="col-start-1 row-start-1 aspect-square"
           />
-          <img
-            loading="lazy"
-            src="/{data.midgroundImagePath?.toLowerCase().replace('dds', 'png')}"
-            alt=""
-            class="col-start-1 row-start-1 aspect-square"
-          />
+          {#if data.midgroundImagePath}
+            <img
+              loading="lazy"
+              src="/{data.midgroundImagePath?.toLowerCase().replace('dds', 'png')}"
+              alt=""
+              class="col-start-1 row-start-1 aspect-square"
+            />
+          {/if}
 
           <img
             loading="lazy"

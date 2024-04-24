@@ -49,8 +49,6 @@
       clearInterval(interval)
     }
   })
-
-  $inspect(leaderboards?.length)
 </script>
 
 <div

@@ -12,8 +12,8 @@ const SORT_BY = {
   'value_desc': (a: LeaderboardAPIBoardItem, b: LeaderboardAPIBoardItem) => b.value - a.value,
   'server': (a: LeaderboardAPIBoardItem, b: LeaderboardAPIBoardItem) => a.server.localeCompare(b.server),
   'server_desc': (a: LeaderboardAPIBoardItem, b: LeaderboardAPIBoardItem) => b.server.localeCompare(a.server),
-  'faction': (a: LeaderboardAPIBoardItem, b: LeaderboardAPIBoardItem) => b.faction?.localeCompare(a.faction) || 0,
-  'faction_desc': (a: LeaderboardAPIBoardItem, b: LeaderboardAPIBoardItem) => a.faction?.localeCompare(b.faction) || 0
+  'faction': (a: LeaderboardAPIBoardItem, b: LeaderboardAPIBoardItem) => b.faction?.localeCompare(a.faction ?? '') || 0,
+  'faction_desc': (a: LeaderboardAPIBoardItem, b: LeaderboardAPIBoardItem) => a.faction?.localeCompare(b.faction ?? '') || 0
 }
 
 function isSortBy(key: string): key is keyof typeof SORT_BY {
@@ -106,10 +106,12 @@ export const load = (async ({ locals, fetch, url, params: { season, type, first,
       if (sort && sort.length && isSortBy(sort)) mapped.sort(SORT_BY[sort])
       return mapped
     })
-    .then(async (items) => {
-      if (!search || type === 'faction') return items
+    .then(async (rows) => {
+      if (!search || type === 'faction') return rows
       const res = await searchCompaniesAndCharactersByName(search, session?.user, 30)
-      return items.filter(entry => res.some(q => entry.entityId?.split('_').includes(q.id)))
+      const found = rows
+        .filter(row => row.entityId?.split('_').some(id => res.map(q => q.id).includes(id)))
+      return found
     })
     .then(items => ({
       data: items.slice(start, end).map(entry => {
