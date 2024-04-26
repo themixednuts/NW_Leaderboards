@@ -85,7 +85,7 @@ export const actions = {
         } = obj.data
 
         if (productId) {
-          appId = Number((productId as string).replace('STEAM_APP_ID.', ''))
+          appId = Number((productId as string).split('.')[1])
         }
 
         if (groupId) {
@@ -175,7 +175,9 @@ export const actions = {
 
     try {
       await db.transaction(async (tx) => {
+
         const chars = [...log.characterIds].map(characterMap => ({ ...characterMap[1] }))
+        console.log(chars)
         if (!!chars.length) {
           const columnNames = getTableColumns(characters)
 
@@ -253,16 +255,24 @@ export const actions = {
           await grp_chars_stmt
         }
 
-        const stmt = tx.insert(logs).values({
+        console.table({
           userId: session!.user!.id as string,
-          //@ts-expect-error
           gameModeId: firstRow.data.gameModeId,
           fileName: file.name.replace(".json", ""),
           data: log.data,
-          //@ts-expect-error
+          characterId: logStart?.data.characterId,
+          guildId: logStart?.data.guildId
+        })
+
+        const stmt = tx.insert(logs).values({
+          userId: session!.user!.id as string,
+          gameModeId: firstRow.data.gameModeId,
+          fileName: file.name.replace(".json", ""),
+          data: log.data,
           characterId: logStart?.data.characterId,
           guildId: logStart?.data.guildId
         }).returning({ id: logs.id }).get()
+
         const logId = (await stmt).id
 
         // const chars_logs = [...log.characterIds].map(character => ({ characterId: character[0], logId }))

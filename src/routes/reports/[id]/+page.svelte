@@ -48,6 +48,8 @@
     )
   })
 
+  $inspect(statusUptimes)
+
   let start = $derived(Number($page.url.searchParams.get('start')))
   let end = $derived(Number($page.url.searchParams.get('end')))
 
@@ -105,11 +107,11 @@
       <Breakdown {reports} data={flattened} type="healingdone" />
       <Breakdown {reports} data={flattened} type="deaths" />
     </div>
-    {#if statusUptimes}
+    <!-- {#if statusUptimes}
       {#each statusUptimes as [charId, uptimes]}
-        <!-- {#await data.characters then characters}
+        {#await data.characters then characters}
           {characters.find((character) => character.id === charId)?.name}
-        {/await} -->
+        {/await}
         <div class="h-96 overflow-y-auto">
           <Table.Root>
             <Table.Header class="">
@@ -138,7 +140,7 @@
           </Table.Root>
         </div>
       {/each}
-    {/if}
+    {/if} -->
   {:else if $page.url.searchParams.get('view') === 'events'}
     <EventsView reports={flattened} />
   {/if}
