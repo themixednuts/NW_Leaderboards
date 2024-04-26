@@ -22,24 +22,24 @@
     return Object.entries(
       flattened?.reduce((acc, ev, idx, arr) => {
         if (ev.type === 'statuseffect') {
-          if (!acc[ev.data.characterId]) {
-            acc[ev.data.characterId] = new Map()
+          if (!acc[ev.data.playerName]) {
+            acc[ev.data.playerName] = new Map()
           }
-          const char = acc[ev.data.characterId]
-          if (!char.has(ev.data.id)) {
-            char.set(ev.data.id, 0)
+          const char = acc[ev.data.playerName]
+          if (!char.has(ev.data.name)) {
+            char.set(ev.data.name, 0)
           }
 
           if (ev.subtype === 'active') {
-            state[ev.data.characterId] ??= {}
-            state[ev.data.characterId][ev.data.id] = ev.eventAt
+            state[ev.data.playerName] ??= {}
+            state[ev.data.playerName][ev.data.name] = ev.eventAt
           }
 
           if (ev.subtype === 'inactive') {
             let v = char.get(ev.data.id)
             if (v) {
-              v += ev.eventAt - state[ev.data.characterId][ev.data.id]
-              char.set(ev.data.id, v)
+              v += ev.eventAt - state[ev.data.playerName][ev.data.name]
+              char.set(ev.data.name, v)
             }
           }
         }
@@ -107,11 +107,9 @@
       <Breakdown {reports} data={flattened} type="healingdone" />
       <Breakdown {reports} data={flattened} type="deaths" />
     </div>
-    <!-- {#if statusUptimes}
-      {#each statusUptimes as [charId, uptimes]}
-        {#await data.characters then characters}
-          {characters.find((character) => character.id === charId)?.name}
-        {/await}
+    {#if statusUptimes}
+      {#each statusUptimes as [playerName, uptimes]}
+        {playerName}
         <div class="h-96 overflow-y-auto">
           <Table.Root>
             <Table.Header class="">
@@ -140,7 +138,7 @@
           </Table.Root>
         </div>
       {/each}
-    {/if} -->
+    {/if}
   {:else if $page.url.searchParams.get('view') === 'events'}
     <EventsView reports={flattened} />
   {/if}
