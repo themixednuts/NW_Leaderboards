@@ -7,8 +7,11 @@
   import Chart, { type ChartCallbacks } from '@/components/chart/chart.svelte'
   import { filterByType, generateDataset, type ChartContext } from '@/components/chart/utils.svelte.js'
   import { goto } from '$app/navigation'
+  import type { LogEvent, StatusEffectActiveEvent, StatusEffectStackEvent } from '@/events.types.js'
 
   type StatusUptimes = Record<string, Map<string, number>>
+  type Tuple<T, N extends number, A extends any[] = []> = A extends { length: N } ? A : Tuple<T, N, [...A, T]>
+  type MyTuple = Tuple<StatusEffectActiveEvent, 8>
 
   let { data } = $props()
 
@@ -16,7 +19,7 @@
   let flattened = $derived(reports?.flatMap((event) => event.data).sort((a, b) => a.eventAt - b.eventAt))
 
   let statusUptimes = $derived.by(() => {
-    const state: Record<string, Record<string, number>> = {}
+    const state: Record<string, MyTuple> = {}
 
     if (!flattened) return
     return Object.entries(
@@ -24,22 +27,25 @@
         if (ev.type === 'statuseffect') {
           if (!acc[ev.data.playerName]) {
             acc[ev.data.playerName] = new Map()
+            state[ev.data.playerName] = new Array<MyTuple>(8).map((ele) => ({}) as StatusEffectActiveEvent) as MyTuple
           }
           const char = acc[ev.data.playerName]
-          if (!char.has(ev.data.name)) {
-            char.set(ev.data.name, 0)
-          }
 
           if (ev.subtype === 'active') {
-            state[ev.data.playerName] ??= {}
-            state[ev.data.playerName][ev.data.name] = ev.eventAt
+            // console.log(ev.data.idx, 'active')
+            if (!char.has(ev.data.name)) {
+              char.set(ev.data.name, 0)
+            }
+            state[ev.data.playerName][ev.data.idx - 1] = ev
           }
 
           if (ev.subtype === 'inactive') {
-            let v = char.get(ev.data.id)
-            if (v) {
-              v += ev.eventAt - state[ev.data.playerName][ev.data.name]
-              char.set(ev.data.name, v)
+            // console.log(ev.data.idx, 'inactive')
+            const _event = state[ev.data.playerName][ev.data.idx - 1]
+            let v = char.get(_event.data.name)
+            if (v != undefined) {
+              v += ev.eventAt - state[ev.data.playerName][ev.data.idx - 1].eventAt
+              char.set(_event.data.name, v)
             }
           }
         }
