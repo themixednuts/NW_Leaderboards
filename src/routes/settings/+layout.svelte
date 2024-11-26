@@ -4,11 +4,13 @@
   import { cn } from '@/shadcn/utils'
   import { page } from '$app/stores'
   import { Button } from '@/shadcn/components/ui/button'
+  import type { Snippet } from 'svelte'
 
   interface Props {
     data: LayoutData
+    children: Snippet
   }
-  let { data }: Props = $props()
+  let { data, children }: Props = $props()
 
   const options = [
     {
@@ -63,16 +65,16 @@
         {option.group}
       </div>
       <!-- <hr class="p-2" /> -->
-      {#each option.items as item}
-        {#if !item.roles || item.roles.includes(data?.session?.user?.role)}
+      {#each option.items as { roles, icon: Icon, link, label }}
+        {#if !roles || roles.includes(data?.session?.user?.role)}
           <div
             class={cn(' flex w-full place-items-center gap-2 border-transparent', {
-              'border-r-4 border-r-blue-bright': $page.url?.pathname.includes(item.link),
+              'border-r-4 border-r-blue-bright': $page.url?.pathname.includes(link),
             })}
           >
-            <Button variant="secondary" href={item.link} class="h-12 w-full justify-start gap-2">
-              <svelte:component this={item.icon} />
-              {item.label}
+            <Button variant="secondary" href={link} class="h-12 w-full justify-start gap-2">
+              <Icon></Icon>
+              {label}
             </Button>
           </div>
         {/if}
@@ -81,6 +83,6 @@
   </div>
 
   <div class="flex h-full grow">
-    <slot />
+    {@render children()}
   </div>
 </div>

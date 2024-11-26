@@ -1,18 +1,27 @@
 import { handle as authentication } from '$lib/server/db/users/auth'
-import type { users } from '@/server/db/users/schema'
+import { sessions, type users } from '@/server/db/users/schema'
 import { redirect, type Handle, type HandleServerError } from '@sveltejs/kit'
 import { sequence } from '@sveltejs/kit/hooks'
 
 const authorization = (async ({ event, resolve }) => {
   const { url, locals } = event
-  const session = await locals.auth()
 
-  if (session?.user?.id && url.pathname.startsWith('/signin')) redirect(303, '/')
+  if (url.pathname.startsWith('/signin')) {
+    const session = await locals.auth()
 
-  if (url.pathname.startsWith('/settings') && !session) redirect(303, '/signin')
+    if (!session?.user?.id) redirect(303, '/')
+  }
 
-  if (url.pathname.startsWith('/reports') && session?.user?.role !== 'admin' && session?.user?.role !== 'maintainer')
-    redirect(303, '/')
+  if (url.pathname.startsWith('/settings')) {
+    const session = await locals.auth()
+    if (!session?.user?.id) redirect(303, '/signin')
+  }
+
+  if (url.pathname.startsWith('/reports')) {
+    const session = await locals.auth()
+    if (!session?.user?.id && (session?.user?.role !== 'admin' || session?.user?.role !== 'maintianer'))
+      redirect(303, '/')
+  }
 
   return resolve(event)
 }) satisfies Handle
