@@ -2,7 +2,7 @@
   import type { getCompanyWithMembersByName } from '@/server/db/gamedata/helpers'
   import * as Table from '@/shadcn/components/ui/table'
   import { normalize_name } from '@/utils'
-  import { Date } from 'svelte/reactivity'
+  import { SvelteDate } from 'svelte/reactivity'
   import { createTable, Render, Subscribe, createRender } from 'svelte-headless-table'
   import { addPagination, addSortBy, addTableFilter } from 'svelte-headless-table/plugins'
   import { readable } from 'svelte/store'
@@ -68,7 +68,7 @@
     }),
   ])
 
-  let updatedAt = new Date(guild.updatedAt)
+  let updatedAt = new SvelteDate(guild.updatedAt)
 
   const { headerRows, pageRows, tableAttrs, tableBodyAttrs, pluginStates } = table.createViewModel(columns)
   const { hasNextPage, hasPreviousPage, pageIndex, pageCount } = pluginStates.page
