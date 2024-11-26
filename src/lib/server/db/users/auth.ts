@@ -25,4 +25,5 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
     },
   },
   useSecureCookies: dev ? false : true,
+  trustHost: true,
 })
