@@ -1,16 +1,16 @@
 <script lang="ts">
-  import Card from '@/components/company/card.svelte'
   import type { LayoutData } from './$types'
-  import { ScrollArea } from '@/shadcn/components/ui/scroll-area'
   import { cn } from '@/shadcn/utils'
   import { page } from '$app/stores'
   import { Button } from '@/shadcn/components/ui/button'
   import CompanyHeader from '@/components/company/header.svelte'
+  import type { Snippet } from 'svelte'
 
   interface Props {
     data: LayoutData
+    children: Snippet
   }
-  let { data }: Props = $props()
+  let { data, children }: Props = $props()
 
   let pages = $derived([
     {
@@ -51,7 +51,7 @@
         {/each}
       </div>
       <div class="w-full rounded-2xl border-2 p-2">
-        <slot />
+        {@render children()}
       </div>
     {/if}
   {/await}

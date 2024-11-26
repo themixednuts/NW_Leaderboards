@@ -55,7 +55,7 @@
             style="background: {data.backgroundColor}; mask-image: url('/{data.backgroundImagePath
               ?.toLowerCase()
               .replace('dds', 'png')}');"
-          />
+          ></div>
           <div
             class={cn(
               ` col-start-1 row-start-1 size-6 mask-size-contain mask-repeat-no-repeat mask-position-center mask-composite-add mask-mode-luminance`,
@@ -63,7 +63,7 @@
             style="background: {data.foregroundColor}; mask-image: url('/{data.foregroundImagePath
               ?.toLowerCase()
               .replace('dds', 'png')}');"
-          />
+          ></div>
         {/if}
       </div>
       {#if data.name}
@@ -121,7 +121,7 @@
             style="background: {data.backgroundColor}; mask-image: url('/{data.backgroundImagePath
               ?.toLowerCase()
               .replace('dds', 'png')}');"
-          />
+          ></div>
           <div
             class={cn(
               ` col-start-1 row-start-1 size-16 mask-size-contain mask-repeat-no-repeat mask-position-center mask-composite-add mask-mode-luminance`,
@@ -129,7 +129,7 @@
             style="background: {data.foregroundColor}; mask-image: url('/{data.foregroundImagePath
               ?.toLowerCase()
               .replace('dds', 'png')}');"
-          />
+          ></div>
         {/if}
       </div>
       <div class="col-start-2">

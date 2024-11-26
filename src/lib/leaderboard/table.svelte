@@ -63,9 +63,9 @@
 
 <div class="grid min-w-fit grid-cols-1 grid-rows-[min-content,min-content,1fr] overflow-y-auto contain-paint">
   {#if leaderboard}
-    <div class="flex items-center">
+    <div class="flex items-start self-start">
       <div
-        class="relative flex w-full min-w-fit flex-col place-content-center place-items-start whitespace-nowrap py-4 pl-2 text-sm uppercase sm:text-xl md:text-2xl xl:text-4xl"
+        class="relative flex w-full min-w-fit flex-col place-content-start place-items-start whitespace-nowrap py-4 pl-4 text-sm uppercase sm:text-xl md:text-2xl xl:text-4xl"
       >
         <div class="flex *:aspect-square *:h-min">
           {@html replaceLynshineSrc(leaderboard.Category)}, {leaderboard.DisplayName}
@@ -122,7 +122,7 @@
       </div>
     </div>
     <!-- <form class="flex-1 sm:flex-initial" method="post" action="/?/search" use:enhance={handleSubmit} bind:this={formEl}> -->
-    <div class="flex items-center py-4 pl-2">
+    <div class="flex items-center pb-2 pl-2">
       <Input
         class="max-w-sm rounded-xl"
         placeholder="Filter characters..."
@@ -249,7 +249,7 @@
                           {#await row.entityId}
                             <CircleNotch class="aspect-square size-12 animate-spin self-center justify-self-center" />
                           {:then players}
-                            <svelte:component this={Players} {players} />
+                            <Players {players} />
                           {/await}
                         {:else if row.faction}
                           {FACTIONS[row.faction.replace('Faction', '') as unknown as keyof typeof FACTIONS]}

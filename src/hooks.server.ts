@@ -11,16 +11,17 @@ const authorization = (async ({ event, resolve }) => {
 
   if (url.pathname.startsWith('/settings') && !session) redirect(303, '/signin')
 
-  if (url.pathname.startsWith('/reports') && session?.user?.role !== 'admin' && session?.user?.role !== 'maintainer') redirect(303, '/')
+  if (url.pathname.startsWith('/reports') && session?.user?.role !== 'admin' && session?.user?.role !== 'maintainer')
+    redirect(303, '/')
 
   return resolve(event)
 }) satisfies Handle
 
 export const handle = sequence(authentication, authorization) satisfies Handle
 
-declare module "@auth/core/types" {
+declare module '@auth/core/types' {
   export interface Session {
-    error?: "RefreshAccessTokenError"
+    error?: 'RefreshAccessTokenError'
   }
   export interface User {
     role: typeof users.$inferSelect.role

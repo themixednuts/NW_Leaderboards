@@ -31,7 +31,7 @@
         'dds',
         'png',
       )}');"
-    />
+    ></div>
     <div
       class={cn(
         ` col-start-1 row-start-1 size-24 mask-size-contain mask-repeat-no-repeat mask-position-center mask-composite-add mask-mode-luminance`,
@@ -40,7 +40,7 @@
         'dds',
         'png',
       )}');"
-    />
+    ></div>
   </div>
   <div class="flex flex-col place-content-start whitespace-nowrap px-2">
     <div class="text-xl font-bold text-white drop-shadow">

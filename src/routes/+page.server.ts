@@ -12,6 +12,8 @@ export const actions = {
     const data = await request.formData()
     const q = data.get('q') as string
 
+    // db.select().from(guilds).where(eq(guilds.id))
+
     const session = await locals.auth()
 
     const results = await searchCompaniesAndCharactersByName(q, session?.user)

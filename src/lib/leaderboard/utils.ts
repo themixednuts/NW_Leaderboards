@@ -7,10 +7,10 @@ if (typeof Object.groupBy === typeof undefined) {
   console.log('polyfill Object.groupBy')
   Object.groupBy = (arr, callback) => {
     return arr.reduce((acc = {}, ...args) => {
-      const key = callback(...args);
+      const key = callback(...args)
       acc[key] ??= []
-      acc[key].push(args[0]);
-      return acc;
+      acc[key].push(args[0])
+      return acc
     }, {})
   }
 }
@@ -21,7 +21,7 @@ export const FACTION_IMAGE_PATHS = [
   '/lyshineui/images/leaderboards/leaderboard_cat_bg_faction_convenant.png',
 ] as const
 
-export const bannerMap = {
+export const BANNER_MAP = {
   'Mutated Expeditions': '/lyshineui/images/leaderboards/leaderboard_cat_bg_expeditions.png',
   'Faction War': (currentIndex: number) => FACTION_IMAGE_PATHS[currentIndex],
   'Vs. Environment': '/lyshineui/images/leaderboards/leaderboard_cat_bg_environment.png',
@@ -29,12 +29,12 @@ export const bannerMap = {
   'Trade Skills': '/lyshineui/images/leaderboards/leaderboard_cat_bg_trade.png',
 } as const
 
-export type BannerMap = typeof bannerMap
+export type BANNER_MAP = typeof BANNER_MAP
 
-export const currentImageBanner = (key: keyof BannerMap, idx: number) => {
+export const currentImageBanner = (key: keyof BANNER_MAP, idx: number) => {
   if (key === 'Faction War')
-    return bannerMap[key](idx)
-  return bannerMap[key]
+    return BANNER_MAP[key](idx)
+  return BANNER_MAP[key]
 }
 
 export function get_seasons(seasons: Awaited<ReturnType<typeof get_valid_seasons>>) {
@@ -66,7 +66,7 @@ export function get_rotations(seasons: Awaited<ReturnType<typeof get_valid_seaso
 }
 
 export function getBannerMapKey(str: string) {
-  for (const key of Object.keys(bannerMap) as (keyof typeof bannerMap)[]) {
+  for (const key of Object.keys(BANNER_MAP) as (keyof typeof BANNER_MAP)[]) {
     if (normalize_string(key) === normalize_string(str)) return key
   }
   return 'Mutated Expeditions'

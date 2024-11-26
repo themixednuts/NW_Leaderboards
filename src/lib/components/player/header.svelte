@@ -13,12 +13,13 @@
   import { characters, visibilitySchema } from '$lib/schemas/gamedata'
   import { Input } from '@/shadcn/components/ui/input'
   import Icon from './icon.svelte'
+  import type { HTMLAttributes } from 'svelte/elements'
 
-  interface Props {
+  interface Props extends HTMLAttributes<HTMLDivElement> {
     character: NonNullable<Awaited<ReturnType<typeof getCharacterById>>>
   }
 
-  let { character }: Props = $props()
+  let { character, class: className, ...restProps }: Props = $props()
 
   let form = $state(
     superForm(
@@ -56,7 +57,13 @@
   let { enhance } = form
 </script>
 
-<div class="grid min-w-min grid-cols-[minmax(0,1fr),minmax(0,2fr)] grid-rows-[minmax(0,1fr)] gap-2 overflow-clip p-2">
+<div
+  class={cn(
+    'grid min-w-min grid-cols-[minmax(0,1fr),minmax(0,2fr)] grid-rows-[minmax(0,1fr)] gap-2 overflow-clip p-2',
+    className,
+  )}
+  {...restProps}
+>
   <div class="relative col-start-1 row-start-1 min-w-min">
     <Icon {character} />
     {#if character.level}

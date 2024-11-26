@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { cn } from "$lib/shadcn/utils.js";
 	import type { HTMLAttributes } from "svelte/elements";
+	import { cn } from "$lib/shadcn/utils.js";
 
 	type $$Props = HTMLAttributes<HTMLTableRowElement> & {
 		"data-state"?: unknown;

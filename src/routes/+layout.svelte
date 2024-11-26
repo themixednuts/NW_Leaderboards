@@ -22,8 +22,6 @@
   import { Gear, SignIn, SignOut, Question, ChartPieSlice } from 'phosphor-svelte'
   import { setContext, type Snippet } from 'svelte'
   import { writable } from 'svelte/store'
-  import SuperDebug from 'sveltekit-superforms'
-  import { dev } from '$app/environment'
 
   interface Props {
     data: PageData
@@ -57,7 +55,7 @@
 </script>
 
 <svelte:head>
-  <script async src="https://nwdb.info/embed.js"></script>
+  <!-- <script async src="https://nwdb.info/embed.js"></script> -->
 </svelte:head>
 
 <Toaster position="top-right" closeButton />

@@ -1,7 +1,6 @@
-console.log('starting?')
 // // Yes, run with bun, suck it
-import { write } from "bun"
-import { leaderboard_datatable } from "./lib/leaderboard"
+import { write } from 'bun'
+import { leaderboard_datatable } from './lib/leaderboard'
 
 console.log('Starting Script')
 console.log('Fetching Leaderboards Datatsheet')
@@ -10,7 +9,10 @@ let s = performance.now()
 const leaderboards = await leaderboard_datatable()
 console.log('Fetched! -> ', performance.now() - s, 'ms')
 const SEASON = 5
-const seasons = Array.from({ length: SEASON + 1 }, (_, idx) => idx === 0 ? 'q1' : `s${idx}`) as readonly ('q1' | `s${number}`)[]
+const seasons = Array.from({ length: SEASON + 1 }, (_, idx) => (idx === 0 ? 'q1' : `s${idx}`)) as readonly (
+  | 'q1'
+  | `s${number}`
+)[]
 
 interface LeaderboardItem {
   entityId: string
@@ -23,14 +25,28 @@ const m: Record<string, string[]> = {}
 console.log('Fetching Leaderboard Stats')
 s = performance.now()
 const lbs: { [k: string]: string | number | boolean }[] = []
-const ids = await Promise.all(leaderboards.flatMap(async (leaderboard) => {
-  const { LeaderboardDefinitionId, FactionLeaderboardDefinitionId } = leaderboard
-  const ids = [FactionLeaderboardDefinitionId, LeaderboardDefinitionId]
-  lbs.push({ leaderboard: leaderboard.LeaderboardId, 'hasFactionBoard': FactionLeaderboardDefinitionId ? true : false, 'IDs': ids.filter(Boolean).join(', ') })
+const ids = await Promise.all(
+  leaderboards.flatMap(async (leaderboard) => {
+    const { LeaderboardDefinitionId, FactionLeaderboardDefinitionId } = leaderboard
+    const ids = [FactionLeaderboardDefinitionId, LeaderboardDefinitionId]
+    lbs.push({
+      leaderboard: leaderboard.LeaderboardId,
+      hasFactionBoard: FactionLeaderboardDefinitionId ? true : false,
+      IDs: ids.filter(Boolean).join(', '),
+    })
 
-  const fetches = ids.filter(Boolean).map(id => seasons.map(season => fetch(`https://api.nwlb.info/json/${id}/${season}?size=10000&eid=true`).then(res => res.json() as Promise<LeaderboardItem[]>)))
-  return Promise.all(fetches.flat()).then(res => res.flat())
-}))
+    const fetches = ids
+      .filter(Boolean)
+      .map((id) =>
+        seasons.map((season) =>
+          fetch(`https://api.nwlb.info/json/${id}/${season}?size=10000&eid=true`).then(
+            (res) => res.json() as Promise<LeaderboardItem[]>,
+          ),
+        ),
+      )
+    return Promise.all(fetches.flat()).then((res) => res.flat())
+  }),
+)
 // console.table(lbs)
 console.log('\nFetched! -> ', performance.now() - s, 'ms')
 
@@ -70,25 +86,30 @@ console.table({ ...distinctCount, total: Object.values(distinctCount).reduce((ac
 // COMMENT THIS SECTION OUT IF YOU DON'T WANT TO HANDLE DB
 // ---------------------------------------------------------------
 import { db, client } from './gamedata/client'
-import { characters } from "../src/lib/schemas/gamedata"
-import { isNull } from "drizzle-orm"
+import { characters } from '../src/lib/schemas/gamedata'
+import { isNull } from 'drizzle-orm'
 
 console.log('Syncing...')
 s = performance.now()
 // await client.sync()
 console.log('Synced.', performance.now() - s, 'ms')
 
-console.log("Getting missing characters.")
+console.log('Getting missing characters.')
 s = performance.now()
-const missing = await db.select({ id: characters.id, worldId: characters.worldId, name: characters.name }).from(characters).where(isNull(characters.level))
+const missing = await db
+  .select({ id: characters.id, worldId: characters.worldId, name: characters.name })
+  .from(characters)
+  .where(isNull(characters.level))
 console.log('#Missing Characters:', missing.length, '->', performance.now() - s, 'ms')
 
-const worlds = await fetch('https://gt-servers.nwdb.info/server-status/d97f9hg7132dhasei12j93hdasr18j_gt').then(res => res.json() as Promise<{ servers: { worldId: string, worldName: string }[] }>)
+const worlds = await fetch('https://gt-servers.nwdb.info/server-status/d97f9hg7132dhasei12j93hdasr18j_gt').then(
+  (res) => res.json() as Promise<{ servers: { worldId: string; worldName: string }[] }>,
+)
 for (const character of missing) {
-  const world = worlds.servers.find(server => server.worldId === character.worldId)
+  const world = worlds.servers.find((server) => server.worldId === character.worldId)
   if (!world) continue
   const { worldName } = world
-  const isInLeaderboards = distinct[worldName].find(id => id === character.id)
+  const isInLeaderboards = distinct[worldName].find((id) => id === character.id)
   if (isInLeaderboards) {
     console.log(character.name, 'recently added to leaderboards...skipping.')
     continue
