@@ -6,7 +6,7 @@
   import type { PageData } from '../../routes/lb/[first]/[category]/[second]/[rotation]/[type]/[season]/[page]/$types'
 
   interface Props {
-    data: Awaited<NonNullable<Exclude<Awaited<Awaited<PageData['json']>['data'][number]['entityId']>, string>>[number]>
+    data: Awaited<ReturnType<typeof getCharacterById>> | Awaited<ReturnType<typeof getCompanyById>>
   }
 
   let { data }: Props = $props()

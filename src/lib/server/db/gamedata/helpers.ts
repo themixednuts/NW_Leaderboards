@@ -1,8 +1,18 @@
-import type { User } from "@auth/core/types"
-import { db } from "./client"
-import { characters, guilds } from "./schema"
-import { p_character_by_id, p_character_by_name, p_characters_by_user, p_company_by_id, p_guild_with_members_by_id, p_guild_with_members_by_name, p_guilds_with_members_by_user, p_search } from "./statements"
-import { eq } from "drizzle-orm"
+import type { User } from '@auth/core/types'
+import { db } from './client'
+import { characters, guilds } from './schema'
+import {
+  p_character_by_id,
+  p_character_by_name,
+  p_characters_by_ids,
+  p_characters_by_user,
+  p_company_by_id,
+  p_guild_with_members_by_id,
+  p_guild_with_members_by_name,
+  p_guilds_with_members_by_user,
+  p_search,
+} from './statements'
+import { eq } from 'drizzle-orm'
 
 // HELPER FUNCTIONS
 export const getCharactersByUser = async (user?: User) => {
@@ -15,6 +25,14 @@ export const getCharacterById = async (id: typeof characters.$inferSelect.id, us
   const userId = user?.id ?? null
   return p_character_by_id.get({ id, userId, role })
 }
+export const getCharactersByIds = async (id: (typeof characters.$inferSelect.id)[], user?: User) => {
+  const role = user?.role ?? null
+  const userId = user?.id ?? null
+
+  // const ids = id.map((id) => `"${id}"`).join(', ')
+
+  return p_characters_by_ids.all({ ids: id, userId, role })
+}
 export const getCharacterByName = async (name: typeof characters.$inferSelect.name, user?: User) => {
   const role = user?.role ?? null
   const userId = user?.id ?? null
@@ -23,7 +41,10 @@ export const getCharacterByName = async (name: typeof characters.$inferSelect.na
   return p_character_by_name.get({ name, userId, role })
 }
 
-export const updateCharacterVisibility = async (character: { name: typeof characters.$inferInsert.name, visibility?: typeof characters.$inferInsert.visibility }) => {
+export const updateCharacterVisibility = async (character: {
+  name: typeof characters.$inferInsert.name
+  visibility?: typeof characters.$inferInsert.visibility
+}) => {
   const { name, visibility } = character
   return db.update(characters).set({ visibility }).where(eq(characters.name, name)).returning().get()
 }
@@ -55,8 +76,18 @@ export const getCompanyById = async (id: typeof guilds.$inferSelect.id, user?: U
 
   return p_company_by_id.get({ userId, role, id })
 }
+export const getCompaniesByIds = async (id: (typeof guilds.$inferSelect.id)[], user?: User) => {
+  const role = user?.role ?? null
+  const userId = user?.id ?? null
 
-export const searchCompaniesAndCharactersByName = async (name: typeof guilds.$inferSelect.name, user?: User, limit: number = 10) => {
+  return p_company_by_id.all({ userId, role, id })
+}
+
+export const searchCompaniesAndCharactersByName = async (
+  name: typeof guilds.$inferSelect.name,
+  user?: User,
+  limit: number = 10,
+) => {
   const role = user?.role ?? null
   const userId = user?.id ?? null
   return p_search.all({ name, userId, role, limit })

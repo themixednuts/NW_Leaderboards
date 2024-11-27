@@ -1,15 +1,14 @@
-import { error, json } from "@sveltejs/kit"
-import type { RequestHandler } from "./$types"
-import type { LeaderboardAPIBoardItem } from "@/leaderboard/utils"
-import type { Config } from "@sveltejs/adapter-vercel"
-import { BYPASS_TOKEN } from "$env/static/private"
+import { error, json } from '@sveltejs/kit'
+import type { RequestHandler } from './$types'
+import type { LeaderboardAPIBoardItem } from '@/leaderboard/utils'
+import type { Config } from '@sveltejs/adapter-vercel'
+import { BYPASS_TOKEN } from '$env/static/private'
 
 export const config = {
   isr: {
     expiration: 1500,
-    bypassToken: BYPASS_TOKEN
+    bypassToken: BYPASS_TOKEN,
   },
-  runtime: 'nodejs20.x'
 } satisfies Config
 
 export const GET = (async ({ params: { id, season, page }, fetch }) => {
@@ -26,7 +25,7 @@ export const GET = (async ({ params: { id, season, page }, fetch }) => {
     currentRank++
     return {
       ...entry,
-      rank
+      rank,
     }
   })
   return json(mapped)

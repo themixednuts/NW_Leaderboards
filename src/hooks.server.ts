@@ -8,7 +8,6 @@ const authorization = (async ({ event, resolve }) => {
 
   if (url.pathname.startsWith('/signin')) {
     const session = await locals.auth()
-
     if (!session?.user?.id) redirect(303, '/')
   }
 
@@ -19,7 +18,7 @@ const authorization = (async ({ event, resolve }) => {
 
   if (url.pathname.startsWith('/reports')) {
     const session = await locals.auth()
-    if (!session?.user?.id && (session?.user?.role !== 'admin' || session?.user?.role !== 'maintianer'))
+    if (!session?.user?.id && session?.user?.role !== 'maintainer' && session?.user?.role !== 'admin')
       redirect(303, '/')
   }
 

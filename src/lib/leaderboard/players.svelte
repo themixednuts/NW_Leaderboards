@@ -4,7 +4,7 @@
   import Player from './player.svelte'
   import type { PageData } from '../../routes/lb/[first]/[category]/[second]/[rotation]/[type]/[season]/[page]/$types'
   interface Props {
-    players: NonNullable<Exclude<Awaited<PageData['json']>['data'][number]['entityId'], string>>
+    players: Awaited<PageData['json']>['data'][number]['entityId']
   }
   let { players }: Props = $props()
 

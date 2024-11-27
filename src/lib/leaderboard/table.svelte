@@ -233,38 +233,28 @@
                 </Table.Cell>
               </Table.Row>
             {/each}
-          {:then data}
+          {:then { data }}
             {#if data}
-              {#await data.data}
-                <CircleNotch class="aspect-square size-12 animate-spin place-self-center" />
-              {:then table}
-                {#each table as row, _}
-                  {#if row}
-                    <Table.Row>
-                      <Table.Cell>
-                        {row?.rank}
-                      </Table.Cell>
-                      <Table.Cell>
-                        {#if row?.entityId && typeof row.entityId !== 'string'}
-                          {#await row.entityId}
-                            <CircleNotch class="aspect-square size-12 animate-spin self-center justify-self-center" />
-                          {:then players}
-                            <Players {players} />
-                          {/await}
-                        {:else if row.faction}
-                          {FACTIONS[row.faction.replace('Faction', '') as unknown as keyof typeof FACTIONS]}
-                        {/if}
-                      </Table.Cell>
-                      <Table.Cell>
-                        {leaderboard.ValueString === 'Time' ? secondsToTimeFormat(row.value) : row.value}
-                      </Table.Cell>
-                      <Table.Cell>
-                        {row?.server}
-                      </Table.Cell>
-                    </Table.Row>
-                  {/if}
-                {/each}
-              {/await}
+              {#each data as { rank, entityId, faction, server, value }, _}
+                <Table.Row>
+                  <Table.Cell>
+                    {rank}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {#if entityId && typeof entityId !== 'string'}
+                      <Players players={entityId} />
+                    {:else if faction}
+                      {FACTIONS[faction.replace('Faction', '') as unknown as keyof typeof FACTIONS]}
+                    {/if}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {leaderboard.ValueString === 'Time' ? secondsToTimeFormat(value) : value}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {server}
+                  </Table.Cell>
+                </Table.Row>
+              {/each}
             {:else}
               <h1 class="place-self-center text-3xl">No Data</h1>
             {/if}
